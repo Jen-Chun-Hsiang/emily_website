@@ -65,6 +65,13 @@ h1 {
     letter-spacing: -0.02em;
 }
 
+.bengali-name {
+    font-size: 1.1rem;
+    color: var(--accent-color);
+    font-weight: 300;
+    margin-bottom: 0.5rem;
+}
+
 .subtitle {
     font-size: 1.2rem;
     color: var(--accent-color);
