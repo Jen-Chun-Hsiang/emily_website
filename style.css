@@ -87,23 +87,11 @@ h1 {
     color: #ffffff;
 }
 
-.role {
+.identity {
     font-size: 1rem;
     color: var(--accent-color);
     font-weight: 300;
     margin-bottom: 0.3rem;
-}
-
-.institution {
-    font-size: 0.95rem;
-    color: var(--accent-color);
-    margin-bottom: 1.5rem;
-}
-
-.company {
-    font-size: 1rem;
-    color: var(--accent-color);
-    margin-bottom: 1.5rem;
 }
 
 .social-links {
