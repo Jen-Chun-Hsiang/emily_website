@@ -23,21 +23,21 @@ for (let x = 0; x < columns; x++) {
 const draw = () => {
     // Black BG for the canvas
     // Translucent BG to show trail
-    ctx.fillStyle = 'rgba(18, 18, 18, 0.05)';
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
     ctx.fillRect(0, 0, width, height);
 
-    ctx.fillStyle = '#4a4a4a'; // Darker gray for the text
+    ctx.fillStyle = '#e8e8e8'; // Light gray for the text
     ctx.font = fontSize + 'px monospace';
 
     for (let i = 0; i < drops.length; i++) {
         const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
         
         // Randomly vary the color slightly for depth
-        // Mostly gray, occasional white highlight
+        // Mostly light gray, occasional darker highlight
         if (Math.random() > 0.98) {
-             ctx.fillStyle = '#ffffff'; 
+             ctx.fillStyle = '#d0d0d0'; 
         } else {
-             ctx.fillStyle = '#555555';
+             ctx.fillStyle = '#f0f0f0';
         }
 
         ctx.fillText(text, i * fontSize, drops[i] * fontSize);
