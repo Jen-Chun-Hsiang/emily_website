@@ -162,7 +162,7 @@ Recommended host: GitHub Pages from this repo.
 - [x] Add `404.html`.
 - [x] Add `CNAME` for `emilyhsiang.com`.
 - [x] Move the profile image into local assets.
-- [ ] Add favicon and social preview image assets.
+- [x] Add favicon and social preview image assets.
 - [x] Add reduced-motion handling for the canvas animation.
 - [ ] Update JenChunHsiang.com with reciprocal `rel="me"` link and matching schema.
 - [ ] Deploy EmilyHsiang.com.
