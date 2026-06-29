@@ -3,7 +3,7 @@
 
 ## Primary Pages
 - [Home](https://emilyhsiang.com/) - Current professional hub, biography, founder thesis, Attryx overview, academic archive bridge, and selected publications.
-- [Writing](https://emilyhsiang.com/blog.html) - Writing hub for essays and research notes on AI systems, scientific workflows, modeling, and founder work.
+- [Blog](https://emilyhsiang.com/blog.html) - Blog page for upcoming articles from Emily Hsiang. Articles will come soon.
 
 ## Current Work
 - [Semiqlassical Inc.](https://semiqlassical.tech/) - Startup building computational and trust infrastructure for semiclassical physics.
