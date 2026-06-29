@@ -6,11 +6,62 @@
     <title>Emily Hsiang, PhD</title>
     <meta name="description" content="Emily Hsiang is a neuroscience PhD and co-founder of Semiqlassical, building Attryx for human-inspectable research workflows in the AI era.">
     <link rel="canonical" href="https://emilyhsiang.com/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Emily Hsiang">
+    <meta property="og:title" content="Emily Hsiang, PhD">
+    <meta property="og:description" content="Neuroscience PhD and co-founder of Semiqlassical, building Attryx for human-inspectable research workflows in the AI era.">
+    <meta property="og:url" content="https://emilyhsiang.com/">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Emily Hsiang, PhD">
+    <meta name="twitter:description" content="Neuroscience PhD and co-founder of Semiqlassical, building Attryx for human-inspectable research workflows in the AI era.">
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Emily Hsiang",
+        "alternateName": "Jen-Chun Hsiang",
+        "url": "https://emilyhsiang.com/",
+        "image": "https://emilyhsiang.com/assets/images/eh-cropped.png",
+        "jobTitle": "Co-founder",
+        "worksFor": {
+            "@type": "Organization",
+            "name": "Semiqlassical Inc.",
+            "url": "https://semiqlassical.tech/"
+        },
+        "alumniOf": [
+            {
+                "@type": "CollegeOrUniversity",
+                "name": "Washington University in St. Louis"
+            },
+            {
+                "@type": "CollegeOrUniversity",
+                "name": "National Taiwan University"
+            }
+        ],
+        "sameAs": [
+            "https://jenchunhsiang.com/",
+            "https://github.com/Jen-Chun-Hsiang",
+            "https://linkedin.com/in/emily-hsiang-phd-4795571b",
+            "https://scholar.google.com/citations?user=z46FTv4AAAAJ&hl=en",
+            "https://semiqlassical.tech/",
+            "https://attryx.ai/"
+        ],
+        "knowsAbout": [
+            "Computational neuroscience",
+            "Chemical engineering",
+            "Machine learning",
+            "AI systems",
+            "Data modeling",
+            "Scientific workflows",
+            "Human-inspectable computation"
+        ]
+    }
+    </script>
 </head>
 <body>
     <canvas id="matrix-bg"></canvas>
@@ -20,6 +71,7 @@
         <div class="nav-links">
             <a href="index.html">Home</a>
             <a href="#attryx">Attryx</a>
+            <a href="#archive">Archive</a>
             <a href="blog.html">Blog</a>
         </div>
     </nav>
@@ -27,7 +79,7 @@
     <div class="container">
         <header>
             <div class="profile-section">
-                <img src="https://raw.githubusercontent.com/Jen-Chun-Hsiang/Jen-Chun-Hsiang.github.io/master/images/myphoto1.jpg" alt="Emily Hsiang" class="profile-img">
+                <img src="assets/images/eh-cropped.png" alt="Emily Hsiang" class="profile-img">
                 <h1>Emily Hsiang, PhD</h1>
                 <p class="name-bengali">এমিলি শ্যাং</p>
                 <p class="subtitle">Co-founder at <a href="https://semiqlassical.tech/" target="_blank" rel="noopener noreferrer">Semiqlassical Inc.</a>, building <a href="https://attryx.ai/" target="_blank" rel="noopener noreferrer">Attryx</a></p>
@@ -69,25 +121,32 @@
             <section id="about">
                 <h2>About Me</h2>
                 <p>
-                    I turn noisy signals into decisions.
+                    I have been fascinated by the brain for as long as I have been building things: not only because it is efficient, but because it computes under constraints that today's large language models do not yet capture. Brains learn from limited data, act through bodies, carry fear, uncertainty, and mortality, and turn biological signals into decisions that become behavior.
                 </p>
                 <p>
-                    Trained in chemical engineering and neuroscience, I build measurement-driven ML systems that separate signal from artifact and make those systems reliable in the real world. My toolkit evolved from statistics to machine learning, neural-network-based modeling, and AI agents.
+                    At Semiqlassical, that question has become a product and research agenda. We are building Attryx as a scientific computing platform for frontier research: a place where AI can help researchers reason, simulate, and build, while keeping code, assumptions, intermediate steps, diagnostics, and results visible enough for human examination.
                 </p>
                 <p>
-                    I earned my PhD in Neuroscience at Washington University in St. Louis (advisor: Dr. <a href="https://kerschensteinerlab.wustl.edu/" target="_blank" rel="noopener noreferrer">Daniel Kerschensteiner</a>; thesis: "Dendritic Processing and Efficient Coding in the Retina"). In the <a href="https://kerschensteinerlab.wustl.edu/" target="_blank" rel="noopener noreferrer">Kerschensteiner Lab</a>, my work spans multiphoton imaging, multi-electrode array analysis, and neural-network modeling of visual computation.
+                    My founder thesis is not just "human in the loop." As technology becomes more powerful, human judgment is the value-bearing part of the system. The harder question is how we determine, inspect, and preserve those values as AI makes results cheaper and faster. If the process disappears into a black box, we lose the evidence trail that lets science, society, and individual people decide what is true, what matters, and how to move forward.
                 </p>
                 <p>
-                    Recently, I developed a query-based neural activity prediction model (qNAP) designed to generalize across neurons by disentangling neural descriptors, including receptive-field location and cell-type structure, with the goal of reducing data requirements while improving interpretability and generalization.
+                    My scientific path has followed the same thread from computation to biology and back. At Washington University in St. Louis, I earned my PhD in Neuroscience with Dr. <a href="https://kerschensteinerlab.wustl.edu/" target="_blank" rel="noopener noreferrer">Daniel Kerschensteiner</a>, studying how retinal circuits compute. My work used multiphoton calcium imaging, multi-electrode array recordings, large-scale data processing, and neural-network modeling to study subcellular processing, parallel visual pathways, efficient coding, and natural-scene representation in mouse and human retina.
                 </p>
                 <p>
-                    As a founder, I bring an engineering bias to research and product: measurable outcomes, pragmatic iteration, and systems that still work under constraints. I build alongside quantum-computing scientist Dr. <a href="https://www.avahbanerjee.com/" target="_blank" rel="noopener noreferrer">Avah Banerjee</a>, and we care about helping capable people move faster from ideas to working results.
+                    Recently, I developed a query-based neural activity prediction model (qNAP) designed to generalize across neurons by disentangling descriptors such as receptive-field location and cell-type structure. I am interested in foundation-style models for biological visual pathways: models that do not merely fit one experiment, but help us ask what kinds of structure, data, and computation are needed to explain living circuits.
                 </p>
                 <p>
-                    Earlier, I was a Visiting Scholar in the <a href="https://med.stanford.edu/parvizi-lab.html" target="_blank" rel="noopener noreferrer">Parvizi Lab</a> at Stanford University and a Research Assistant at the Institute of Cognitive Neuroscience, National Central University in Taiwan.
+                    Before graduate school, I worked in cognitive neuroscience and human epilepsy research as a Visiting Scholar in the <a href="https://med.stanford.edu/parvizi-lab.html" target="_blank" rel="noopener noreferrer">Parvizi Lab</a> at Stanford University and as a Research Assistant at the Institute of Cognitive Neuroscience, National Central University in Taiwan. Those projects shaped how I think about decision-making, electrical connectivity, deep-brain recordings, and the way internal brain dynamics become visible as behavior.
                 </p>
                 <p>
-                    My undergraduate training was in Chemical Engineering at National Taiwan University, where my thesis focused on photoactive catalytic reactions.
+                    I began in Chemical Engineering at National Taiwan University, where my undergraduate thesis focused on photoactive catalytic reactions. Even then, I was drawn to the idea of building artificial systems that could help us understand the human brain. Today, I see AI as only the beginning of that effort. We will need more diverse computational paradigms, including simulation on advanced quantum and neuromorphic hardware, to understand intelligence, biological constraints, and ourselves with the depth this moment demands.
+                </p>
+            </section>
+
+            <section id="archive">
+                <h2>Academic Archive</h2>
+                <p>
+                    For my academic research archive, publications, and earlier work under the name Jen-Chun Hsiang, visit <a href="https://jenchunhsiang.com/" target="_blank" rel="me noopener noreferrer">JenChunHsiang.com</a>.
                 </p>
             </section>
 

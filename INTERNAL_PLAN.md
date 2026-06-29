@@ -1,6 +1,6 @@
 # EmilyHsiang.com Internal Plan
 
-Last reviewed: 2026-06-28
+Last reviewed: 2026-06-29
 
 ## Current Status
 
@@ -15,30 +15,25 @@ This confirms that the long-standing authority path still points from EmilyHsian
 
 ### Local site
 
-- The repo is a minimal static website with `index.html`, `style.css`, and `script.js`.
+- The repo is a minimal static website with `index.html`, `blog.html`, `style.css`, and `script.js`.
 - The current page already positions Emily as:
   - `Emily Hsiang, PhD`
-  - co-founder at semiqlassical
+  - co-founder at Semiqlassical
   - neuroscience PhD with computational neuroscience training
-  - a builder focused on data, modeling, ML systems, and decision-making
+  - a builder focused on data, modeling, ML systems, decision-making, and human-inspectable research workflows
 - The site includes strong human-readable content: Now, About Me, and Selected Publications.
-- The visual identity is distinctive: dark interface, glass content panel, profile image, multilingual matrix-style canvas background.
+- The site includes Attryx as the first Semiqlassical product.
+- The site includes a visible academic archive bridge to JenChunHsiang.com.
+- The site includes a `CNAME` file for `emilyhsiang.com`, plus `robots.txt`, `sitemap.xml`, and `404.html`.
+- The visual identity is distinctive: light interface, glass content panel, profile image, multilingual matrix-style canvas background.
 
 ### Gaps
 
-- No canonical URL tag.
-- No meta description.
-- No Open Graph or Twitter card metadata.
-- No JSON-LD schema.
-- No `rel="me"` identity bridge to JenChunHsiang.com.
-- No visible link that clearly explains the relationship between EmilyHsiang.com and JenChunHsiang.com.
-- No sitemap or robots file in this repo.
-- No favicon or social preview image.
-- No content architecture yet for a business blog, newsletter, essays, or active professional updates.
+- No favicon or dedicated social preview image.
+- The blog exists as a shell but does not yet have posts, RSS, or a fuller content architecture.
 - The selected publications section is useful, but it risks making the new site feel like another academic portfolio unless it is reframed as research background and linked to the archive.
-- The profile image is loaded from `raw.githubusercontent.com`; it should eventually be copied into this repo as a local asset for reliability, performance, and stable previews.
-- External links using `target="_blank"` should include `rel="noopener noreferrer"`; identity links should use `rel="me"` where appropriate.
-- The animated background should respect `prefers-reduced-motion` and should be checked for mobile performance.
+- JenChunHsiang.com still needs the reciprocal link back to EmilyHsiang.com.
+- The animated background should be checked for mobile performance after deployment.
 
 ## Strategic Positioning
 
@@ -139,18 +134,36 @@ Avoid:
 - Submit the EmilyHsiang.com sitemap after launch.
 - Monitor indexing and search appearance for at least 2-4 weeks.
 
+## Publishing Runbook
+
+Recommended host: GitHub Pages from this repo.
+
+1. Push this repo to GitHub.
+2. In the GitHub repo, go to Settings -> Pages.
+3. Set the source to deploy from the main branch and root folder.
+4. Confirm the custom domain is `emilyhsiang.com`; the repo already includes a `CNAME` file with that value.
+5. In the DNS/registrar settings for `emilyhsiang.com`, remove the old redirect to `jenchunhsiang.com`.
+6. Add GitHub Pages DNS records for `emilyhsiang.com`:
+   - Apex `A` records to GitHub Pages IPs.
+   - Optional `www` CNAME to the GitHub Pages host.
+7. In GitHub Pages, enable "Enforce HTTPS" after the certificate is ready.
+8. Keep `jenchunhsiang.com` live as the academic archive.
+9. Add a reciprocal `rel="me"` link on JenChunHsiang.com pointing to `https://emilyhsiang.com/`.
+10. After launch, submit `https://emilyhsiang.com/sitemap.xml` in Google Search Console and inspect the homepage URL.
+
 ## Immediate Implementation Checklist
 
-- [ ] Add metadata, canonical tag, and social preview tags to `index.html`.
-- [ ] Add JSON-LD `Person` schema to `index.html`.
-- [ ] Add a visible academic archive link with `rel="me"` to the Emily homepage.
-- [ ] Normalize external link attributes.
-- [ ] Add `robots.txt`.
-- [ ] Add `sitemap.xml`.
-- [ ] Add `404.html`.
-- [ ] Move the profile image into local assets.
+- [x] Add metadata, canonical tag, and social preview tags to `index.html`.
+- [x] Add JSON-LD `Person` schema to `index.html`.
+- [x] Add a visible academic archive link with `rel="me"` to the Emily homepage.
+- [x] Normalize external link attributes.
+- [x] Add `robots.txt`.
+- [x] Add `sitemap.xml`.
+- [x] Add `404.html`.
+- [x] Add `CNAME` for `emilyhsiang.com`.
+- [x] Move the profile image into local assets.
 - [ ] Add favicon and social preview image assets.
-- [ ] Add reduced-motion handling for the canvas animation.
+- [x] Add reduced-motion handling for the canvas animation.
 - [ ] Update JenChunHsiang.com with reciprocal `rel="me"` link and matching schema.
 - [ ] Deploy EmilyHsiang.com.
 - [ ] Remove the EmilyHsiang.com to JenChunHsiang.com redirect after deployment is ready.
