@@ -4,18 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Emily Hsiang, PhD</title>
-    <meta name="description" content="Emily Hsiang is a neuroscience PhD and co-founder of Semiqlassical, building Attryx for human-inspectable research workflows in the AI era.">
+    <meta name="author" content="Emily Hsiang">
+    <meta name="description" content="Emily Hsiang is a neuroscience PhD and co-founder of Semiqlassical, building Attryx for human-inspectable frontier research workflows, from protein dynamics to quantum circuit simulation.">
+    <meta name="robots" content="index,follow,max-image-preview:large">
+    <meta name="theme-color" content="#ffffff">
     <link rel="canonical" href="https://emilyhsiang.com/">
     <meta property="og:type" content="website">
+    <meta property="og:locale" content="en_US">
     <meta property="og:site_name" content="Emily Hsiang">
     <meta property="og:title" content="Emily Hsiang, PhD">
-    <meta property="og:description" content="Neuroscience PhD and co-founder of Semiqlassical, building Attryx for human-inspectable research workflows in the AI era.">
+    <meta property="og:description" content="Neuroscience PhD and co-founder of Semiqlassical, building Attryx for human-inspectable frontier research workflows, from protein dynamics to quantum circuit simulation.">
     <meta property="og:url" content="https://emilyhsiang.com/">
     <meta property="og:image" content="https://emilyhsiang.com/assets/images/eh-cropped.png">
+    <meta property="og:image:width" content="904">
+    <meta property="og:image:height" content="1024">
+    <meta property="og:image:alt" content="Portrait of Emily Hsiang">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Emily Hsiang, PhD">
-    <meta name="twitter:description" content="Neuroscience PhD and co-founder of Semiqlassical, building Attryx for human-inspectable research workflows in the AI era.">
+    <meta name="twitter:description" content="Neuroscience PhD and co-founder of Semiqlassical, building Attryx for human-inspectable frontier research workflows, from protein dynamics to quantum circuit simulation.">
     <meta name="twitter:image" content="https://emilyhsiang.com/assets/images/eh-cropped.png">
+    <meta name="twitter:image:alt" content="Portrait of Emily Hsiang">
     <link rel="icon" type="image/png" href="assets/images/eh-cropped.png">
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,43 +33,85 @@
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
-        "@type": "Person",
-        "name": "Emily Hsiang",
-        "alternateName": "Jen-Chun Hsiang",
-        "url": "https://emilyhsiang.com/",
-        "image": "https://emilyhsiang.com/assets/images/eh-cropped.png",
-        "jobTitle": "Co-founder",
-        "worksFor": {
-            "@type": "Organization",
-            "name": "Semiqlassical Inc.",
-            "url": "https://semiqlassical.tech/"
-        },
-        "alumniOf": [
+        "@graph": [
             {
-                "@type": "CollegeOrUniversity",
-                "name": "Washington University in St. Louis"
+                "@type": "WebSite",
+                "@id": "https://emilyhsiang.com/#website",
+                "url": "https://emilyhsiang.com/",
+                "name": "Emily Hsiang",
+                "description": "Emily Hsiang is a neuroscience PhD and co-founder of Semiqlassical, building Attryx for human-inspectable frontier research workflows, from protein dynamics to quantum circuit simulation.",
+                "publisher": {
+                    "@id": "https://emilyhsiang.com/#person"
+                },
+                "inLanguage": "en-US"
             },
             {
-                "@type": "CollegeOrUniversity",
-                "name": "National Taiwan University"
+                "@type": "ProfilePage",
+                "@id": "https://emilyhsiang.com/#page",
+                "url": "https://emilyhsiang.com/",
+                "name": "Emily Hsiang, PhD",
+                "description": "Neuroscience PhD and co-founder of Semiqlassical, building Attryx for human-inspectable frontier research workflows, from protein dynamics to quantum circuit simulation.",
+                "isPartOf": {
+                    "@id": "https://emilyhsiang.com/#website"
+                },
+                "about": {
+                    "@id": "https://emilyhsiang.com/#person"
+                },
+                "primaryImageOfPage": {
+                    "@type": "ImageObject",
+                    "url": "https://emilyhsiang.com/assets/images/eh-cropped.png",
+                    "width": 904,
+                    "height": 1024
+                },
+                "inLanguage": "en-US"
+            },
+            {
+                "@type": "Person",
+                "@id": "https://emilyhsiang.com/#person",
+                "name": "Emily Hsiang",
+                "alternateName": "Jen-Chun Hsiang",
+                "honorificSuffix": "PhD",
+                "description": "Neuroscience PhD and co-founder of Semiqlassical, building Attryx for human-inspectable frontier research workflows, from protein dynamics to quantum circuit simulation.",
+                "url": "https://emilyhsiang.com/",
+                "mainEntityOfPage": {
+                    "@id": "https://emilyhsiang.com/#page"
+                },
+                "image": "https://emilyhsiang.com/assets/images/eh-cropped.png",
+                "email": "mailto:hsiang@semiqlassical.tech",
+                "jobTitle": "Co-founder",
+                "worksFor": {
+                    "@type": "Organization",
+                    "name": "Semiqlassical Inc.",
+                    "url": "https://semiqlassical.tech/"
+                },
+                "alumniOf": [
+                    {
+                        "@type": "CollegeOrUniversity",
+                        "name": "Washington University in St. Louis"
+                    },
+                    {
+                        "@type": "CollegeOrUniversity",
+                        "name": "National Taiwan University"
+                    }
+                ],
+                "sameAs": [
+                    "https://jenchunhsiang.com/",
+                    "https://github.com/Jen-Chun-Hsiang",
+                    "https://linkedin.com/in/emily-hsiang-phd-4795571b",
+                    "https://scholar.google.com/citations?user=z46FTv4AAAAJ&hl=en",
+                    "https://semiqlassical.tech/",
+                    "https://attryx.ai/"
+                ],
+                "knowsAbout": [
+                    "Computational neuroscience",
+                    "Chemical engineering",
+                    "Machine learning",
+                    "AI systems",
+                    "Data modeling",
+                    "Scientific workflows",
+                    "Human-inspectable computation"
+                ]
             }
-        ],
-        "sameAs": [
-            "https://jenchunhsiang.com/",
-            "https://github.com/Jen-Chun-Hsiang",
-            "https://linkedin.com/in/emily-hsiang-phd-4795571b",
-            "https://scholar.google.com/citations?user=z46FTv4AAAAJ&hl=en",
-            "https://semiqlassical.tech/",
-            "https://attryx.ai/"
-        ],
-        "knowsAbout": [
-            "Computational neuroscience",
-            "Chemical engineering",
-            "Machine learning",
-            "AI systems",
-            "Data modeling",
-            "Scientific workflows",
-            "Human-inspectable computation"
         ]
     }
     </script>
@@ -75,7 +125,7 @@
             <a href="index.html">Home</a>
             <a href="#attryx">Attryx</a>
             <a href="#archive">Archive</a>
-            <a href="blog.html">Blog</a>
+            <a href="blog.html">Writing</a>
         </div>
     </nav>
 
@@ -88,10 +138,10 @@
                 <p class="subtitle">Co-founder at <a href="https://semiqlassical.tech/" target="_blank" rel="noopener noreferrer">Semiqlassical Inc.</a>, building <a href="https://attryx.ai/" target="_blank" rel="noopener noreferrer">Attryx</a></p>
                 <p class="identity">Neuroscience PhD (WashU) • Computational neuroscience training</p>
                 <div class="social-links">
-                    <a href="mailto:hsiang@semiqlassical.tech" title="Email"><i class="fas fa-envelope"></i></a>
-                    <a href="https://github.com/Jen-Chun-Hsiang" target="_blank" rel="me noopener noreferrer" title="GitHub"><i class="fab fa-github"></i></a>
-                    <a href="https://linkedin.com/in/emily-hsiang-phd-4795571b" target="_blank" rel="me noopener noreferrer" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
-                    <a href="https://scholar.google.com/citations?user=z46FTv4AAAAJ&hl=en" target="_blank" rel="me noopener noreferrer" title="Google Research"><i class="fab fa-google"></i></a>
+                    <a href="mailto:hsiang@semiqlassical.tech" title="Email" aria-label="Email Emily Hsiang"><i class="fas fa-envelope"></i></a>
+                    <a href="https://github.com/Jen-Chun-Hsiang" target="_blank" rel="me noopener noreferrer" title="GitHub" aria-label="Emily Hsiang on GitHub"><i class="fab fa-github"></i></a>
+                    <a href="https://linkedin.com/in/emily-hsiang-phd-4795571b" target="_blank" rel="me noopener noreferrer" title="LinkedIn" aria-label="Emily Hsiang on LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://scholar.google.com/citations?user=z46FTv4AAAAJ&hl=en" target="_blank" rel="me noopener noreferrer" title="Google Research" aria-label="Emily Hsiang on Google Scholar"><i class="fab fa-google"></i></a>
                 </div>
             </div>
         </header>
@@ -110,7 +160,7 @@
             <section id="attryx">
                 <h2>Attryx</h2>
                 <p>
-                    <a href="https://attryx.ai/" target="_blank" rel="noopener noreferrer">Attryx</a> is our first product at Semiqlassical: a human-inspectable computational workbench for frontier research.
+                    <a href="https://attryx.ai/" target="_blank" rel="noopener noreferrer">Attryx</a> is our first product at Semiqlassical: a human-inspectable computational workbench for frontier research, from protein dynamics to quantum circuit simulation.
                 </p>
                 <p>
                     We are building it for workflows where the path from input to result matters as much as the answer. Code, AI-assisted steps, diagnostics, tables, and results should remain visible enough for people to examine, share, and build on top of.
@@ -127,7 +177,7 @@
                     I have been fascinated by the brain for as long as I have been building things: not only because it is efficient, but because it computes under constraints that today's large language models do not yet capture. Brains learn from limited data, act through bodies, carry fear, uncertainty, and mortality, and turn biological signals into decisions that become behavior.
                 </p>
                 <p>
-                    At Semiqlassical, that question has become a product and research agenda. I co-founded the company with Dr. <a href="https://avahbanerjee.com" target="_blank" rel="noopener noreferrer">Avah Banerjee</a>, and we are building Attryx as a scientific computing platform for frontier research: a place where AI can help researchers reason, simulate, and build, while keeping code, assumptions, intermediate steps, diagnostics, and results visible enough for human examination.
+                    At Semiqlassical, that question has become a product and research agenda. I co-founded the company with Dr. <a href="https://avahbanerjee.com" target="_blank" rel="noopener noreferrer">Avah Banerjee</a>, and we are building Attryx as a scientific computing platform for frontier research, from protein dynamics to quantum circuit simulation and related technical workflows: a place where AI can help researchers reason, simulate, and build, while keeping code, assumptions, intermediate steps, diagnostics, and results visible enough for human examination.
                 </p>
                 <p>
                     My founder thesis is not just "human in the loop." As technology becomes more powerful, human judgment is the value-bearing part of the system. The harder question is how we determine, inspect, and preserve those values as AI makes results cheaper and faster. If the process disappears into a black box, we lose the evidence trail that lets science, society, and individual people decide what is true, what matters, and how to move forward.
@@ -164,7 +214,10 @@
             </section>
 
             <section id="publications">
-                <h2>Selected Publications</h2>
+                <h2>Research Background</h2>
+                <p>
+                    These selected papers reflect the research path behind my current work. For the fuller publication record and archive, visit <a href="https://jenchunhsiang.com/" target="_blank" rel="me noopener noreferrer">JenChunHsiang.com</a>.
+                </p>
                 <ul class="publication-list">
                     <li>
                         <span class="pub-title">Distributed feature representations of natural stimuli across parallel retinal pathways.</span>

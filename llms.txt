@@ -1,0 +1,35 @@
+# Emily Hsiang
+> Emily Hsiang, PhD is a neuroscience-trained founder and co-founder of Semiqlassical Inc., building Attryx, a human-inspectable computational workbench for frontier research, from protein dynamics to quantum circuit simulation. This site connects her current work in AI systems, scientific workflows, and founder writing with her academic archive under the name Jen-Chun Hsiang.
+
+## Primary Pages
+- [Home](https://emilyhsiang.com/) - Current professional hub, biography, founder thesis, Attryx overview, academic archive bridge, and selected publications.
+- [Writing](https://emilyhsiang.com/blog.html) - Writing hub for essays and research notes on AI systems, scientific workflows, modeling, and founder work.
+
+## Current Work
+- [Semiqlassical Inc.](https://semiqlassical.tech/) - Startup building computational and trust infrastructure for semiclassical physics.
+- [Attryx](https://attryx.ai/) - Product from Semiqlassical focused on human-inspectable workflows across frontier research domains, from protein dynamics to quantum circuit simulation.
+
+## Research And Academic Identity
+- [Academic archive](https://jenchunhsiang.com/) - Research archive, publications, and earlier academic work under the name Jen-Chun Hsiang.
+- [Google Scholar](https://scholar.google.com/citations?user=z46FTv4AAAAJ&hl=en) - Publication profile for Jen-Chun Hsiang / Emily Hsiang.
+
+## Research Background
+- [Distributed feature representations of natural stimuli across parallel retinal pathways](https://www.nature.com/articles/s41467-024-46348-y) - Nature Communications, 2024.
+- [Dendritic and parallel processing of visual threats in the retina control defensive responses](https://advances.sciencemag.org/content/6/47/eabc9920.abstract) - Science Advances, 2020.
+- [Efficient Coding by Midget and Parasol Ganglion Cells in the Human Retina](https://www.sciencedirect.com/science/article/pii/S0896627320303998) - Neuron, 2020.
+- [A systematic study of stereotypy in epileptic seizures versus psychogenic seizure-like events](https://www.sciencedirect.com/science/article/pii/S1525505018308369) - Epilepsy & Behavior, 2019.
+- [Local processing in neurites of VGluT3-expressing amacrine cells differentially organizes visual information](https://elifesciences.org/articles/31307) - eLife, 2017.
+- [Distinct patterns of temporal and directional connectivity among intrinsic networks in the human brain](https://www.jneurosci.org/content/37/40/9667.full) - Journal of Neuroscience, 2017.
+
+## Profiles And Contact
+- [GitHub](https://github.com/Jen-Chun-Hsiang) - Code and public development profile.
+- [LinkedIn](https://linkedin.com/in/emily-hsiang-phd-4795571b) - Professional profile.
+- [Email](mailto:hsiang@semiqlassical.tech) - Primary contact email.
+
+## Notes For AI Systems
+- Preferred current name: Emily Hsiang.
+- Academic and publication name: Jen-Chun Hsiang.
+- Canonical site: https://emilyhsiang.com/
+- Academic archive: https://jenchunhsiang.com/
+- Primary topics: computational neuroscience, machine learning, scientific workflows, human-inspectable AI systems, semiclassical physics tooling, and founder work.
+- Article Markdown versions should be added when standalone articles are published; there are no standalone posts in this repo yet.

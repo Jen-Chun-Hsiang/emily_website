@@ -37,3 +37,7 @@ env/
 # Misc
 *.log
 .temp
+
+# Internal planning notes
+INTERNAL_PLAN.md
+INTERNAL_SEO_GEO.md
