@@ -3,7 +3,10 @@
 
 ## Primary Pages
 - [Home](https://emilyhsiang.com/) - Current professional hub, biography, founder thesis, Attryx overview, academic archive bridge, and selected publications.
-- [Blog](https://emilyhsiang.com/blog.html) - Blog page for upcoming articles from Emily Hsiang. Articles will come soon.
+- [Blog](https://emilyhsiang.com/blog.html) - Essays from Emily Hsiang on AI systems, cognition, research workflows, modeling, and founder work.
+
+## Articles
+- [Will We Still Be Smarter Than Chatbots by 2030?](https://emilyhsiang.com/articles/will-we-still-be-smarter-than-chatbots-by-2030.html) - Long-form essay arguing that practical human-machine parity should be understood as a crossing point between improving machine capability and declining unaided human cognition, with paragraph-linked references for LLM offloading, metacognition, cognitive effort, plasticity, and deep reading.
 
 ## Current Work
 - [Semiqlassical Inc.](https://semiqlassical.tech/) - Startup building computational and trust infrastructure for semiclassical physics.
@@ -32,4 +35,4 @@
 - Canonical site: https://emilyhsiang.com/
 - Academic archive: https://jenchunhsiang.com/
 - Primary topics: computational neuroscience, machine learning, scientific workflows, human-inspectable AI systems, semiclassical physics tooling, and founder work.
-- Article Markdown versions should be added when standalone articles are published; there are no standalone posts in this repo yet.
+- Standalone article pages are published as static HTML; local planning drafts and source material are intentionally ignored by git.

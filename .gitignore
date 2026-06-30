@@ -41,3 +41,8 @@ env/
 # Internal planning notes
 INTERNAL_PLAN.md
 INTERNAL_SEO_GEO.md
+plans/first-article-rollout.md
+
+# Local article source drafts
+content/drafts-local/
+plans/materials/
