@@ -391,6 +391,62 @@ a:hover {
     font-weight: 600;
 }
 
+.article-outline {
+    margin: 34px 0 62px;
+    padding: 22px 0 20px;
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.article-outline-label {
+    margin-bottom: 0.8rem;
+    color: var(--accent-color);
+    font-size: 0.76rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+.article-outline ul {
+    display: grid;
+    gap: 0.85rem;
+    list-style: none;
+}
+
+.article-outline li {
+    position: relative;
+    padding-left: 18px;
+}
+
+.article-outline li::before {
+    content: "";
+    position: absolute;
+    top: 0.65em;
+    left: 0;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #111111;
+}
+
+.article-outline a {
+    border-bottom: none;
+    color: #111111;
+    font-weight: 600;
+}
+
+.article-outline a:hover {
+    border-bottom: 1px solid var(--accent-color);
+}
+
+.article-outline span {
+    display: block;
+    margin-top: 0.12rem;
+    color: var(--accent-color);
+    font-size: 0.86rem;
+    line-height: 1.45;
+}
+
 .article-body h2 {
     margin-top: 70px;
     margin-bottom: 18px;
