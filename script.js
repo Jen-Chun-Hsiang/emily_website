@@ -188,6 +188,7 @@ const initMotionToggle = () => {
     const apply = (enabled) => {
         button.textContent = enabled ? 'Pause background motion' : 'Resume background motion';
         button.dataset.motionState = enabled ? 'running' : 'paused';
+        button.setAttribute('aria-pressed', String(enabled));
         button.title = enabled
             ? 'Pause the moving background'
             : 'Resume the moving background';
