@@ -1,14 +1,12 @@
 // Shared background motion preference, persisted across pages.
 const motionState = (() => {
     const STORAGE_KEY = 'background-motion';
-    const LEGACY_STORAGE_KEY = 'bg-motion';
     const prefersReducedMotion = window.matchMedia
         && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const read = () => {
         try {
-            const stored = localStorage.getItem(STORAGE_KEY)
-                || localStorage.getItem(LEGACY_STORAGE_KEY);
+            const stored = localStorage.getItem(STORAGE_KEY);
             if (stored === 'on') return true;
             if (stored === 'off') return false;
         } catch (e) { /* storage may be unavailable */ }
@@ -24,7 +22,6 @@ const motionState = (() => {
             enabled = value;
             try {
                 localStorage.setItem(STORAGE_KEY, value ? 'on' : 'off');
-                localStorage.removeItem(LEGACY_STORAGE_KEY);
             } catch (e) { /* ignore */ }
             listeners.forEach((fn) => fn(value));
         },

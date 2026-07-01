@@ -346,10 +346,11 @@ a:hover {
 }
 
 .article-header h1 {
-    max-width: 760px;
-    font-size: clamp(2.5rem, 7vw, 5.1rem);
-    line-height: 0.96;
+    max-width: 100%;
+    font-size: clamp(2.35rem, 5.6vw, 4.15rem);
+    line-height: 0.92;
     letter-spacing: -0.06em;
+    text-wrap: balance;
 }
 
 .article-dek {
@@ -411,23 +412,6 @@ a:hover {
 .article-section.has-selected-ref {
     background: rgba(0, 0, 0, 0.025);
     box-shadow: 0 0 0 12px rgba(0, 0, 0, 0.025);
-}
-
-.section-evidence {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 8px;
-    margin: -4px 0 24px;
-    color: var(--accent-color);
-    font-size: 0.82rem;
-}
-
-.section-evidence span {
-    margin-right: 4px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
 }
 
 .ref-chip,
@@ -678,16 +662,13 @@ a:hover {
     }
 
     .article-header h1 {
-        font-size: 2.65rem;
+        font-size: 2.35rem;
     }
 
     .article-body {
         font-size: 1rem;
     }
 
-    .section-evidence {
-        gap: 6px;
-    }
 }
 
 @media (prefers-reduced-motion: reduce) {
