@@ -6,7 +6,7 @@
 - [Blog](https://emilyhsiang.com/blog.html) - Essays from Emily Hsiang on AI systems, cognition, research workflows, modeling, and founder work.
 
 ## Articles
-- [Will We Still Be Smarter Than Chatbots by 2030?](https://emilyhsiang.com/articles/will-we-still-be-smarter-than-chatbots-by-2030.html) - Long-form essay arguing that practical human-machine parity should be understood as a crossing point between improving machine capability and declining unaided human cognition, with paragraph-linked references for LLM offloading, metacognition, cognitive effort, plasticity, and deep reading.
+- [Will We Still Be Smarter Than Chatbots by 2030?](https://emilyhsiang.com/articles/will-we-still-be-smarter-than-chatbots-by-2030.html) - Long-form essay arguing that practical human-machine parity should be understood as a crossing point between improving machine capability and changing patterns of unaided human cognition, with paragraph-linked references for LLM offloading, metacognition, cognitive effort, plasticity, and deep reading.
 - Article terminology note: in this essay, "AI" means consumer-facing generative AI and large language model assistants such as ChatGPT, Claude, and Gemini, not machine learning as a whole.
 
 ## Current Work
