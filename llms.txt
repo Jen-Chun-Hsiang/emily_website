@@ -18,6 +18,7 @@
 - [Google Scholar](https://scholar.google.com/citations?user=z46FTv4AAAAJ&hl=en) - Publication profile for Jen-Chun Hsiang / Emily Hsiang.
 
 ## Research Background
+- [Explicit disentanglement of neural descriptive factors using the query-based neural activity prediction (qNAP) model](https://static1.squarespace.com/static/6102ca347474c263c40150cd/t/6894fc7f5fb1aa4a65a2fc1e/1754594431324/Cosyne+2025+Main+Meeting+Program+Book.pdf#page=151) - COSYNE, 2025 conference poster.
 - [Distributed feature representations of natural stimuli across parallel retinal pathways](https://www.nature.com/articles/s41467-024-46348-y) - Nature Communications, 2024.
 - [Dendritic and parallel processing of visual threats in the retina control defensive responses](https://advances.sciencemag.org/content/6/47/eabc9920.abstract) - Science Advances, 2020.
 - [Efficient Coding by Midget and Parasol Ganglion Cells in the Human Retina](https://www.sciencedirect.com/science/article/pii/S0896627320303998) - Neuron, 2020.
