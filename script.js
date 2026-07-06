@@ -456,3 +456,111 @@ const initReferenceRail = () => {
 };
 
 initReferenceRail();
+
+const initReviewArtifactModal = () => {
+    const reviewBody = document.querySelector('.review-body');
+    if (!reviewBody) return;
+
+    const modal = document.createElement('div');
+    modal.className = 'artifact-modal';
+    modal.innerHTML = `
+        <div class="artifact-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="artifact-modal-title">
+            <div class="artifact-modal-header">
+                <p id="artifact-modal-title" class="artifact-modal-title">Expanded view</p>
+                <button class="artifact-modal-close" type="button" aria-label="Close expanded view">×</button>
+            </div>
+            <div class="artifact-modal-body"></div>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    const title = modal.querySelector('.artifact-modal-title');
+    const body = modal.querySelector('.artifact-modal-body');
+    const closeButton = modal.querySelector('.artifact-modal-close');
+    let lastTrigger = null;
+
+    const closeModal = () => {
+        if (!modal.classList.contains('is-open')) return;
+
+        modal.classList.remove('is-open');
+        document.body.classList.remove('artifact-modal-open');
+        body.innerHTML = '';
+
+        if (lastTrigger instanceof HTMLElement) {
+            lastTrigger.focus();
+        }
+    };
+
+    const openModal = (sourceNode, label, trigger) => {
+        const clone = sourceNode.cloneNode(true);
+        clone.querySelectorAll('.artifact-expand').forEach((button) => button.remove());
+        clone.classList.remove('review-artifact');
+
+        title.textContent = label;
+        body.innerHTML = '';
+        body.appendChild(clone);
+        lastTrigger = trigger;
+
+        modal.classList.add('is-open');
+        document.body.classList.add('artifact-modal-open');
+        closeButton.focus();
+    };
+
+    const ensureTableWrapper = (table) => {
+        if (table.parentElement?.classList.contains('review-table-wrap')) {
+            return table.parentElement;
+        }
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'review-table-wrap';
+        table.parentNode.insertBefore(wrapper, table);
+        wrapper.appendChild(table);
+        return wrapper;
+    };
+
+    const addExpandButton = (host, sourceNode, label) => {
+        if (host.classList.contains('review-artifact')) return;
+
+        host.classList.add('review-artifact');
+
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'artifact-expand';
+        button.textContent = '⤢';
+        button.title = `Expand ${label.toLowerCase()}`;
+        button.setAttribute('aria-label', `Expand ${label.toLowerCase()}`);
+        button.addEventListener('click', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            openModal(sourceNode, label, button);
+        });
+
+        host.appendChild(button);
+    };
+
+    Array.from(reviewBody.querySelectorAll('figure.fig')).forEach((figure, index) => {
+        const label = figure.querySelector('.fno')?.textContent?.trim() || `Figure ${index + 1}`;
+        addExpandButton(figure, figure, label);
+    });
+
+    Array.from(reviewBody.querySelectorAll('.eq')).forEach((equation, index) => {
+        addExpandButton(equation, equation, `Equation ${index + 1}`);
+    });
+
+    Array.from(reviewBody.querySelectorAll('table.tbl')).forEach((table, index) => {
+        const wrapper = ensureTableWrapper(table);
+        addExpandButton(wrapper, wrapper, `Table ${index + 1}`);
+    });
+
+    closeButton.addEventListener('click', closeModal);
+    modal.addEventListener('click', (event) => {
+        if (event.target === modal) closeModal();
+    });
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') closeModal();
+    });
+};
+
+initReviewArtifactModal();

@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Making the non-differentiable differentiable | Emily Hsiang</title>
+    <meta name="author" content="Emily Hsiang">
+    <meta name="description" content="An illustrated review of how scientific ML and differentiable simulation push gradients through discrete choices, non-smooth physics, and black-box components, with a practical gradient-audit lens for inverse and physics-informed workflows.">
+    <meta name="robots" content="index,follow,max-image-preview:large">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="canonical" href="https://emilyhsiang.com/articles/making-the-non-differentiable-differentiable.html">
+    <meta property="og:type" content="article">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:site_name" content="Emily Hsiang">
+    <meta property="og:title" content="Making the non-differentiable differentiable">
+    <meta property="og:description" content="An illustrated review of how scientific ML and differentiable simulation push gradients through discrete choices, non-smooth physics, and black-box components, with a practical gradient-audit lens for inverse and physics-informed workflows.">
+    <meta property="og:url" content="https://emilyhsiang.com/articles/making-the-non-differentiable-differentiable.html">
+    <meta property="og:image" content="https://emilyhsiang.com/assets/images/eh-cropped.png">
+    <meta property="og:image:width" content="904">
+    <meta property="og:image:height" content="1024">
+    <meta property="og:image:alt" content="Portrait of Emily Hsiang">
+    <meta property="article:author" content="Emily Hsiang">
+    <meta property="article:section" content="Scientific Machine Learning">
+    <meta property="article:tag" content="differentiable simulation">
+    <meta property="article:tag" content="scientific machine learning">
+    <meta property="article:tag" content="inverse problems">
+    <meta property="article:tag" content="physics-informed modeling">
+    <meta property="article:modified_time" content="2026-07-05">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Making the non-differentiable differentiable">
+    <meta name="twitter:description" content="An illustrated review of how scientific ML and differentiable simulation push gradients through discrete choices, non-smooth physics, and black-box components, with a practical gradient-audit lens for inverse and physics-informed workflows.">
+    <meta name="twitter:image" content="https://emilyhsiang.com/assets/images/eh-cropped.png">
+    <meta name="twitter:image:alt" content="Portrait of Emily Hsiang">
+    <link rel="icon" type="image/png" href="../assets/images/eh-cropped.png">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "@id": "https://emilyhsiang.com/articles/making-the-non-differentiable-differentiable.html#article",
+        "url": "https://emilyhsiang.com/articles/making-the-non-differentiable-differentiable.html",
+        "headline": "Making the non-differentiable differentiable",
+        "description": "An illustrated review of how scientific ML and differentiable simulation push gradients through discrete choices, non-smooth physics, and black-box components, with a practical gradient-audit lens for inverse and physics-informed workflows.",
+        "dateCreated": "2026-07-05",
+        "dateModified": "2026-07-05",
+        "creativeWorkStatus": "Public review",
+        "inLanguage": "en-US",
+        "image": {
+            "@type": "ImageObject",
+            "url": "https://emilyhsiang.com/assets/images/eh-cropped.png",
+            "width": 904,
+            "height": 1024,
+            "caption": "Portrait of Emily Hsiang"
+        },
+        "keywords": [
+            "differentiable simulation",
+            "scientific machine learning",
+            "physics-informed modeling",
+            "gradient estimation",
+            "inverse problems",
+            "neural operators",
+            "flow matching"
+        ],
+        "articleSection": [
+            "Scientific machine learning",
+            "Differentiable simulation",
+            "Physics-informed modeling",
+            "Inverse problems"
+        ],
+        "author": {
+            "@type": "Person",
+            "@id": "https://emilyhsiang.com/#person",
+            "name": "Emily Hsiang",
+            "url": "https://emilyhsiang.com/"
+        },
+        "publisher": {
+            "@type": "Person",
+            "@id": "https://emilyhsiang.com/#person",
+            "name": "Emily Hsiang"
+        },
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https://emilyhsiang.com/articles/making-the-non-differentiable-differentiable.html"
+        },
+        "isPartOf": {
+            "@type": "Blog",
+            "@id": "https://emilyhsiang.com/blog.html#blog"
+        }
+    }
+    </script>
+</head>
+<body class="article-page">
+    <canvas id="matrix-bg"></canvas>
+
+    <nav class="navbar">
+        <a href="../index.html" class="nav-brand">Emily Hsiang</a>
+        <div class="nav-links">
+            <a href="../index.html">Home</a>
+            <a href="../index.html#attryx">Attryx</a>
+            <a href="../blog.html">Blog</a>
+            <button class="background-motion-toggle" type="button" aria-pressed="true">Pause background motion</button>
+        </div>
+    </nav>
+
+    <main class="article-shell">
+        <article class="article-card review-article-card">
+            <a class="back-link" href="../blog.html">Back to Blog</a>
+            <header class="article-header">
+                <p class="eyebrow">Illustrated Review</p>
+                <h1>Making the non-differentiable differentiable</h1>
+                <p class="article-dek">How gradients have been pushed through the hard parts of simulators and ML pipelines, with a practical gradient-audit lens for scientific ML, inverse problems, and physics-informed workflows.</p>
+                <p class="article-meta">By Emily Hsiang · Public review opened <time datetime="2026-07-05">2026-07-05</time> · Illustrated review</p>
+            </header>
+
+            <div class="article-body review-body">
+<section class="article-section" id="why-differentiability-is-the-organizing-goal" data-refs="8,12,13,26,36">
+  <p class="eyebrow">01: Motivation</p>
+  <h2>Why differentiability is the organizing goal</h2>
+  <p>Modern machine learning is, at bottom, gradient descent on a computational graph. A discrete choice, hard threshold, collision test, or external solver can block that graph and separate what can be <em>learned end-to-end</em> from what must be hand-tuned, sampled, or bolted on afterward. The whole enterprise reviewed here is the project of dissolving those walls.</p>
+  <p data-refs="1,5" data-ref-label="Differentiable simulators and inverse workflows">A differentiable simulator computes gradients of physical states with respect to inputs such as control signals, poses, material properties, and boundary conditions. That enables end-to-end optimization and tight coupling with learning and control. The payoff is threefold: <strong>inverse problems</strong> (recover parameters from observations) become gradient descent problems, reducing expensive black-box search; <strong>control and design</strong> can be optimized directly through the physics; and <strong>hybrid solvers</strong> become possible, where classical numerical methods run alongside trainable neural components and the gradient flows through the whole pipeline. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-1" data-ref-link="1" aria-label="Show reference 1">1</a> <a class="ref-chip inline-ref" href="#ref-5" data-ref-link="5" aria-label="Show reference 5">5</a></span></p>
+  <p>Two senses of "differentiable" are worth separating up front, because most confusion in this field comes from conflating them.</p>
+  <p data-refs="8,26,36" data-ref-label="When a gradient is uninformative"><strong>Differentiable in principle</strong> means a gradient exists almost everywhere and autodiff will hand you a number. That number can still be useless. Three everyday examples, all of which technically "have a gradient": <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-8" data-ref-link="8" aria-label="Show reference 8">8</a> <a class="ref-chip inline-ref" href="#ref-26" data-ref-link="26" aria-label="Show reference 26">26</a> <a class="ref-chip inline-ref" href="#ref-36" data-ref-link="36" aria-label="Show reference 36">36</a></span></p>
+  <ul>
+    <li>A hard threshold or mask, <code>m = (x &gt; 0)</code>. Its derivative is exactly <strong>zero</strong> everywhere it is defined, so autodiff faithfully returns 0. That valid number carries no direction for changing <code>x</code>. Step along it and the optimizer stays put.</li>
+    <li>A long <strong>chaotic</strong> rollout, such as a many-step pendulum or turbulent flow. A number comes back, often <strong>exploded</strong> or vanished: tiny perturbations compound, so the direction becomes wildly amplified and unhelpful.</li>
+    <li>A single-sample <strong>score-function</strong> estimate. It is unbiased <em>on average</em>. On any given step, its <strong>variance</strong> is so large that the returned direction is nearly random.</li>
+  </ul>
+  <p data-refs="12,13" data-ref-label="Relaxations that turn unusable gradients into usable ones"><strong>Differentiable in a useful way</strong> means the gradient is <em>informative</em>: nonzero where you need to move, finite, low-variance, and well-conditioned enough that stepping along it actually lowers the loss. Replace that hard threshold with a smooth sigmoid and the gradient now points toward the decision boundary; an MSE loss on a smooth model gives a gradient that reliably reduces error. Almost every tool in Section 3 is a device for turning a case from the first list into a case from the second. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-12" data-ref-link="12" aria-label="Show reference 12">12</a> <a class="ref-chip inline-ref" href="#ref-13" data-ref-link="13" aria-label="Show reference 13">13</a></span></p>
+
+  <figure class="fig"><div class="figsvg">
+  <svg viewBox="0 0 680 230" role="img"><title>Two senses of differentiable</title><desc>Four functions that all have a gradient. The first three produce unusable gradients: a flat staircase with zero slope, a cliff with infinite slope, and a noisy signal whose gradient estimate has high variance. The fourth, a smooth bowl, gives an informative gradient that points toward the minimum.</desc>
+  <defs><marker id="a0" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+
+  <line x1="25" y1="56" x2="495" y2="56" stroke="#B4B2A9" stroke-width="1"/>
+  <line x1="25" y1="56" x2="25" y2="62" stroke="#B4B2A9" stroke-width="1"/><line x1="495" y1="56" x2="495" y2="62" stroke="#B4B2A9" stroke-width="1"/>
+  <text class="ts" x="260" y="46" text-anchor="middle" fill="#854F0B">differentiable in principle: unusable gradient</text>
+  <line x1="505" y1="56" x2="655" y2="56" stroke="#B4B2A9" stroke-width="1"/>
+  <line x1="505" y1="56" x2="505" y2="62" stroke="#B4B2A9" stroke-width="1"/><line x1="655" y1="56" x2="655" y2="62" stroke="#B4B2A9" stroke-width="1"/>
+  <text class="ts" x="580" y="46" text-anchor="middle" fill="#0F6E56">useful</text>
+  <line x1="500" y1="72" x2="500" y2="210" stroke="#B4B2A9" stroke-width="0.5" stroke-dasharray="4 4"/>
+
+  <line x1="33" y1="165" x2="173" y2="165" stroke="#B4B2A9" stroke-width="0.5"/>
+  <polyline points="40,150 80,150 80,126 118,126 118,102 158,102" fill="none" stroke="#BA7517" stroke-width="2.5" stroke-linejoin="round"/>
+  <text class="th" x="100" y="188" text-anchor="middle">∂ = 0</text><text class="ts" x="100" y="204" text-anchor="middle">flat: no direction</text>
+
+  <line x1="193" y1="165" x2="333" y2="165" stroke="#B4B2A9" stroke-width="0.5"/>
+  <polyline points="200,152 250,152 250,92 320,92" fill="none" stroke="#BA7517" stroke-width="2.5" stroke-linejoin="round"/>
+  <text class="th" x="260" y="188" text-anchor="middle">∂ → ∞</text><text class="ts" x="260" y="204" text-anchor="middle">cliff: blows up</text>
+
+  <line x1="353" y1="128" x2="493" y2="128" stroke="#B4B2A9" stroke-width="0.5"/>
+  <polyline points="360,128 372,150 384,104 396,146 408,108 420,150 432,106 444,144 456,110 468,148 480,124" fill="none" stroke="#BA7517" stroke-width="1.6"/>
+  <text class="th" x="420" y="188" text-anchor="middle">high variance</text><text class="ts" x="420" y="204" text-anchor="middle">random direction</text>
+
+  <path d="M520,100 Q580,170 640,100" fill="none" stroke="#0F6E56" stroke-width="2.5"/>
+  <circle cx="534" cy="118" r="4" fill="#0F6E56"/>
+  <line x1="540" y1="126" x2="566" y2="158" stroke="#0F6E56" stroke-width="2" marker-end="url(#a0)"/>
+  <text class="th" x="580" y="188" text-anchor="middle">points downhill</text><text class="ts" x="580" y="204" text-anchor="middle">optimization works</text>
+  </svg></div>
+  <figcaption><span class="fno">Fig 1</span>Four functions that all "have a gradient." In the first three, the slope is zero, infinite, or drowned in variance, so autodiff returns a number with no useful optimization direction. The smooth case (right) gives an informative gradient. The tools of Section 3 move the left three cases rightward.</figcaption>
+  </figure>
+  <p>Much of the sophistication in the field targets the second condition. A function can be technically differentiable and still yield gradients that are worthless for optimization.</p>
+</section>
+
+                <div class="article-disclaimer">
+                    <strong>Scope note:</strong> This review is a field guide to making gradients useful across scientific ML, differentiable simulation, physics-informed learning, inverse problems, control, data assimilation, and generative workflows. Inverse design appears as one recurring application. The focus is the shared machinery underneath: when gradients become informative, where they become fragile, and how to audit them before trusting an optimized result.
+                </div>
+
+                <nav class="article-outline" aria-label="Review sections">
+                    <p class="article-outline-label">Sections</p>
+                    <ul>
+                        <li><a href="#why-differentiability-is-the-organizing-goal">Motivation</a><span>Why useful differentiability is the organizing idea beyond the mathematical property.</span></li>
+                        <li><a href="#the-historical-and-architectural-arc">Lineage</a><span>How autodiff, neural operators, diffusion, and simulators built the current toolkit.</span></li>
+                        <li><a href="#the-hard-components-and-the-tools-for-each">Toolkit</a><span>The concrete tools for discrete, non-smooth, equation-defined, and black-box components.</span></li>
+                        <li><a href="#gradient-audit">Gradient Audit</a><span>How to check whether the differentiable tool is telling the truth.</span></li>
+                        <li><a href="#benchmarks-and-how-to-judge-success">Evaluation</a><span>Benchmarks and metrics that catch failures ordinary accuracy numbers miss.</span></li>
+                        <li><a href="#data-and-the-estimators">Data And Estimators</a><span>How sample count, noise, and discrete capacity change the bias-variance picture.</span></li>
+                        <li><a href="#engineering-the-tools">Engineering</a><span>The practical levers that make differentiable methods actually train.</span></li>
+                        <li><a href="#physics-informed-modeling-from-noisy-sparse-experimental-data">Target Regime</a><span>Where sparse, noisy experiments, identifiability, and uncertainty become the real story.</span></li>
+                        <li><a href="#the-honest-ledger">The Honest Ledger</a><span>Where simpler baselines beat differentiable physics ML.</span></li>
+                        <li><a href="#open-problems">Open Problems</a><span>The current boundaries: contact, chaos, ill-posedness, multiphysics, and cost.</span></li>
+                        <li><a href="#a-compact-decision-guide">Practitioner Guide</a><span>A compact routing table for choosing tools and knowing when to stop.</span></li>
+                    </ul>
+                </nav>
+
+<section class="article-section" id="the-historical-and-architectural-arc" data-refs="1,2,3,4,5,6,12,13,19,20,21">
+  <p class="eyebrow">02: Lineage</p>
+  <h2>The historical and architectural arc</h2>
+
+  <h3>Foundations: autodiff and differentiable programming</h3>
+  <p data-refs="1,2" data-ref-label="Autodiff and differentiable programming foundations">The substrate for everything else is automatic differentiation (AD) and the broader "differentiable programming" paradigm: entire pipelines beyond neural nets are implemented so reverse-mode AD can backpropagate through them. This fused backpropagation (from deep learning) with adjoint methods (from the numerical solution of differential equations). Once solvers themselves are written in AD-capable frameworks (JAX, PyTorch, Julia), the boundary between "simulator" and "model" begins to dissolve. Traditional engines resisted this because they often estimate gradients by <strong>finite differences</strong> (incompatible with backprop, poorly scaling) and use explicit integration with penalty contact (non-smooth). Accurate, cheap gradients arrived when solvers exposed differentiable internals and avoided finite-difference probes from outside. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-1" data-ref-link="1" aria-label="Show reference 1">1</a> <a class="ref-chip inline-ref" href="#ref-2" data-ref-link="2" aria-label="Show reference 2">2</a></span></p>
+
+  <h3>The generative era (VAE / GAN): the discrete-sampling problem</h3>
+  <p data-refs="12,13" data-ref-label="Discrete latents and the generative-era toolkit">The first wall hit at scale was <strong>stochastic nodes with discrete latent variables</strong>. Categorical variables are the natural way to represent discrete structure, yet a categorical sample blocks backpropagation. This motivated most of the gradient-estimation toolkit in Section 3: score-function/REINFORCE (unbiased, high variance), reparameterization (low variance, originally continuous-only), and continuous relaxations such as the Gumbel-Softmax / Concrete distribution (Jang et al.; Maddison et al., 2016), which propagated into VAEs, discrete-sequence GANs, neural architecture search, and combinatorial optimization. The era's lasting contribution was a durable set of estimators. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-12" data-ref-link="12" aria-label="Show reference 12">12</a> <a class="ref-chip inline-ref" href="#ref-13" data-ref-link="13" aria-label="Show reference 13">13</a></span></p>
+
+  <h3>The transformer / operator-learning era</h3>
+  <p data-refs="19,20" data-ref-label="Neural operators as differentiable surrogates">In parallel, the transformer became the dominant inductive-bias-light backbone for neural surrogates. More consequentially for physics, <strong>neural operators</strong> arose, learning function-to-function mappings (input field → solution field): <strong>DeepONet</strong> (Lu et al.), a branch/trunk decomposition grounded in an operator-approximation theorem; and the <strong>Fourier Neural Operator</strong> (Li et al.), a spectral method, generally the strongest baseline across PDE benchmarks that degrades where sharp discontinuities create Gibbs artifacts. These are natively differentiable, so the question shifts from "does the gradient exist" to "does the learned operator respect physics and stay stable under rollout." <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-19" data-ref-link="19" aria-label="Show reference 19">19</a> <a class="ref-chip inline-ref" href="#ref-20" data-ref-link="20" aria-label="Show reference 20">20</a></span></p>
+
+  <h3>The diffusion / score-based / flow-matching era</h3>
+  <p data-refs="21" data-ref-label="Diffusion, score-based models, and flow matching in scientific ML">The current frontier for generative physics modeling is diffusion and its relatives (VAE → GAN → normalizing flows → score-based diffusion → flow matching / stochastic interpolants). In scientific ML these serve as fast surrogates (calorimeter-shower and particle-physics fast simulation), probabilistic field generation and reconstruction (turbulence, PDE emulation, diffusion-based ensemble weather forecasting, score-based data assimilation), and physics-informed / hard-constrained sampling. The conceptual shift is to reframe simulation as <em>sampling from a learned distribution</em>, a natural fit for physics that is genuinely stochastic or under-determined by sparse data. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-21" data-ref-link="21" aria-label="Show reference 21">21</a></span></p>
+
+  <h3>The differentiable-simulator arc (running in parallel)</h3>
+  <p data-refs="3,4,5,6,7" data-ref-label="Differentiable simulator platforms and domains">Independently, a simulator-centric line matured: analytical LCP-contact gradients for simple rigid bodies (de Avila Belbute-Peres et al., 2018; Degrave et al., 2019); high-DOF and deformable systems including fluids, elastic bodies, cloth, and soft multi-body dynamics (Hu et al.; Liang et al.; Qiao et al.); end-to-end perception-to-physics via differentiable rendering + simulation (Jatavallabhula et al., 2021); and platform-level differentiability (MuJoCo XLA, Tiny Differentiable Simulator, Warp, DiffPD, Nimble, Genesis), plus domain codes for accelerators (Cheetah), subsurface flow (DPFEHM), neuroscience (Jaxley), and detectors. The two arcs meet wherever a learned component and a physics solver share one gradient path. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-3" data-ref-link="3" aria-label="Show reference 3">3</a> <a class="ref-chip inline-ref" href="#ref-4" data-ref-link="4" aria-label="Show reference 4">4</a> <a class="ref-chip inline-ref" href="#ref-5" data-ref-link="5" aria-label="Show reference 5">5</a> <a class="ref-chip inline-ref" href="#ref-6" data-ref-link="6" aria-label="Show reference 6">6</a> <a class="ref-chip inline-ref" href="#ref-7" data-ref-link="7" aria-label="Show reference 7">7</a></span></p>
+</section>
+
+<section class="article-section" id="the-hard-components-and-the-tools-for-each" data-refs="6,8,10,11,12,13,14,15,16,17,18,21,27">
+  <p class="eyebrow">03: Toolkit</p>
+  <h2>The hard components and the tools for each, illustrated</h2>
+  <p>Real pipelines rest on algorithmic components implementing <strong>discrete decisions</strong> or relying on <strong>discrete intermediate structures</strong>; these break gradient flow, and the fix is a differentiable proxy via smoothing or relaxation. Every tool below is really a different answer to one question: <em>what do I send backward when the forward op has no usable slope?</em> That shared problem looks like this:</p>
+
+  <figure class="fig"><div class="figsvg">
+  <svg viewBox="0 0 680 230" role="img"><title>The gradient wall</title><desc>A chain from parameters through a network to a discrete step to a loss. The forward pass flows right; on the backward pass the gradient reaches the discrete step and dies there because its derivative is zero almost everywhere, so upstream parameters receive no update.</desc>
+  <defs><marker id="a1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <text class="ts" x="40" y="34">Forward pass →</text>
+  <g class="c-gray"><rect x="40" y="46" width="125" height="54" rx="8"/><text class="th" x="102" y="66" text-anchor="middle" dominant-baseline="central">Inputs θ</text><text class="ts" x="102" y="84" text-anchor="middle" dominant-baseline="central">parameters</text></g>
+  <g class="c-teal"><rect x="190" y="46" width="125" height="54" rx="8"/><text class="th" x="252" y="66" text-anchor="middle" dominant-baseline="central">Network f(θ)</text><text class="ts" x="252" y="84" text-anchor="middle" dominant-baseline="central">differentiable</text></g>
+  <g class="c-coral"><rect x="340" y="46" width="125" height="54" rx="8" stroke-width="1"/><text class="th" x="402" y="66" text-anchor="middle" dominant-baseline="central">z = hard(a)</text><text class="ts" x="402" y="84" text-anchor="middle" dominant-baseline="central">discrete step</text></g>
+  <g class="c-gray"><rect x="490" y="46" width="125" height="54" rx="8"/><text class="th" x="552" y="73" text-anchor="middle" dominant-baseline="central">Loss L(z)</text></g>
+  <line x1="165" y1="73" x2="188" y2="73" stroke="#1D9E75" stroke-width="1.5" marker-end="url(#a1)"/>
+  <line x1="315" y1="73" x2="338" y2="73" stroke="#1D9E75" stroke-width="1.5" marker-end="url(#a1)"/>
+  <line x1="465" y1="73" x2="488" y2="73" stroke="#1D9E75" stroke-width="1.5" marker-end="url(#a1)"/>
+  <line x1="552" y1="100" x2="552" y2="150" stroke="#888780" stroke-width="0.5"/>
+  <line x1="552" y1="150" x2="412" y2="150" stroke="#639922" stroke-width="1.5" marker-end="url(#a1)"/>
+  <text class="ts" x="482" y="142" text-anchor="middle">∂L/∂z arrives ✓</text>
+  <line x1="402" y1="136" x2="402" y2="168" stroke="#E24B4A" stroke-width="2" stroke-dasharray="3 3"/>
+  <text class="th" x="402" y="150" text-anchor="middle" dominant-baseline="central" fill="#E24B4A">✕</text>
+  <line x1="392" y1="150" x2="106" y2="150" stroke="#B4B2A9" stroke-width="1.5" stroke-dasharray="4 4" marker-end="url(#a1)"/>
+  <line x1="102" y1="150" x2="102" y2="100" stroke="#B4B2A9" stroke-width="0.5" stroke-dasharray="4 4"/>
+  <text class="ts" x="402" y="192" text-anchor="middle" fill="#A32D2D">∂z/∂a = 0 almost everywhere</text>
+  <text class="ts" x="230" y="212" text-anchor="middle">θ receives no update</text>
+  </svg></div>
+  <figcaption><span class="fno">Fig 2</span>The shared problem. A discrete step (<code>argmax</code>, sample, round) has zero derivative almost everywhere, so the gradient dies mid-graph and upstream parameters receive no update.</figcaption>
+  </figure>
+
+  <h3>Tool 1: Continuous relaxation (Gumbel-Softmax / Concrete)</h3>
+  <p>Send a relaxed vector forward. First <strong>reparameterize</strong> the randomness out of the way with the Gumbel-Max trick (a categorical draw equals <code>argmaxᵢ(log πᵢ + gᵢ)</code> with fixed Gumbel noise <code>gᵢ = −log(−log uᵢ)</code>), then <strong>relax</strong> the hard argmax into a temperature-scaled softmax:</p>
+  <div class="eq">y<sub>i</sub> = exp((log π<sub>i</sub> + g<sub>i</sub>)/τ) ⁄ Σ<sub>j</sub> exp((log π<sub>j</sub> + g<sub>j</sub>)/τ) &nbsp; <span class="lbl">τ → 0 ⇒ one-hot · τ large ⇒ uniform</span></div>
+  <p data-refs="12,13,14" data-ref-label="Gumbel-Softmax and categorical relaxations">The temperature τ is the dial between a smooth blur and a near-discrete sample. It is biased (temperature-dependent), low-variance, and standard for categorical latents you control. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-12" data-ref-link="12" aria-label="Show reference 12">12</a> <a class="ref-chip inline-ref" href="#ref-13" data-ref-link="13" aria-label="Show reference 13">13</a> <a class="ref-chip inline-ref" href="#ref-14" data-ref-link="14" aria-label="Show reference 14">14</a></span></p>
+  <p class="lin"><b>In the lineage</b>The generative (VAE / GAN) era invented this for discrete latents, where categorical draws block ordinary backprop. The same trick carried into hard attention and neural-architecture search in the transformer era.</p>
+
+  <figure class="fig"><div class="figsvg">
+  <svg viewBox="0 0 680 215" role="img"><title>Gumbel-Softmax temperature</title><desc>Three bar panels showing a softmax over four categories at temperature 2, 0.5, and near zero. As temperature falls the distribution sharpens from nearly uniform to a spike on the winning category.</desc>
+  <defs><marker id="a2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <text class="ts" x="340" y="24" text-anchor="middle">temperature τ decreases  →</text>
+  <line x1="150" y1="36" x2="540" y2="36" stroke="#888780" stroke-width="1" marker-end="url(#a2)"/>
+  <rect class="c-gray" x="56" y="153" width="28" height="27" rx="3"/><rect class="c-gray" x="96" y="159" width="28" height="21" rx="3"/><rect class="c-coral" x="136" y="151" width="28" height="29" rx="3"/><rect class="c-gray" x="176" y="161" width="28" height="19" rx="3"/>
+  <line x1="48" y1="180" x2="212" y2="180" stroke="#888780" stroke-width="0.5"/><text class="th" x="130" y="198" text-anchor="middle">τ = 2 (soft)</text>
+  <rect class="c-gray" x="266" y="166" width="28" height="14" rx="3"/><rect class="c-gray" x="306" y="170" width="28" height="10" rx="3"/><rect class="c-coral" x="346" y="118" width="28" height="62" rx="3"/><rect class="c-gray" x="386" y="170" width="28" height="10" rx="3"/>
+  <line x1="258" y1="180" x2="422" y2="180" stroke="#888780" stroke-width="0.5"/><text class="th" x="340" y="198" text-anchor="middle">τ = 0.5</text>
+  <rect class="c-gray" x="476" y="178" width="28" height="2" rx="1"/><rect class="c-gray" x="516" y="179" width="28" height="1" rx="1"/><rect class="c-coral" x="556" y="88" width="28" height="92" rx="3"/><rect class="c-gray" x="596" y="179" width="28" height="1" rx="1"/>
+  <line x1="468" y1="180" x2="632" y2="180" stroke="#888780" stroke-width="0.5"/><text class="th" x="550" y="198" text-anchor="middle">τ → 0 (≈ one-hot)</text>
+  </svg></div>
+  <figcaption><span class="fno">Fig 3</span>The same noisy logits at three temperatures. Lowering τ sharpens the softmax toward a true one-hot draw while staying differentiable throughout. Coral = the winning category.</figcaption>
+  </figure>
+
+  <h3>Tool 2: Straight-through estimator (STE)</h3>
+  <p>The cheapest trick, behind quantized networks and VQ-VAE, keeps the hard op in the forward pass so the network really sees a discrete <code>z</code>. On the way back, it substitutes a convenient derivative:</p>
+  <div class="eq">z = hard(a) &nbsp;(forward), &nbsp; ∂z/∂a := 1 &nbsp;(backward) &nbsp; ⇒ &nbsp; ∂L/∂a = ∂L/∂z</div>
+  <p data-refs="15,27" data-ref-label="Straight-through estimators and codebook-style discrete bottlenecks">Forward and backward literally disagree about what the op is. The estimator is biased, cheap, and often good enough. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-15" data-ref-link="15" aria-label="Show reference 15">15</a> <a class="ref-chip inline-ref" href="#ref-27" data-ref-link="27" aria-label="Show reference 27">27</a></span></p>
+  <p class="lin"><b>In the lineage</b>Straight-through lets VQ-VAE and VQ-GAN codebooks, the discrete tokenizers under modern transformers and latent diffusion, send a gradient to their encoder while emitting genuinely discrete tokens forward.</p>
+
+  <figure class="fig"><div class="figsvg">
+  <svg viewBox="0 0 680 235" role="img"><title>Straight-through estimator</title><desc>Two lanes. The forward lane sends input a through a hard discrete operation to discrete z. The backward lane sends the gradient through an identity, treating the derivative of the hard op as one.</desc>
+  <defs><marker id="a3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <text class="ts" x="40" y="38">Forward pass (hard)</text>
+  <g class="c-gray"><rect x="40" y="48" width="100" height="50" rx="8"/><text class="th" x="90" y="75" text-anchor="middle" dominant-baseline="central">input a</text></g>
+  <g class="c-coral"><rect x="200" y="48" width="160" height="50" rx="8" stroke-width="1"/><text class="th" x="280" y="66" text-anchor="middle" dominant-baseline="central">hard(a)</text><text class="ts" x="280" y="84" text-anchor="middle" dominant-baseline="central">round · sign · argmax</text></g>
+  <g class="c-gray"><rect x="420" y="48" width="120" height="50" rx="8"/><text class="th" x="480" y="75" text-anchor="middle" dominant-baseline="central">z (discrete)</text></g>
+  <line x1="140" y1="73" x2="198" y2="73" stroke="#1D9E75" stroke-width="1.5" marker-end="url(#a3)"/>
+  <line x1="360" y1="73" x2="418" y2="73" stroke="#1D9E75" stroke-width="1.5" marker-end="url(#a3)"/>
+  <line x1="280" y1="98" x2="280" y2="150" stroke="#888780" stroke-width="0.5" stroke-dasharray="4 4"/>
+  <text class="ts" x="292" y="128">same op, swapped derivative</text>
+  <g class="c-gray"><rect x="40" y="150" width="100" height="50" rx="8"/><text class="th" x="90" y="177" text-anchor="middle" dominant-baseline="central">∂L/∂a</text></g>
+  <g class="c-green"><rect x="200" y="150" width="160" height="50" rx="8" stroke-width="1"/><text class="th" x="280" y="168" text-anchor="middle" dominant-baseline="central">identity</text><text class="ts" x="280" y="186" text-anchor="middle" dominant-baseline="central">∂z/∂a := 1</text></g>
+  <g class="c-gray"><rect x="420" y="150" width="120" height="50" rx="8"/><text class="th" x="480" y="177" text-anchor="middle" dominant-baseline="central">∂L/∂z</text></g>
+  <line x1="418" y1="175" x2="362" y2="175" stroke="#639922" stroke-width="1.5" marker-end="url(#a3)"/>
+  <line x1="198" y1="175" x2="142" y2="175" stroke="#639922" stroke-width="1.5" marker-end="url(#a3)"/>
+  <text class="ts" x="40" y="224">Backward pass (identity)</text>
+  </svg></div>
+  <figcaption><span class="fno">Fig 4</span>The asymmetry <em>is</em> the method. Forward keeps the true discrete op; backward substitutes the identity so a gradient can pass through at all.</figcaption>
+  </figure>
+
+  <h3>Tools 3 &amp; 4: Score-function vs. reparameterization</h3>
+  <p>Both differentiate the same expectation, <code>∇θ E[f(z)]</code>. The fork determines what kind of downstream function you can use:</p>
+  <div class="eq">Score function:&nbsp; ∇<sub>θ</sub>J = E[ f(z) · ∇<sub>θ</sub> log p<sub>θ</sub>(z) ] &nbsp;&nbsp;&nbsp; Reparameterization:&nbsp; z = g(θ,ε),&nbsp; ∇<sub>θ</sub>J = E<sub>ε</sub>[ ∇<sub>z</sub>f · ∂g/∂θ ]</div>
+  <p data-refs="12,26" data-ref-label="Score-function versus reparameterization">Score-function treats <code>f</code> as a black box, so it works for non-differentiable rewards and pays for that flexibility with high variance. Reparameterization follows a smooth sample path, giving low variance when <code>f</code> is smooth and <code>p<sub>θ</sub></code> is reparameterizable (Gaussian VAEs; Gumbel-Softmax is the discrete cousin). <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-12" data-ref-link="12" aria-label="Show reference 12">12</a> <a class="ref-chip inline-ref" href="#ref-26" data-ref-link="26" aria-label="Show reference 26">26</a></span></p>
+  <p class="lin"><b>In the lineage</b>Reparameterization made the Gaussian VAE trainable and forms the mathematical core of diffusion, where every denoising step reparameterizes Gaussian noise. Score-function is the generative era's fallback for discrete or black-box outputs (early discrete-latent inference; sequence models trained on non-differentiable metrics), now reused to fine-tune diffusion models on non-differentiable rewards.</p>
+
+  <figure class="fig"><div class="figsvg">
+  <svg viewBox="0 0 680 280" role="img"><title>Score function versus reparameterization</title><desc>The gradient of an expectation splits into two routes: score function differentiates the distribution, works for any f, and has high variance; reparameterization differentiates the sample path, needs a differentiable f, and has low variance.</desc>
+  <defs><marker id="a4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <g class="c-gray"><rect x="230" y="40" width="220" height="54" rx="8"/><text class="th" x="340" y="60" text-anchor="middle" dominant-baseline="central">∇θ E[f(z)]</text><text class="ts" x="340" y="78" text-anchor="middle" dominant-baseline="central">gradient of an expectation</text></g>
+  <path d="M300 94 L300 118 L170 118 L170 138" fill="none" stroke="#888780" stroke-width="1.5" marker-end="url(#a4)"/>
+  <path d="M380 94 L380 118 L510 118 L510 138" fill="none" stroke="#888780" stroke-width="1.5" marker-end="url(#a4)"/>
+  <g class="c-amber"><rect x="60" y="140" width="220" height="54" rx="8" stroke-width="1"/><text class="th" x="170" y="160" text-anchor="middle" dominant-baseline="central">Score function</text><text class="ts" x="170" y="178" text-anchor="middle" dominant-baseline="central">differentiate the distribution</text></g>
+  <g class="c-teal"><rect x="400" y="140" width="220" height="54" rx="8" stroke-width="1"/><text class="th" x="510" y="160" text-anchor="middle" dominant-baseline="central">Reparameterization</text><text class="ts" x="510" y="178" text-anchor="middle" dominant-baseline="central">differentiate the sample</text></g>
+  <line x1="170" y1="194" x2="170" y2="212" stroke="#888780" stroke-width="0.5"/><line x1="510" y1="194" x2="510" y2="212" stroke="#888780" stroke-width="0.5"/>
+  <rect class="box" x="60" y="212" width="220" height="54" rx="8"/><text class="ts" x="170" y="232" text-anchor="middle" dominant-baseline="central">works for any f</text><text class="ts" x="170" y="250" text-anchor="middle" dominant-baseline="central" fill="#A32D2D">high variance</text>
+  <rect class="box" x="400" y="212" width="220" height="54" rx="8"/><text class="ts" x="510" y="232" text-anchor="middle" dominant-baseline="central">needs differentiable f</text><text class="ts" x="510" y="250" text-anchor="middle" dominant-baseline="central" fill="#0F6E56">low variance</text>
+  </svg></div>
+  <figcaption><span class="fno">Fig 5</span>The estimator fork. If <code>f</code> is a black box or discrete reward, only the left route is open; if <code>f</code> is smooth, the right route is far lower-variance.</figcaption>
+  </figure>
+
+  <h3>Tool 5: Randomized / stochastic smoothing</h3>
+  <p>The workhorse for contact and friction in physics, hard renderers, and black-box solvers averages the function over random input perturbations, convolving sharp edges into a smooth surface:</p>
+  <div class="eq">f<sub>σ</sub>(x) = E<sub>ε∼N(0,σ²)</sub>[ f(x+ε) ] = (f ∗ φ<sub>σ</sub>)(x), &nbsp;&nbsp; ∇f<sub>σ</sub>(x) = E<sub>ε</sub>[ f(x+ε) · ε ⁄ σ² ]</div>
+  <p data-refs="10,11" data-ref-label="Randomized smoothing for non-smooth and black-box components">Stein's identity gives the gradient of the smoothed function using only <em>evaluations</em> of <code>f</code>. No derivative of <code>f</code> is needed, so it works even where <code>f</code> is a flat staircase or a black box. Radius σ is the dial: σ → 0 recovers the sharp function; larger σ is smoother and more biased. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-10" data-ref-link="10" aria-label="Show reference 10">10</a> <a class="ref-chip inline-ref" href="#ref-11" data-ref-link="11" aria-label="Show reference 11">11</a></span></p>
+  <p class="lin"><b>In the lineage</b>This is the differentiable-simulator arc’s answer to contact and friction, and the route by which diffusion guidance reaches through a non-differentiable classifier or reward.</p>
+
+  <figure class="fig"><div class="figsvg">
+  <svg viewBox="0 0 680 272" role="img"><title>Randomized smoothing</title><desc>A sharp staircase function with flat, zero-gradient regions is averaged over Gaussian perturbations of the input, producing a smooth rising curve with a usable slope everywhere, including where the original was flat.</desc>
+  <text class="ts" x="70" y="52" text-anchor="middle">f(x)</text>
+  <line x1="70" y1="60" x2="70" y2="190" stroke="#888780" stroke-width="0.5"/><line x1="70" y1="190" x2="610" y2="190" stroke="#888780" stroke-width="0.5"/><text class="ts" x="618" y="194">x</text>
+  <polyline points="80,170 250,170 250,120 430,120 430,76 600,76" fill="none" stroke="#D85A30" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M80,168 C200,168 210,124 260,120 C330,118 340,80 420,78 L600,78" fill="none" stroke="#1D9E75" stroke-width="2"/>
+  <line x1="228" y1="150" x2="286" y2="98" stroke="#639922" stroke-width="2"/>
+  <line x1="322" y1="96" x2="278" y2="120" stroke="#888780" stroke-width="0.5" stroke-dasharray="3 3"/>
+  <text class="ts" x="326" y="92" fill="#3B6D11">usable gradient</text>
+  <path d="M218,210 C233,210 238,186 250,186 C262,186 267,210 282,210" fill="none" stroke="#7F77DD" stroke-width="1.5"/>
+  <line x1="250" y1="186" x2="250" y2="120" stroke="#7F77DD" stroke-width="0.5" stroke-dasharray="3 3"/>
+  <text class="ts" x="250" y="228" text-anchor="middle">average f over x+ε,  ε ~ N(0, σ²)</text>
+  <line x1="120" y1="252" x2="142" y2="252" stroke="#D85A30" stroke-width="2.5"/><text class="ts" x="148" y="256">hard f: flat, no gradient</text>
+  <line x1="380" y1="252" x2="402" y2="252" stroke="#1D9E75" stroke-width="2"/><text class="ts" x="408" y="256">smoothed f_σ: differentiable</text>
+  </svg></div>
+  <figcaption><span class="fno">Fig 6</span>Smoothing melts the staircase. The coral hard function has zero slope on every tread; its Gaussian-averaged version (teal) rises smoothly, giving a gradient that points uphill even where the original was flat.</figcaption>
+  </figure>
+
+  <h3>Tool 6: Implicit differentiation / adjoint</h3>
+  <p>The one that matters most for physics, because simulators run <em>many</em> steps. Whenever the output is the <em>solution</em> of an equation, such as a fixed point, an optimization optimum, or an integrated ODE/PDE, you can either <strong>unroll</strong> (backprop through every iteration, storing every state, memory growing with steps) or differentiate the solution implicitly. If <code>z*</code> satisfies <code>F(z*, θ) = 0</code>:</p>
+  <div class="eq">∂z*/∂θ = −( ∂F/∂z* )<sup>−1</sup> ( ∂F/∂θ ) &nbsp; <span class="lbl">one linear solve · constant memory · independent of iteration count</span></div>
+  <p data-refs="17,18" data-ref-label="Implicit differentiation and differentiable optimization layers">This powers neural ODEs, differentiable optimization layers (OptNet), and adjoint-method PDE solvers. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-17" data-ref-link="17" aria-label="Show reference 17">17</a> <a class="ref-chip inline-ref" href="#ref-18" data-ref-link="18" aria-label="Show reference 18">18</a></span></p>
+  <p class="lin"><b>In the lineage</b>It powers the transformer era's implicit-depth models (deep equilibrium networks, neural ODEs), the probability-flow ODE behind diffusion sampling, and adjoint PDE solvers in differentiable simulators. Use it for equation-defined outputs.</p>
+
+  <figure class="fig"><div class="figsvg">
+  <svg viewBox="0 0 680 252" role="img"><title>Unrolling versus implicit differentiation</title><desc>Left: unrolling stacks solver iterations and backpropagates through all of them, so memory grows with the number of steps. Right: implicit or adjoint differentiation runs the solver to a solution then obtains the gradient from a single linear solve, using constant memory.</desc>
+  <defs><marker id="a6" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+  <line x1="340" y1="36" x2="340" y2="240" stroke="#B4B2A9" stroke-width="0.5" stroke-dasharray="4 4"/>
+  <text class="ts" x="135" y="42" text-anchor="middle" fill="#854F0B">unroll the solver</text>
+  <g class="c-amber"><rect x="70" y="54" width="130" height="32" rx="6"/><text class="th" x="135" y="70" text-anchor="middle" dominant-baseline="central">z₀ (guess)</text></g>
+  <g class="c-amber"><rect x="70" y="96" width="130" height="32" rx="6"/><text class="th" x="135" y="112" text-anchor="middle" dominant-baseline="central">z₁</text></g>
+  <g class="c-amber"><rect x="70" y="138" width="130" height="32" rx="6"/><text class="th" x="135" y="154" text-anchor="middle" dominant-baseline="central">z₂</text></g>
+  <g class="c-amber"><rect x="70" y="180" width="130" height="32" rx="6" stroke-width="1"/><text class="th" x="135" y="196" text-anchor="middle" dominant-baseline="central">z* (solution)</text></g>
+  <line x1="135" y1="86" x2="135" y2="95" stroke="#1D9E75" stroke-width="1.5" marker-end="url(#a6)"/>
+  <line x1="135" y1="128" x2="135" y2="137" stroke="#1D9E75" stroke-width="1.5" marker-end="url(#a6)"/>
+  <line x1="135" y1="170" x2="135" y2="179" stroke="#1D9E75" stroke-width="1.5" marker-end="url(#a6)"/>
+  <line x1="200" y1="196" x2="225" y2="196" stroke="#BA7517" stroke-width="0.5"/>
+  <line x1="225" y1="196" x2="225" y2="70" stroke="#BA7517" stroke-width="1.5" stroke-dasharray="4 4" marker-end="url(#a6)"/>
+  <line x1="225" y1="70" x2="200" y2="70" stroke="#BA7517" stroke-width="0.5"/>
+  <text class="ts" x="135" y="234" text-anchor="middle" fill="#854F0B">memory grows with #steps</text>
+  <text class="ts" x="490" y="42" text-anchor="middle" fill="#0F6E56">implicit / adjoint</text>
+  <g class="c-teal"><rect x="380" y="54" width="220" height="44" rx="8" stroke-width="1"/><text class="th" x="490" y="72" text-anchor="middle" dominant-baseline="central">solver</text><text class="ts" x="490" y="88" text-anchor="middle" dominant-baseline="central">any number of steps</text></g>
+  <line x1="490" y1="98" x2="490" y2="116" stroke="#1D9E75" stroke-width="1.5" marker-end="url(#a6)"/>
+  <g class="c-gray"><rect x="440" y="118" width="100" height="32" rx="6"/><text class="th" x="490" y="134" text-anchor="middle" dominant-baseline="central">z*</text></g>
+  <line x1="490" y1="150" x2="490" y2="168" stroke="#1D9E75" stroke-width="1.5" marker-end="url(#a6)"/>
+  <g class="c-teal"><rect x="380" y="170" width="220" height="44" rx="8" stroke-width="1"/><text class="th" x="490" y="188" text-anchor="middle" dominant-baseline="central">one linear solve</text><text class="ts" x="490" y="204" text-anchor="middle" dominant-baseline="central">from F(z*, θ) = 0</text></g>
+  <text class="ts" x="490" y="234" text-anchor="middle" fill="#0F6E56">exact gradient, O(1) memory</text>
+  </svg></div>
+  <figcaption><span class="fno">Fig 7</span>Two ways to get a gradient through a solver. Unrolling (left) stores every iterate; implicit/adjoint (right) skips the internals and solves one linear system from the optimality condition.</figcaption>
+  </figure>
+
+  <h3>The taxonomy behind the pictures</h3>
+  <p>The hard components fall into eight categories: (1) discrete/categorical sampling; (2) hard selection: argmax, top-k, quantization, rounding, integer casts; (3) combinatorial operators: sorting, ranking, matching, shortest paths, dynamic programming; (4) control flow and thresholds: branches, masks, cuts, Heaviside steps; (5) non-smooth physics: contact, collision, friction, fracture; (6) rendering/rasterization; (7) black-box/external components; and (8) long-horizon/chaotic composition, a pathology of the full chain. The tool families map onto them as follows.</p>
+
+  <table class="tbl">
+    <tr><th>Tool family</th><th>Core idea</th><th>Bias / variance</th><th>Best when</th></tr>
+    <tr><td><strong>Continuous relaxation</strong> (Gumbel-Softmax, soft-sort, sigmoid step)</td><td>Temperature-controlled smooth surrogate, anneals to the discrete limit</td><td>Biased, low variance</td><td>Categorical sampling; sorting/ranking; masks you control</td></tr>
+    <tr><td><strong>Straight-through</strong></td><td>Hard forward, identity (or soft) backward</td><td>Biased, low variance, cheap</td><td>Quantization, binary/one-hot activations</td></tr>
+    <tr><td><strong>Score-function / REINFORCE</strong></td><td>Differentiate distribution probabilities around the sample</td><td>Unbiased, high variance</td><td>Black-box <code>f</code>; discrete actions/rewards in RL</td></tr>
+    <tr><td><strong>Reparameterization</strong></td><td>Push randomness into a base distribution</td><td>Low variance, exact for continuous</td><td>Continuous latents; reparameterizable families</td></tr>
+    <tr><td><strong>Randomized smoothing</strong></td><td>Gradient of the smoothed function via input perturbation</td><td>Tunable bias (radius), variance reducible</td><td>Non-smooth / black-box; contact physics; rendering</td></tr>
+    <tr><td><strong>Implicit / adjoint</strong></td><td>Differentiate an equation-defined solution directly</td><td>Exact, memory-efficient</td><td>Equilibrium layers, constrained optimization, long integration</td></tr>
+    <tr><td><strong>Learned surrogate</strong></td><td>Replace the hard/black-box part with a trained differentiable proxy</td><td>Depends on surrogate fidelity</td><td>Legacy solvers; expensive components; measurement operators</td></tr>
+  </table>
+
+    <h3>Which era reaches for which tool, and why</h3>
+  <p>Because the tools were invented to solve concrete problems in the architectures of Section 2, each era leans on a characteristic subset. Several tools recur across eras, which is why the same six ideas keep appearing.</p>
+  <table class="tbl">
+    <tr><th>Lineage stage (§2)</th><th>Tools it reaches for</th><th>Why that era needs them</th></tr>
+    <tr><td><strong>Generative (VAE / GAN)</strong></td><td>Reparameterization · Gumbel-Softmax · Score-function · Straight-through</td><td>Must backprop through Gaussian <em>and</em> categorical latent draws: reparameterization made the Gaussian VAE trainable; relaxation, STE, and score-function handle discrete latents and non-differentiable outputs.</td></tr>
+    <tr><td><strong>Transformer / neural operator</strong></td><td>Straight-through · Implicit / adjoint · Gumbel-Softmax</td><td>Operators are already smooth, so the hard parts are discrete tokens (VQ codebooks → STE), implicit-depth models (deep equilibrium nets, neural ODEs → adjoint), and hard attention / architecture search (relaxation).</td></tr>
+    <tr><td><strong>Diffusion / score-based / flow</strong></td><td>Reparameterization · Implicit / adjoint · Score-function · Randomized smoothing</td><td>Sampling is a reparameterized Gaussian chain; the probability-flow ODE is differentiated by adjoint; guiding on a non-differentiable reward or classifier uses score-function or smoothing.</td></tr>
+    <tr><td><strong>Differentiable simulators</strong></td><td>Randomized smoothing · Implicit / adjoint · Analytic (LCP) · Learned surrogate</td><td>Non-smooth contact and friction need smoothing or analytic LCP gradients; long PDE/ODE integration needs adjoint; opaque legacy solvers get a learned differentiable proxy.</td></tr>
+  </table>
+
+  <h3>Routing a hard component to a tool</h3>
+  <p>The top split is the kind of hard component: discrete choice, non-smooth function, equation-defined output, or continuous random node. For a <strong>discrete choice</strong>, use <strong>score-function</strong> with a variance-taming baseline when the downstream value is a black box or non-differentiable reward; use <strong>straight-through</strong> when the forward pass must stay genuinely discrete; use <strong>Gumbel-Softmax</strong> when a soft relaxation can be annealed toward the discrete limit. For a <strong>non-smooth or black-box function</strong>, exploit an <strong>analytic/structured gradient</strong> where one exists, fall back to <strong>randomized smoothing</strong> when no internals are usable, or replace the component with a <strong>learned surrogate</strong> when it is swappable. An equation-defined output goes to <strong>implicit / adjoint</strong>. A continuous stochastic node goes to <strong>reparameterization</strong>.</p>
+
+  <figure class="fig"><div class="figsvg">
+  <svg viewBox="0 0 680 540" role="img"><title>Decision tree for routing a hard component to a differentiation tool</title><desc>Starting from what the hard component is, four categories each route to specific tools: discrete choice to score-function, straight-through, or Gumbel-Softmax; non-smooth or black box to analytic LCP, randomized smoothing, or a learned surrogate; solution of an equation to implicit or adjoint differentiation; and a continuous random node to reparameterization.</desc>
+  <defs><marker id="a7" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+
+  <g class="c-gray"><rect x="40" y="241" width="140" height="56" rx="8" stroke-width="1"/><text class="th" x="110" y="266" text-anchor="middle">What is the</text><text class="ts" x="110" y="284" text-anchor="middle">hard part?</text></g>
+
+  <line x1="180" y1="269" x2="208" y2="113" stroke="#9c9a92" stroke-width="1" marker-end="url(#a7)"/>
+  <line x1="180" y1="269" x2="208" y2="289" stroke="#9c9a92" stroke-width="1" marker-end="url(#a7)"/>
+  <line x1="180" y1="269" x2="208" y2="411" stroke="#9c9a92" stroke-width="1" marker-end="url(#a7)"/>
+  <line x1="180" y1="269" x2="208" y2="479" stroke="#9c9a92" stroke-width="1" marker-end="url(#a7)"/>
+
+  <g class="c-purple"><rect x="210" y="88" width="180" height="50" rx="8"/><text class="th" x="300" y="108" text-anchor="middle">Discrete</text><text class="ts" x="300" y="126" text-anchor="middle">choice / sampling</text></g>
+  <g class="c-coral"><rect x="210" y="264" width="180" height="50" rx="8"/><text class="th" x="300" y="284" text-anchor="middle">Non-smooth</text><text class="ts" x="300" y="302" text-anchor="middle">or black box</text></g>
+  <g class="c-teal"><rect x="210" y="386" width="180" height="50" rx="8"/><text class="th" x="300" y="406" text-anchor="middle">Equation</text><text class="ts" x="300" y="424" text-anchor="middle">solution / fixed point</text></g>
+  <g class="c-blue"><rect x="210" y="454" width="180" height="50" rx="8"/><text class="th" x="300" y="474" text-anchor="middle">Continuous</text><text class="ts" x="300" y="492" text-anchor="middle">random node</text></g>
+
+  <line x1="390" y1="113" x2="428" y2="59"  stroke="#9c9a92" stroke-width="1" marker-end="url(#a7)"/>
+  <line x1="390" y1="113" x2="428" y2="113" stroke="#9c9a92" stroke-width="1" marker-end="url(#a7)"/>
+  <line x1="390" y1="113" x2="428" y2="167" stroke="#9c9a92" stroke-width="1" marker-end="url(#a7)"/>
+  <line x1="390" y1="289" x2="428" y2="235" stroke="#9c9a92" stroke-width="1" marker-end="url(#a7)"/>
+  <line x1="390" y1="289" x2="428" y2="289" stroke="#9c9a92" stroke-width="1" marker-end="url(#a7)"/>
+  <line x1="390" y1="289" x2="428" y2="343" stroke="#9c9a92" stroke-width="1" marker-end="url(#a7)"/>
+  <line x1="390" y1="411" x2="428" y2="411" stroke="#9c9a92" stroke-width="1" marker-end="url(#a7)"/>
+  <line x1="390" y1="479" x2="428" y2="479" stroke="#9c9a92" stroke-width="1" marker-end="url(#a7)"/>
+
+  <g class="c-purple"><rect x="430" y="36" width="190" height="46" rx="8"/><text class="th" x="525" y="55" text-anchor="middle">Score-function</text><text class="ts" x="525" y="71" text-anchor="middle">black-box reward</text></g>
+  <g class="c-purple"><rect x="430" y="90" width="190" height="46" rx="8"/><text class="th" x="525" y="109" text-anchor="middle">Straight-through</text><text class="ts" x="525" y="125" text-anchor="middle">need a hard forward</text></g>
+  <g class="c-purple"><rect x="430" y="144" width="190" height="46" rx="8"/><text class="th" x="525" y="163" text-anchor="middle">Gumbel-Softmax</text><text class="ts" x="525" y="179" text-anchor="middle">soft pick, anneal τ</text></g>
+
+  <g class="c-coral"><rect x="430" y="212" width="190" height="46" rx="8"/><text class="th" x="525" y="231" text-anchor="middle">Analytic / LCP</text><text class="ts" x="525" y="247" text-anchor="middle">structured gradient</text></g>
+  <g class="c-coral"><rect x="430" y="266" width="190" height="46" rx="8"/><text class="th" x="525" y="285" text-anchor="middle">Randomized smoothing</text><text class="ts" x="525" y="301" text-anchor="middle">no internals; tune σ</text></g>
+  <g class="c-coral"><rect x="430" y="320" width="190" height="46" rx="8"/><text class="th" x="525" y="339" text-anchor="middle">Learned surrogate</text><text class="ts" x="525" y="355" text-anchor="middle">part is replaceable</text></g>
+
+  <g class="c-teal"><rect x="430" y="388" width="190" height="46" rx="8"/><text class="th" x="525" y="407" text-anchor="middle">Implicit / adjoint</text><text class="ts" x="525" y="423" text-anchor="middle">fixed point / ODE</text></g>
+
+  <g class="c-blue"><rect x="430" y="456" width="190" height="46" rx="8"/><text class="th" x="525" y="475" text-anchor="middle">Reparameterization</text><text class="ts" x="525" y="491" text-anchor="middle">Gaussian latent noise</text></g>
+  </svg></div>
+  <figcaption><span class="fno">Fig 8</span>The full router. The top split is what the hard component <em>is</em>; the second split is the condition that selects the specific tool. Colour groups leaves by category. Reparameterization and implicit/adjoint recur because continuous noise and equation-defined outputs appear in many architectures at once.</figcaption>
+  </figure>
+  <p data-refs="36" data-ref-label="Long-horizon and chaotic composition"><strong>Long-horizon or chaotic composition</strong> belongs to the whole chain. It rides on top of whatever tool you choose and is handled with truncated backprop, checkpointing, gradient clipping, and the audit checks below. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-36" data-ref-link="36" aria-label="Show reference 36">36</a></span></p>
+</section>
+
+<section class="article-section" id="gradient-audit" data-refs="8,17,18,24,25,37">
+  <p class="eyebrow">04: Gradient audit</p>
+  <h2>How to know whether the differentiable tool is telling the truth</h2>
+  <p>Before asking whether a differentiable pipeline is accurate, ask whether its gradient is worth trusting. A forward simulator can match observations and still produce a gradient that points the optimizer the wrong way. Treat differentiability as a claim that has to be audited.</p>
+
+  <h3>4.1 &nbsp;Start with the baseline and cost audit</h3>
+  <p data-refs="17,18,37" data-ref-label="Baseline strength and total validated cost">Begin with stronger questions than "Can I differentiate this?" What is the classical baseline? For PDE-constrained problems, that is often a classical adjoint; finite differences or random search are weaker baselines. Is this a repeated-query problem where gradients will be reused thousands of times? And what is the total cost to a validated result once simulations, solver rewrites, training, hyperparameter search, final high-fidelity checks, and human tuning are counted? A paper that reports only neural inference time, while hiding the expensive steps needed to reach a validated answer, still owes proof of a real speedup. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-17" data-ref-link="17" aria-label="Show reference 17">17</a> <a class="ref-chip inline-ref" href="#ref-18" data-ref-link="18" aria-label="Show reference 18">18</a> <a class="ref-chip inline-ref" href="#ref-37" data-ref-link="37" aria-label="Show reference 37">37</a></span></p>
+
+  <h3>4.2 &nbsp;Classical adjoint first</h3>
+  <p data-refs="17,18" data-ref-label="Adjoints and differentiable optimization layers">For smooth PDE inverse problems and many engineering design loops, the right baseline is <strong>adjoint PDE-constrained optimization</strong>, which often computes sensitivities at a cost nearly independent of the number of design variables. Differentiable ML can still help as an implementation route for adjoint-style gradients inside AD frameworks, as an amortization layer when many related solves are needed, or as a coupling layer when a neural component must share one gradient path with the solver. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-17" data-ref-link="17" aria-label="Show reference 17">17</a> <a class="ref-chip inline-ref" href="#ref-18" data-ref-link="18" aria-label="Show reference 18">18</a></span></p>
+
+  <h3>4.3 &nbsp;Gradient checks that should be routine</h3>
+  <p data-refs="6,8,17,18,37" data-ref-label="Gradient validation diagnostics">At minimum, audit the gradient before trusting any inverse, control, or design result: random-direction finite differences, adjoint consistency on small problems, gradient-to-loss correlation under small steps, norm and signal-to-noise tracking, sensitivity to timestep, mesh, solver tolerance, relaxation temperature <code>&tau;</code>, smoothing radius <code>&sigma;</code>, and rollout horizon, plus direct probes near contacts, collisions, thresholds, and topology changes. The final check is whether the candidate that optimizes the relaxed or learned surrogate still works in the high-fidelity solver that actually matters. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-6" data-ref-link="6" aria-label="Show reference 6">6</a> <a class="ref-chip inline-ref" href="#ref-8" data-ref-link="8" aria-label="Show reference 8">8</a> <a class="ref-chip inline-ref" href="#ref-17" data-ref-link="17" aria-label="Show reference 17">17</a> <a class="ref-chip inline-ref" href="#ref-18" data-ref-link="18" aria-label="Show reference 18">18</a> <a class="ref-chip inline-ref" href="#ref-37" data-ref-link="37" aria-label="Show reference 37">37</a></span></p>
+
+  <h3>4.4 &nbsp;Identifiability comes before optimization</h3>
+  <p data-refs="24,25" data-ref-label="Ill-posed inverse problems and posterior reporting">For sparse and noisy experimental inverse problems, a gradient can optimize an under-identified parameter. Physics regularization only narrows information already present in the experiment. Before reporting a point estimate, check sensitivity rank, parameter correlations, posterior width, and whether several parameter settings explain the data equally well. If the inverse problem is ill-posed or multi-modal, report uncertainty or posterior samples alongside the optimizer endpoint. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-24" data-ref-link="24" aria-label="Show reference 24">24</a> <a class="ref-chip inline-ref" href="#ref-25" data-ref-link="25" aria-label="Show reference 25">25</a></span></p>
+
+  <h3>4.5 &nbsp;Constraints are four different things</h3>
+  <p>Keep these separate: hard constraints, soft penalties, projection or correction into the feasible set, and post-hoc repair after the model has already produced an invalid result. They have different gradients, different failure modes, and different claims. A soft penalty gives a soft objective. A repaired design only shows post-hoc feasibility, leaving the differentiable path itself to be checked.</p>
+</section>
+
+<section class="article-section" id="benchmarks-and-how-to-judge-success" data-refs="20,21,22,23,37">
+  <p class="eyebrow">05: Evaluation</p>
+  <h2>Benchmarks and how to judge success</h2>
+  <p>Evaluation here is unusually treacherous: low pointwise error can coexist with physically nonsensical output, and vice versa. A few benchmark suites and a richer-than-usual metric set have emerged.</p>
+  <p data-refs="20,22,23" data-ref-label="Benchmark suites for forward and inverse scientific ML"> <strong>Forward surrogate / operator suites.</strong> <strong>PDEBench</strong> is the most-cited broad suite (Burgers, diffusion-sorption, diffusion-reaction, incompressible and compressible Navier–Stokes, Darcy, shallow water) with ready datasets and baselines (FNO, U-Net, PINN, gradient-based inverse); FNO is often a strong baseline in these suites and degrades where sharp discontinuities create spectral artifacts. <strong>APEBench</strong> targets autoregressive rollout stability; <strong>CFDBench</strong> and <strong>Multiphysics Bench</strong> add fluid-scale data and strongly-coupled multiphysics (where all learned solvers degrade); <strong>PDEInvBench</strong> is a dedicated 2026 TMLR benchmark for PDE inverse problems, with splits for in-distribution and out-of-distribution parameter recovery. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-20" data-ref-link="20" aria-label="Show reference 20">20</a> <a class="ref-chip inline-ref" href="#ref-22" data-ref-link="22" aria-label="Show reference 22">22</a> <a class="ref-chip inline-ref" href="#ref-23" data-ref-link="23" aria-label="Show reference 23">23</a></span></p>
+  <p data-refs="20,21,23" data-ref-label="Metrics beyond pointwise error"> <strong>Metrics beyond RMSE.</strong> Normalized RMSE, maximum (worst-case) error, <strong>conserved-quantity error</strong> (does it respect conservation laws?), <strong>boundary error</strong>, and <strong>Fourier-space error</strong> (which frequency bands fail: high-frequency failure is the classic surrogate weakness). For diffusion/probabilistic models: calibration and proper scoring rules (CRPS), plus whether the model captures the <em>invariant statistics</em> of the attractor beyond pointwise trajectories. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-20" data-ref-link="20" aria-label="Show reference 20">20</a> <a class="ref-chip inline-ref" href="#ref-21" data-ref-link="21" aria-label="Show reference 21">21</a> <a class="ref-chip inline-ref" href="#ref-23" data-ref-link="23" aria-label="Show reference 23">23</a></span></p>
+  <div class="callout"><span class="tag">Caution</span>Several studies show a contact simulator can be <strong>forward-correct yet gradient-wrong</strong>. A differentiable simulator needs gradient validation as well as forward validation, and the field is only beginning to standardize that audit with dedicated suites.</div>
+</section>
+
+<section class="article-section" id="data-and-the-estimators" data-refs="8,24,26,27,28,29,37">
+  <p class="eyebrow">06: Data &amp; the estimators</p>
+  <h2>What data size and quality mean for learning the non-differentiable parts</h2>
+  <p>For the tools in Section 3, "data" behaves differently from ordinary supervised scaling, because the object being learned through is a <em>gradient estimator</em> sitting on a discrete or non-smooth node. Two quantities matter: (i) the number of Monte-Carlo <strong>samples used to estimate the gradient</strong> through that node at each step, and (ii) the <strong>noise</strong> in the signal feeding the node. The right frame throughout is <strong>bias vs. variance of the estimator</strong>, and data touches only one of the two.</p>
+
+  <h3>6.1 &nbsp;Data size here means samples-per-gradient, and it only buys down variance</h3>
+  <p data-refs="26" data-ref-label="Monte Carlo gradient estimators and sample count">For a stochastic node, "more data" usually means <em>more samples per estimate</em>; training-set size is usually secondary. The canonical Monte-Carlo gradient survey (Mohamed, Rosca, Figurnov &amp; Mnih, JMLR 2020) makes the ranking concrete: the <strong>score-function / REINFORCE</strong> estimator is unbiased and high-variance, so its error falls only slowly with the sample count <code>N</code> and needs baselines/control variates to be usable; the <strong>reparameterization / pathwise</strong> estimator reaches far lower variance at the same <code>N</code> (its variance is bounded by the squared Lipschitz constant of the cost). The data lever is the pairing of sample count and estimator: a small <code>N</code> with reparameterization can beat a large <code>N</code> with score-function. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-26" data-ref-link="26" aria-label="Show reference 26">26</a></span></p>
+
+  <figure class="fig"><div class="figsvg">
+  <svg viewBox="0 0 680 305" role="img"><title>Estimator error versus number of samples</title><desc>Gradient error against Monte-Carlo samples per step for three estimator families. Score-function is high and decays slowly; reparameterization is lower and decays fast; relaxation and straight-through have low variance and flatten at a structural bias floor.</desc>
+  <line x1="90" y1="60" x2="90" y2="250" stroke="#888780" stroke-width="0.5"/><line x1="90" y1="250" x2="620" y2="250" stroke="#888780" stroke-width="0.5"/>
+  <text class="ts" x="95" y="52">gradient error</text><text class="ts" x="614" y="272" text-anchor="end">Monte-Carlo samples per step (N) →</text>
+  <line x1="90" y1="206" x2="610" y2="206" stroke="#BA7517" stroke-width="1" stroke-dasharray="6 4"/>
+  <text class="ts" x="610" y="200" text-anchor="end" fill="#854F0B">bias floor</text>
+  <path d="M90,82 C170,108 270,145 380,170 C470,188 545,202 610,210" fill="none" stroke="#D85A30" stroke-width="2.5"/>
+  <path d="M90,150 C150,192 220,222 300,233 C400,241 500,245 610,247" fill="none" stroke="#1D9E75" stroke-width="2.5"/>
+  <path d="M90,178 C165,199 245,205 340,206 L610,206" fill="none" stroke="#BA7517" stroke-width="2.5"/>
+  <text class="ts" x="350" y="92" text-anchor="middle">variance shrinks with N; bias floor remains</text>
+  <line x1="95" y1="290" x2="117" y2="290" stroke="#D85A30" stroke-width="2.5"/><text class="ts" x="123" y="294">score-function</text>
+  <line x1="275" y1="290" x2="297" y2="290" stroke="#1D9E75" stroke-width="2.5"/><text class="ts" x="303" y="294">reparameterization</text>
+  <line x1="475" y1="290" x2="497" y2="290" stroke="#BA7517" stroke-width="2.5"/><text class="ts" x="503" y="294">relaxation / STE</text>
+  </svg></div>
+  <figcaption><span class="fno">Fig 9</span>Error vs samples, per estimator (after Mohamed et al. 2020). Unbiased estimators (coral, teal) fall toward zero as <code>N</code> grows; reparameterization gets there fastest. Biased estimators (amber: Gumbel-Softmax, straight-through) have low variance and hit a structural bias floor.</figcaption>
+  </figure>
+
+  <h3>6.2 &nbsp;The bias floor: data reduces variance; scarcity hides failure</h3>
+  <p data-refs="8,12,26" data-ref-label="Bias floors and hidden estimator failure">Relaxation (Gumbel-Softmax), straight-through, and any biased smoothing are <em>systematically</em> biased. Adding samples shrinks the scatter around the wrong answer while the offset remains (the amber floor in Fig 9). You reduce that bias by <strong>annealing the temperature τ or shrinking the smoothing radius σ</strong>, which re-inflates variance. Bias–variance is a knob you set; extra data alone leaves the tradeoff in place. At <em>low</em> sample counts, the failure can become invisible: Suh et al. (2022) show that a first-order gradient through a discontinuity can have near-zero <em>empirical</em> variance while its true bias is large. Scarce data can conceal a broken estimator. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-8" data-ref-link="8" aria-label="Show reference 8">8</a> <a class="ref-chip inline-ref" href="#ref-12" data-ref-link="12" aria-label="Show reference 12">12</a> <a class="ref-chip inline-ref" href="#ref-26" data-ref-link="26" aria-label="Show reference 26">26</a></span></p>
+
+  <h3>6.3 &nbsp;Data quality means noise amplification</h3>
+  <p data-refs="24,28" data-ref-label="Noise amplification and noisy inverse problems">Noise enters the non-smooth nodes in three ways. It inflates score-function variance (noisy rewards or labels widen an already high-variance estimator). It acts as an extra perturbation on thresholds and contact, raising the <em>effective</em> smoothing radius and therefore the bias. Any loss that differentiates the data, including PDE residuals in PINNs, derivative terms in equation discovery, and contact impulses, amplifies noise because a numerical derivative scales the error like <code>ε/Δx</code>. The robust recipe is <strong>denoise, then differentiate</strong>: reconstruct a clean, physically-consistent trajectory before taking gradients. Noise also enters implicit/adjoint methods through the solution <code>z*</code>, where it can degrade the conditioning of the linear solve. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-24" data-ref-link="24" aria-label="Show reference 24">24</a> <a class="ref-chip inline-ref" href="#ref-28" data-ref-link="28" aria-label="Show reference 28">28</a></span></p>
+
+  <figure class="fig"><div class="figsvg">
+  <svg viewBox="0 0 680 295" role="img"><title>Differentiation amplifies noise</title><desc>Top: a smooth signal with noisy samples scattered around it. Bottom: the true derivative is smooth; the derivative of the noisy samples is wildly spiky, showing that small input noise produces large derivative error.</desc>
+  <line x1="90" y1="140" x2="620" y2="140" stroke="#B4B2A9" stroke-width="0.5"/>
+  <text class="ts" x="96" y="60">signal + noisy samples</text>
+  <path d="M90,112 C170,84 250,84 330,112 C410,140 490,140 570,112 L610,104" fill="none" stroke="#1D9E75" stroke-width="2.5"/>
+  <circle cx="110" cy="118" r="2.3" fill="#888780"/><circle cx="150" cy="96" r="2.3" fill="#888780"/><circle cx="190" cy="86" r="2.3" fill="#888780"/><circle cx="230" cy="92" r="2.3" fill="#888780"/><circle cx="270" cy="86" r="2.3" fill="#888780"/><circle cx="310" cy="110" r="2.3" fill="#888780"/><circle cx="350" cy="122" r="2.3" fill="#888780"/><circle cx="390" cy="138" r="2.3" fill="#888780"/><circle cx="430" cy="132" r="2.3" fill="#888780"/><circle cx="470" cy="120" r="2.3" fill="#888780"/><circle cx="510" cy="102" r="2.3" fill="#888780"/><circle cx="550" cy="102" r="2.3" fill="#888780"/><circle cx="590" cy="106" r="2.3" fill="#888780"/>
+  <line x1="90" y1="210" x2="620" y2="210" stroke="#B4B2A9" stroke-width="0.5"/>
+  <text class="ts" x="96" y="178">its derivative: noise amplified</text>
+  <polyline points="90,210 108,182 126,244 144,188 162,248 180,178 198,236 216,190 234,246 252,184 270,238 288,196 306,240 324,186 342,234 360,198 378,242 396,188 414,236 432,196 450,240 468,190 486,232 504,200 522,238 540,192 558,230 576,202 594,224 610,208" fill="none" stroke="#D85A30" stroke-width="1.4"/>
+  <path d="M90,192 C170,178 250,202 330,210 C410,218 490,236 570,214 L610,206" fill="none" stroke="#1D9E75" stroke-width="2.5"/>
+  <text class="ts" x="350" y="280" text-anchor="middle" fill="#993C1D">small input noise → large derivative error  (≈ ε / Δx)</text>
+  </svg></div>
+  <figcaption><span class="fno">Fig 10</span>Why noise is fatal to derivative-based losses. The true signal (teal) and its derivative are smooth; differentiating the noisy samples (coral) produces a wildly amplified derivative. Any tool that differentiates measured data, including PINNs, equation discovery, and contact impulses, must denoise first.</figcaption>
+  </figure>
+
+  <h3>6.4 &nbsp;Discrete capacity is limited by usable gradient signal</h3>
+  <p data-refs="27" data-ref-label="Discrete capacity and codebook collapse">The "model size / complexity" question for these tools is really: how big can the <em>discrete</em> component be before it stops learning? For discrete bottlenecks trained with straight-through, including VQ-VAE codebooks, hard attention, and discrete tokens, only the codes that actually receive gradients survive; the rest go dead. This <strong>codebook collapse</strong> (van den Oord et al., 2017; Zheng &amp; Vedaldi, 2023) means naively scaling the codebook or category count fails: large codebooks collapse to a used fraction unless propped up by reinitialization, EMA updates, or clustered assignment. The <em>usable</em> capacity of a non-differentiable component is set by the portion the estimator can reach. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-27" data-ref-link="27" aria-label="Show reference 27">27</a></span></p>
+
+  <figure class="fig"><div class="figsvg">
+  <svg viewBox="0 0 680 240" role="img"><title>What data fixes, what remains structural</title><desc>Two panels. Data reduces the variance of score-function estimates, noisy signals, and adjoint conditioning. Structural bias remains in Gumbel or straight-through estimators, smoothing bias, and discrete codebook collapse.</desc>
+  <g class="c-teal"><rect x="50" y="50" width="270" height="170" rx="12"/><text class="th" x="185" y="80" text-anchor="middle" dominant-baseline="central">Data fixes this: variance</text><text class="ts" x="70" y="116">score-function: more MC samples</text><text class="ts" x="70" y="146">noisy signal: samples + baselines</text><text class="ts" x="70" y="176">adjoint: cleaner z* conditions</text></g>
+  <g class="c-coral"><rect x="360" y="50" width="270" height="170" rx="12"/><text class="th" x="495" y="80" text-anchor="middle" dominant-baseline="central">Structural bias remains</text><text class="ts" x="380" y="116">Gumbel/STE: anneal τ</text><text class="ts" x="380" y="146">smoothing: shrink σ (↑ variance)</text><text class="ts" x="380" y="176">codebook collapse (dead codes)</text></g>
+  </svg></div>
+  <figcaption><span class="fno">Fig 11</span>The estimator-specific levers. More or cleaner data buys down variance (left). Systematic bias in relaxed/straight-through estimators, smoothing bias, and over-sized discrete bottleneck collapse (right) are fixed by annealing, radius, and reinitialization.</figcaption>
+  </figure>
+
+  <h3>6.5 &nbsp;Synthesis</h3>
+  <p>For the differentiability tools, the outcome is governed by the estimator's bias–variance profile, and the three inputs act on different parts of it: <strong>sample count</strong> buys down variance (fastest for reparameterization, slowest for score-function); <strong>noise</strong> raises variance and, through differentiation, bias, so it must be denoised; and <strong>discrete capacity</strong> is bounded by the gradient signal each part receives. Systematic bias from relaxation, straight-through, and smoothing is controlled through τ, σ, and the annealing schedule. Those knobs deliberately trade back against the variance that sample count was reducing.</p>
+</section>
+
+<section class="article-section" id="engineering-the-tools" data-refs="12,27,30,31,32,33,34,35,36">
+  <p class="eyebrow">07: Engineering the tools</p>
+  <h2>Making the tools actually train: the tricks that make "differentiable" work</h2>
+  <p>Every tool in Section 3 manufactures a gradient where none was usable. In doing so, it perturbs the thing you are optimizing. The perturbation lands in one of two places: the estimator's <strong>statistics</strong> (it becomes biased or high-variance) or the <strong>loss landscape</strong> (it becomes ill-conditioned, discontinuous, or imbalanced across terms). The techniques below are targeted controls; each one counters a specific distortion introduced by a specific tool. Read the section as <em>distortion → remedy</em>.</p>
+
+  <h3>7.1 &nbsp;Relaxation (Gumbel-Softmax): schedule the temperature</h3>
+  <p><strong>Distortion: statistics (bias).</strong> A relaxed categorical sample is exact only in the limit τ → 0; at any finite temperature it is a <em>biased</em> stand-in for the discrete draw, and the softmax leaks probability mass to the wrong categories.</p>
+  <p data-refs="30" data-ref-label="Temperature scheduling for relaxed categorical variables"><strong>Remedy: temperature scheduling.</strong> Start hot (τ ≈ 1–5) for smooth, well-behaved gradients and exploration, then <strong>anneal</strong> toward a small floor (τ ≈ 0.1–0.5); Jang et al. use the schedule τ = max(0.5, exp(−rt)) over the training step, with exponential, linear, or multiplicative decay as alternatives. The schedule is itself a bias–variance dial: anneal too fast and the model <em>collapses prematurely</em> onto a suboptimal discrete choice; anneal too slowly and it stays soft and indecisive. The <strong>straight-through Gumbel</strong> variant takes a hard argmax on the forward pass, so training and evaluation see the same discrete object, while backpropagating the soft gradient; τ can even be made a learned parameter. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-30" data-ref-link="30" aria-label="Show reference 30">30</a></span></p>
+
+  <h3>7.2 &nbsp;Straight-through &amp; vector quantization: prop the codebook up with auxiliary losses</h3>
+  <p><strong>Distortion: statistics <em>and</em> capacity.</strong> STE's forward/backward mismatch is biased, and the discrete bottleneck it feeds tends to <strong>collapse</strong>: because only selected codes receive gradients, most of a large codebook goes dead (§5.4).</p>
+  <p data-refs="27,31" data-ref-label="Keeping vector-quantized codebooks alive"><strong>Remedy: commitment loss, EMA, resets.</strong> VQ-VAE adds a <strong>commitment loss</strong> β‖z<sub>e</sub> − sg(e)‖² (β ≈ 0.25, where <code>sg</code> is stop-gradient) that pulls encoder outputs toward their assigned codes; strip it out and codebook utilization collapses toward 0% as the codebook grows. The codebook itself uses an <strong>exponential-moving-average</strong> online <em>k</em>-means update (decay γ), which is empirically faster and more stable than gradient descent; a <strong>stop-gradient</strong> keeps the encoder and codebook updates decoupled; and a <strong>dead-code reset</strong> respawns any code unused for many steps as a noisy copy of a live encoder output. <em>k</em>-means initialization and starting with a small codebook help too. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-27" data-ref-link="27" aria-label="Show reference 27">27</a> <a class="ref-chip inline-ref" href="#ref-31" data-ref-link="31" aria-label="Show reference 31">31</a></span></p>
+
+  <h3>7.3 &nbsp;Score-function &amp; smoothing: reduce the variance</h3>
+  <p><strong>Distortion: statistics (variance).</strong> These estimators are unbiased and noisy; a single sample points in a nearly random direction (§1, §5.1).</p>
+  <p data-refs="10,11,32" data-ref-label="Variance reduction for score-function and smoothing estimators"><strong>Remedy: baselines, more samples, antithetics.</strong> Subtract a <strong>baseline / control variate</strong> b: it leaves the estimate unbiased yet can cut its variance sharply (REINFORCE-with-baseline; REBAR and RELAX build <em>differentiable</em> control variates for discrete variables). Average over <strong>more Monte-Carlo samples per step</strong> (variance falls roughly like 1/N). For randomized smoothing specifically, <strong>antithetic or coupled perturbations</strong> and randomized quasi-Monte-Carlo lower the variance at a fixed sample budget. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-10" data-ref-link="10" aria-label="Show reference 10">10</a> <a class="ref-chip inline-ref" href="#ref-11" data-ref-link="11" aria-label="Show reference 11">11</a> <a class="ref-chip inline-ref" href="#ref-32" data-ref-link="32" aria-label="Show reference 32">32</a></span></p>
+
+  <h3>7.4 &nbsp;PINN soft-constraints: repair the loss landscape</h3>
+  <p><strong>Distortion: landscape.</strong> Turning a PDE into a <em>soft penalty</em> builds a multi-term objective with badly <strong>imbalanced</strong> gradients: the residual term dominates and starves the data and boundary terms, the problem becomes <strong>ill-conditioned</strong>, and time-dependent PDEs have their <strong>causality violated</strong> (Krishnapriyan et al. 2021; Wang, Teng &amp; Perdikaris 2021).</p>
+  <p data-refs="33,34,35" data-ref-label="Repairing PINN optimization pathologies"><strong>Remedy: adaptive weighting, causal scheduling, better optimizers.</strong> <strong>Adaptive loss weighting</strong> reads the back-propagated gradient statistics each step and rescales the term weights λ<sub>i</sub> so no term's gradient swamps the others, with an EMA running-average to tame the estimate's variance (learning-rate annealing, Wang et al. 2021, with η = 10⁻³, α = 0.1; relatives include GradNorm, inverse-Dirichlet, SoftAdapt, ReLoBRaLo, and self-adaptive weights); an <strong>NTK-based</strong> variant balances the per-term convergence rates (Wang, Yu &amp; Perdikaris 2020). <strong>Causal / curriculum scheduling</strong> forces earlier times to be learned first and ramps difficulty (Wang, Sankaran &amp; Perdikaris 2024; Krishnapriyan's curriculum and sequence-to-sequence reformulations recover 1–2 orders of magnitude in accuracy). <strong>Residual-based adaptive sampling</strong> concentrates collocation points where the residual is large; <strong>Fourier features</strong> restore high frequencies; and training typically runs <strong>Adam</strong> for the bulk, then switches to <strong>L-BFGS / second-order</strong> for the final, ill-conditioned high-accuracy push. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-33" data-ref-link="33" aria-label="Show reference 33">33</a> <a class="ref-chip inline-ref" href="#ref-34" data-ref-link="34" aria-label="Show reference 34">34</a> <a class="ref-chip inline-ref" href="#ref-35" data-ref-link="35" aria-label="Show reference 35">35</a></span></p>
+
+  <h3>7.5 &nbsp;Differentiable simulators: tame the Jacobian spectrum</h3>
+  <p><strong>Distortion: statistics, via composition.</strong> Chaining differentiable steps multiplies their Jacobians; if the system's Jacobian spectrum contains large eigenvalues, the gradient <strong>explodes or vanishes</strong> and its variance blows up. Metz et al. (2021, <em>Gradients are Not All You Need</em>) trace this chaos-based failure precisely to that spectrum. Contact adds hard <strong>discontinuities</strong> on top.</p>
+  <p data-refs="8,36" data-ref-label="Stabilizing long differentiable rollouts"><strong>Remedy: truncate, clip, checkpoint, soften.</strong> <strong>Truncated backprop</strong> shortens the unroll. A 400-step Brax rollout can fail outright, while a short window trains; the tradeoff is bias from dropping the long Jacobian-product terms. <strong>Gradient clipping / normalization</strong> rescales g whenever ‖g‖ exceeds a threshold, capping the explosion. <strong>Gradient checkpointing</strong> recomputes activations so a long rollout fits in memory. For contact, <strong>softening</strong> (blurring contact forces over a lengthscale) and <strong>chunking</strong> the trajectory at contact events restore usable gradients (§8 covers when these remedies fail and a zeroth-order method wins). <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-8" data-ref-link="8" aria-label="Show reference 8">8</a> <a class="ref-chip inline-ref" href="#ref-36" data-ref-link="36" aria-label="Show reference 36">36</a></span></p>
+
+  <h3>7.6 &nbsp;The five levers, and why Adam is the default</h3>
+  <p>Across all six tools, the same handful of levers recur. <strong>Adam</strong> is the near-universal default because its per-parameter adaptive rates already absorb some of the gradient imbalance these tools create. It is a cushion, with the targeted fixes above still required.</p>
+
+  <figure class="fig"><div class="figsvg">
+  <svg viewBox="0 0 680 300" role="img"><title>The five engineering levers and what each fixes</title><desc>Five trick families, each mapped to the distortion it counters: optimizer choice handles imbalance and ill-conditioning; scheduling lowers bias and orders learning; batch and diversity cut variance and keep codes alive; auxiliary losses reshape the landscape; clipping and truncation cap exploding Jacobian products.</desc>
+  <defs><marker id="a12" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+
+  <g class="c-gray"><rect x="30" y="24" width="230" height="42" rx="8"/><text class="th" x="145" y="45" text-anchor="middle" dominant-baseline="central">Optimizer choice</text></g>
+  <line x1="264" y1="45" x2="288" y2="45" stroke="#9c9a92" stroke-width="1" marker-end="url(#a12)"/>
+  <text class="ts" x="296" y="40">Adam's per-parameter rates absorb imbalance;</text>
+  <text class="ts" x="296" y="58">L-BFGS / 2nd-order for the final ill-conditioned push</text>
+
+  <g class="c-amber"><rect x="30" y="76" width="230" height="42" rx="8"/><text class="th" x="145" y="97" text-anchor="middle" dominant-baseline="central">Scheduling</text></g>
+  <line x1="264" y1="97" x2="288" y2="97" stroke="#9c9a92" stroke-width="1" marker-end="url(#a12)"/>
+  <text class="ts" x="296" y="92">anneal τ, σ toward the sharp / discrete limit</text>
+  <text class="ts" x="296" y="110">lowers bias; causal &amp; curriculum order the learning</text>
+
+  <g class="c-teal"><rect x="30" y="128" width="230" height="42" rx="8"/><text class="th" x="145" y="149" text-anchor="middle" dominant-baseline="central">Batch / diversity</text></g>
+  <line x1="264" y1="149" x2="288" y2="149" stroke="#9c9a92" stroke-width="1" marker-end="url(#a12)"/>
+  <text class="ts" x="296" y="144">more MC / perturbation samples cut variance;</text>
+  <text class="ts" x="296" y="162">batch diversity keeps discrete codes alive</text>
+
+  <g class="c-purple"><rect x="30" y="180" width="230" height="42" rx="8"/><text class="th" x="145" y="201" text-anchor="middle" dominant-baseline="central">Auxiliary loss</text></g>
+  <line x1="264" y1="201" x2="288" y2="201" stroke="#9c9a92" stroke-width="1" marker-end="url(#a12)"/>
+  <text class="ts" x="296" y="196">commitment · KL · entropy · residual weighting</text>
+  <text class="ts" x="296" y="214">reshape the landscape; tie surrogate to true goal</text>
+
+  <g class="c-blue"><rect x="30" y="232" width="230" height="42" rx="8"/><text class="th" x="145" y="253" text-anchor="middle" dominant-baseline="central">Clip / truncate</text></g>
+  <line x1="264" y1="253" x2="288" y2="253" stroke="#9c9a92" stroke-width="1" marker-end="url(#a12)"/>
+  <text class="ts" x="296" y="248">clip ‖g‖, truncate long rollouts, checkpoint</text>
+  <text class="ts" x="296" y="266">cap exploding Jacobian products (bias for stability)</text>
+  </svg></div>
+  <figcaption><span class="fno">Fig 12</span>The five recurring levers, each mapped to the distortion it counters. Colours follow the document's categorical priority (gray → amber → teal → purple → blue). Most published "make it differentiable" pipelines are a specific combination of these applied to the tool of Section 3 they depend on.</figcaption>
+  </figure>
+
+  <table class="tbl">
+    <tr><th>Tool (from §3)</th><th>What it distorts</th><th>Signature tricks</th></tr>
+    <tr><td><strong>Relaxation (Gumbel)</strong></td><td>bias at finite τ</td><td>temperature annealing; straight-through Gumbel</td></tr>
+    <tr><td><strong>Straight-through / VQ</strong></td><td>bias + codebook collapse</td><td>commitment loss (β≈0.25); EMA codebook; dead-code reset; k-means init</td></tr>
+    <tr><td><strong>Score-function</strong></td><td>high variance</td><td>baselines / control variates (REBAR, RELAX); more samples</td></tr>
+    <tr><td><strong>Randomized smoothing</strong></td><td>bias–variance via σ</td><td>antithetic / quasi-MC; sample count; σ schedule</td></tr>
+    <tr><td><strong>PINN soft-constraint</strong></td><td>imbalanced, ill-conditioned landscape</td><td>adaptive loss weights; NTK weighting; causal / curriculum; Adam → L-BFGS</td></tr>
+    <tr><td><strong>Differentiable rollout</strong></td><td>exploding / vanishing Jacobian products</td><td>truncated BPTT; gradient clipping; checkpointing; contact softening</td></tr>
+    <tr><td><strong>Implicit / adjoint</strong></td><td>conditioning of the linear solve</td><td>Jacobian damping / regularization; preconditioning</td></tr>
+  </table>
+</section>
+
+  <section class="article-section" id="physics-informed-modeling-from-noisy-sparse-experimental-data" data-refs="4,5,24,28,29">
+  <p class="eyebrow">08: The target regime</p>
+  <h2>Physics-informed modeling from noisy, sparse experimental data</h2>
+  <p data-refs="24,25" data-ref-label="Identifiability comes before fitting">This is the regime the review is ultimately aimed at: integrate real experimental data that is noisy, sparse, expensive, and partially observed, and still recover physically meaningful models and parameters. The first question is whether the observations identify the parameters at all. Sparse sensors, noisy measurements, and hidden states can make many parameter settings equally plausible even when the optimizer fits the observations. Before reporting a point estimate, run sensitivity and rank checks, inspect parameter correlations, compare independent restarts, and ask whether adding a sensor or perturbation would collapse the posterior. Physics regularization can shrink the solution space around information already present in the experiment. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-24" data-ref-link="24" aria-label="Show reference 24">24</a> <a class="ref-chip inline-ref" href="#ref-25" data-ref-link="25" aria-label="Show reference 25">25</a></span></p>
+  <p data-refs="24" data-ref-label="Why physics-informed methods fit sparse inverse problems"><strong>Why physics-informed methods fit.</strong> By embedding governing equations into training, PINNs and relatives are mesh-free, natively handle inverse problems (infer parameters, boundary conditions, closure coefficients from sparse and noisy data that would underdetermine a purely supervised model), and perform data assimilation (each source improves the other: simulation raises the effective resolution of the data; data raises the credibility of the simulation). <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-24" data-ref-link="24" aria-label="Show reference 24">24</a></span></p>
+  <p data-refs="24,28" data-ref-label="Handling noise and uncertainty explicitly"><strong>Handling noise and uncertainty explicitly.</strong> The strongest versions are Bayesian or ensemble-based. B-PINNs and related physics-informed Bayesian models carry uncertainty from <em>both</em> the measurement and the physical model, yielding posteriors over weights and over unknown equation parameters. The reporting rule is simple: if the inverse problem is ill-posed, multi-modal, or sensor-limited, report a posterior, interval, ensemble, or calibration diagnostic alongside the best-fit parameter vector. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-24" data-ref-link="24" aria-label="Show reference 24">24</a> <a class="ref-chip inline-ref" href="#ref-28" data-ref-link="28" aria-label="Show reference 28">28</a></span></p>
+  <p data-refs="29" data-ref-label="Extreme scarcity and constitutive-model discovery"><strong>Squeezing signal from extreme scarcity.</strong> Recent frameworks recover constitutive laws (hyperelastic strain-energy densities) from a <em>single</em> material test using only sparse displacement and reaction-force data, combining PINNs with finite-element discretization, a two-stage Adam→L-BFGS optimization, and sparse (ℓ<sub>p</sub>) regression to keep the discovered model parsimonious. Multi-fidelity PINNs fuse cheap low-fidelity physics with a few high-fidelity measurements; transfer learning ports models across regimes when long-term high-fidelity data is unattainable. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-29" data-ref-link="29" aria-label="Show reference 29">29</a></span></p>
+  <p data-refs="3,4,5" data-ref-label="Differentiable simulators as assimilation engines"><strong>Differentiable simulators as the assimilation engine.</strong> Where a fully differentiable simulator exists, it can be embedded directly in the training loop so gradient-based optimization fits physical parameters to data. Examples include differentiable multiphase reservoir flow, Cheetah for accelerator system identification, and Jaxley for fitting detailed biophysical neuron models to recordings and tasks. The published Jaxley paper reports large GPU-accelerated biophysical networks, multilevel checkpointing, gradients that cost several forward-pass equivalents, and a 2,000-neuron, 1-million-synapse benchmark with 8,000 time steps. Differentiability turns black-box assimilation into gradient-based fitting. The gradient cost and memory strategy still have to be reported. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-3" data-ref-link="3" aria-label="Show reference 3">3</a> <a class="ref-chip inline-ref" href="#ref-4" data-ref-link="4" aria-label="Show reference 4">4</a> <a class="ref-chip inline-ref" href="#ref-5" data-ref-link="5" aria-label="Show reference 5">5</a></span></p>
+  <div class="callout"><span class="tag">The special hazard</span>Noise interacts badly with the non-smooth and chaotic components of Sections 3 and 6: a threshold or contact event that is already gradient-fragile gets worse when its input is a noisy measurement, and derivative-based losses amplify noise. The noisy-data regime calls for relaxation, smoothing, and Bayesian tooling in combination.</div>
+</section>
+
+<section class="article-section" id="the-honest-ledger" data-refs="8,37">
+  <p class="eyebrow">09: The honest ledger</p>
+  <h2>Where simple ML or engineering intuition wins</h2>
+  <p data-refs="37" data-ref-label="Critical literature and boundary conditions">Many papers claim that differentiable physics or physics-informed ML "outperforms" a conventional approach. The more useful question is where the advantage is real, where it is fragile, and why. Three lines of evidence draw the boundary sharply. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-37" data-ref-link="37" aria-label="Show reference 37">37</a></span></p>
+
+  <h3>9.1 &nbsp;The weak-baseline problem: much of the reported advantage is an artifact</h3>
+  <p data-refs="37" data-ref-label="Weak baselines and overoptimistic reporting">A systematic review of ML-for-fluid-PDE research (McGreivy &amp; Hakim, <em>Nature Machine Intelligence</em>, 2024) found that among articles claiming to beat a standard numerical method, <strong>79% (60 of 76) compared against a weak baseline</strong>, usually an under-tuned or low-resolution classical solver that any competent numericist would improve. Combined with reporting biases (negative results under-reported), the authors conclude the field is <strong>overoptimistic</strong>: the literature makes ML look more successful at solving fluid PDEs than it actually is. The practical reading: <em>where a mature, fast classical solver already exists for a forward PDE, differentiable or neural surrogates frequently show little speed-accuracy advantage once the baseline is tuned properly.</em> The "win" was often measured against a straw man. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-37" data-ref-link="37" aria-label="Show reference 37">37</a></span></p>
+
+  <h3>9.2 &nbsp;When the gradient itself becomes the problem</h3>
+  <p data-refs="8,37" data-ref-label="When first-order gradients are biased">The central promise of a differentiable simulator is that its first-order gradient beats derivative-free (zeroth-order) estimates. Suh et al. (ICML 2022, oral) show this promise depends intricately on the physics. For systems that are <strong>stiff, discontinuous (contact-rich), or chaotic</strong>, the simulator's first-order gradient can be <em>biased</em> and actually <strong>hurt</strong> optimization, converging to worse or unsafe solutions than a plain zeroth-order or REINFORCE-style estimator. Empirical variance alone misses this bias. Their fix (an α-order estimator interpolating toward zeroth-order near non-smoothness) is essentially a concession: rich contact, chaos, and stiffness are exactly where the nominal first-order gradient is weakest, and simpler sampling-based methods are competitive or better. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-8" data-ref-link="8" aria-label="Show reference 8">8</a> <a class="ref-chip inline-ref" href="#ref-37" data-ref-link="37" aria-label="Show reference 37">37</a></span></p>
+
+  <h3>9.3 &nbsp;PINNs stumble on problems classical methods find trivial</h3>
+  <p data-refs="37" data-ref-label="PINN failure modes on simple forward problems">Krishnapriyan et al. (NeurIPS 2021) demonstrate that standard PINNs, which impose the PDE as a soft loss penalty, <strong>fail to learn even simple convection or reaction dynamics</strong>. A textbook finite-difference or finite-element scheme solves those problems in milliseconds. The failure comes from the soft PDE regularizer, which makes the <em>loss landscape ill-conditioned and hard to optimize</em>. Curriculum training and sequence-to-sequence reformulations recover 1–2 orders of magnitude in accuracy. The lesson stands: for a well-posed forward PDE with a good classical solver, a PINN is typically slower to train, less accurate, and less reliable. Its value is in inverse, sparse, or constrained settings. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-37" data-ref-link="37" aria-label="Show reference 37">37</a></span></p>
+
+  <h3>9.4 &nbsp;Cases where simple ML or engineering intuition simply wins</h3>
+  <ul>
+    <li><strong>Abundant, clean data for a forward map.</strong> If you have plentiful high-quality input→output pairs and only need a fast approximation, a plain regression surrogate (or even the tuned numerical solver) is usually simpler and just as good. The physics machinery earns nothing extra.</li>
+    <li><strong>One-off forward solves.</strong> Differentiable pipelines pay off when a gradient is <em>reused</em> many times (inverse design, control, assimilation). For a single forward simulation, building and validating a differentiable stack costs more than it returns. Run the classical solver.</li>
+    <li><strong>Well-characterized engineering regimes.</strong> Where reduced-order models, dimensionless correlations, or lookup tables already capture the behavior (heat-transfer correlations, drag curves, standard control laws), engineering intuition plus a simple fit matches or beats a heavy differentiable model at a fraction of the effort and with better interpretability.</li>
+    <li><strong>Smooth, low-dimensional relationships.</strong> If the map is smooth and low-dimensional, linear models, splines, or gradient-boosted trees with a few physically-motivated features are strong, robust baselines. Overoptimistic studies often omit exactly these comparisons.</li>
+  </ul>
+
+  <h3>9.5 &nbsp;When it earns its place</h3>
+  <p data-refs="8,37" data-ref-label="Where differentiable physics ML genuinely earns its keep">The advantage is real and conditional. It appears when <strong>two things hold at once</strong>: (i) the landscape is <em>smooth enough</em> that gradients are trustworthy (ruling out the stiff, contact-rich, and chaotic cases above), and (ii) there is either <em>no good classical alternative</em> or an <em>amortization or inverse structure</em> that reuses the gradient many times. Concretely, it wins for repeated inverse-design and control loops, for sparse and noisy inverse problems where physics regularizes an otherwise ill-posed fit and no classical inverse solver exists, and for end-to-end pipelines (perception → simulation → control) where the gradient must cross module boundaries that no classical method spans. A non-smooth landscape, a fast classical solver, or a one-off forward solve shifts the advantage back to the simpler tool. That is the whole map: <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-8" data-ref-link="8" aria-label="Show reference 8">8</a> <a class="ref-chip inline-ref" href="#ref-37" data-ref-link="37" aria-label="Show reference 37">37</a></span></p>
+
+  <figure class="fig"><div class="figsvg">
+  <svg viewBox="0 0 680 270" role="img"><title>When does differentiable physics ML win</title><desc>A two-by-two matrix. Columns: whether a fast classical solver exists. Rows: whether the landscape is smooth with repeated queries, or stiff, chaotic, or one-off. Top-left is a strong fit; top-right must prove itself against a strong baseline; bottom-left has unreliable gradients; bottom-right favors the classical solver or engineering intuition.</desc>
+  <text class="ts" x="257" y="62" text-anchor="middle">no fast classical solver</text>
+  <text class="ts" x="494" y="62" text-anchor="middle">fast classical solver exists</text>
+  <text class="ts" x="40" y="106">smooth &amp;</text><text class="ts" x="40" y="122">repeated</text>
+  <text class="ts" x="40" y="196">stiff /</text><text class="ts" x="40" y="212">chaotic /</text><text class="ts" x="40" y="228">one-off</text>
+  <g class="c-green"><rect x="145" y="72" width="225" height="82" rx="10"/><text class="th" x="257" y="104" text-anchor="middle" dominant-baseline="central">Strong fit</text><text class="ts" x="257" y="128" text-anchor="middle" dominant-baseline="central">inverse design · assimilation</text></g>
+  <g class="c-amber"><rect x="382" y="72" width="225" height="82" rx="10"/><text class="th" x="494" y="104" text-anchor="middle" dominant-baseline="central">Prove it vs baseline</text><text class="ts" x="494" y="128" text-anchor="middle" dominant-baseline="central">often a wash</text></g>
+  <g class="c-coral"><rect x="145" y="166" width="225" height="82" rx="10"/><text class="th" x="257" y="198" text-anchor="middle" dominant-baseline="central">Gradients unreliable</text><text class="ts" x="257" y="222" text-anchor="middle" dominant-baseline="central">use zeroth-order / sampling</text></g>
+  <g class="c-gray"><rect x="382" y="166" width="225" height="82" rx="10"/><text class="th" x="494" y="198" text-anchor="middle" dominant-baseline="central">Use classical / intuition</text><text class="ts" x="494" y="222" text-anchor="middle" dominant-baseline="central">ML rarely helps</text></g>
+  </svg></div>
+  <figcaption><span class="fno">Fig 13</span>The use-case map. Differentiable physics ML earns its keep in the top-left; the other three quadrants are where weak baselines, unreliable gradients (Suh et al. 2022), or a perfectly good classical solver (McGreivy &amp; Hakim 2024) mean a simpler method wins.</figcaption>
+  </figure>
+</section>
+
+<section class="article-section" id="open-problems" data-refs="5,8,21,23,24,35,36,37">
+  <p class="eyebrow">10: Open problems</p>
+  <h2>Challenges facing the field today</h2>
+  <p data-refs="5,8,21,23,24,35,36,37" data-ref-label="The unresolved boundary conditions of the field">The field now has a credible toolkit. Its hardest regimes remain exactly the ones that matter most in practice: contact-rich mechanics, long chaotic horizons, scarce and noisy inverse data, coupled multiphysics, and generative samplers whose deployment cost is still high. The open problems below are the current edge of what gradients can be trusted to do. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-5" data-ref-link="5" aria-label="Show reference 5">5</a> <a class="ref-chip inline-ref" href="#ref-8" data-ref-link="8" aria-label="Show reference 8">8</a> <a class="ref-chip inline-ref" href="#ref-21" data-ref-link="21" aria-label="Show reference 21">21</a> <a class="ref-chip inline-ref" href="#ref-23" data-ref-link="23" aria-label="Show reference 23">23</a> <a class="ref-chip inline-ref" href="#ref-24" data-ref-link="24" aria-label="Show reference 24">24</a> <a class="ref-chip inline-ref" href="#ref-35" data-ref-link="35" aria-label="Show reference 35">35</a> <a class="ref-chip inline-ref" href="#ref-36" data-ref-link="36" aria-label="Show reference 36">36</a> <a class="ref-chip inline-ref" href="#ref-37" data-ref-link="37" aria-label="Show reference 37">37</a></span></p>
+  <ul>
+    <li><strong>Useful gradients over merely existing gradients.</strong> Null-almost-everywhere, infinite, or high-variance gradients still require per-problem relaxation/smoothing choices, and the smoothing radius or temperature remains problem-specific.</li>
+    <li><strong>Correctness and validation of gradients.</strong> Contact-rich simulators can be forward-correct yet gradient-wrong; standard gradient-validation benchmarks are only now appearing.</li>
+    <li><strong>Long-horizon and chaotic optimization.</strong> Exploding/vanishing gradients, decorrelation, and a physics-imposed predictability ceiling. Fixes (checkpointing, gradient decay/clipping, multi-step penalty losses, truncated backprop, intermediate goals) are heuristic.</li>
+    <li><strong>Contact, friction, fracture.</strong> Non-smooth impulsive physics remains the hardest case; smoothing trades exactness for informativeness and the "right" differentiable contact model is unsettled.</li>
+    <li><strong>Data scarcity, noise, and ill-posedness.</strong> Inverse problems are frequently ill-posed; physics regularization depends on identifiability already present in the experiment, and calibrated UQ at scale is still expensive.</li>
+    <li><strong>Multiphysics coupling.</strong> Strong inter-field coupling degrades every current learned solver.</li>
+    <li><strong>Scale helps only in limited ways.</strong> Geometry, operating conditions, and accuracy demands cap corpus size; combining foundation-model scale with physical structure and stability guarantees is open.</li>
+    <li><strong>Cost of differentiable sampling.</strong> Diffusion surrogates' many function evaluations remain a deployment bottleneck; consistency and flow-matching variants help and are still becoming standard.</li>
+  </ul>
+</section>
+
+<section class="article-section" id="a-compact-decision-guide" data-refs="8,12,17,18,24,25,37">
+  <p class="eyebrow">11: Practitioner's guide</p>
+  <h2>A compact decision guide</h2>
+  <p data-refs="8,12,17,18,24,25,37" data-ref-label="A compact routing table for practitioners">The shortest honest summary of the field is that the right tool depends less on the buzzword than on the failure mode: whether the hard part is discrete, non-smooth, equation-defined, noisy, or structurally unidentifiable from the data. The table is meant to shorten that routing step before you spend a week building the wrong differentiable stack. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-8" data-ref-link="8" aria-label="Show reference 8">8</a> <a class="ref-chip inline-ref" href="#ref-12" data-ref-link="12" aria-label="Show reference 12">12</a> <a class="ref-chip inline-ref" href="#ref-17" data-ref-link="17" aria-label="Show reference 17">17</a> <a class="ref-chip inline-ref" href="#ref-18" data-ref-link="18" aria-label="Show reference 18">18</a> <a class="ref-chip inline-ref" href="#ref-24" data-ref-link="24" aria-label="Show reference 24">24</a> <a class="ref-chip inline-ref" href="#ref-25" data-ref-link="25" aria-label="Show reference 25">25</a> <a class="ref-chip inline-ref" href="#ref-37" data-ref-link="37" aria-label="Show reference 37">37</a></span></p>
+  <table class="tbl">
+    <tr><th>Situation</th><th>First tool to try</th><th>What to validate</th><th>When to abandon it</th></tr>
+    <tr><td><strong>Smooth PDE inverse or control loop with many repeated queries</strong></td><td>Classical adjoint or differentiable solver</td><td>Gradient check, mesh and timestep convergence, cost versus adjoint baseline</td><td>If it is a one-off solve or the classical adjoint is already cheap</td></tr>
+    <tr><td><strong>Sparse and noisy inverse problem</strong></td><td>Physics-informed model + Bayesian or ensemble UQ + sensor or experiment design</td><td>Identifiability, posterior calibration, noise sensitivity</td><td>If the measurements leave parameters unidentifiable</td></tr>
+    <tr><td><strong>Discrete choice, architecture, token, or quantized code</strong></td><td>Gumbel-Softmax or STE</td><td><code>&tau;</code> schedule, train-test mismatch, category or code utilization</td><td>If hard decisions collapse or bias dominates</td></tr>
+    <tr><td><strong>Black-box or non-differentiable reward</strong></td><td>Score-function or stochastic smoothing</td><td>Variance, sample count, baseline or control-variate quality</td><td>If the sample budget required for a stable signal is too high</td></tr>
+    <tr><td><strong>Contact, friction, fracture, or hard events</strong></td><td>Soft contact, randomized smoothing, event-aware custom gradients</td><td>Directional finite differences near events; contact-normal and event-time sensitivity</td><td>If first-order gradients are biased; use zeroth-order or <code>&alpha;</code>-order estimators</td></tr>
+    <tr><td><strong>Long chaotic rollout</strong></td><td>Short-horizon gradients, checkpointing, adjoint with care</td><td>Horizon sensitivity, gradient growth, whether steps reduce actual loss</td><td>If gradients stop predicting loss decrease</td></tr>
+    <tr><td><strong>Multi-modal inverse problem</strong></td><td>Diffusion, flow, or posterior sampler</td><td>Coverage, calibration, constraint satisfaction</td><td>If a single deterministic solution is all the task requires</td></tr>
+    <tr><td><strong>Geometry or topology inverse design</strong></td><td>Differentiable parameterization, level set, density method, or classical adjoint with constraints</td><td>Representation, constraints, manufacturability, and final-solver validation</td><td>If the optimized design only works after heavy post-hoc repair</td></tr>
+  </table>
+  <ul>
+    <li><strong>Before differentiating:</strong> identify the strong classical baseline, estimate total validated cost, and decide whether this is a repeated-query problem where gradients will be reused.</li>
+    <li><strong>Before optimizing:</strong> run the gradient audit: directional finite differences, adjoint consistency where possible, gradient-to-loss correlation, resolution and tolerance sensitivity, and final high-fidelity validation.</li>
+    <li><strong>Discrete latent or categorical choice?</strong> Start with Gumbel-Softmax (+ STE for a hard forward); move to REINFORCE-with-baseline if you need unbiasedness or a black box; use generalized or variance-reduced Gumbel for exotic distributions.</li>
+    <li><strong>Hard selection, quantization, or integer physics?</strong> Straight-through, or relax during optimization and re-discretize afterward.</li>
+    <li><strong>Combinatorial operator?</strong> Purpose-built differentiable sorting, ranking, or matching, or stochastic smoothing of the black box.</li>
+    <li><strong>Non-smooth physics, rendering, or black box?</strong> Randomized or stochastic smoothing, or a learned differentiable surrogate.</li>
+    <li><strong>Equation- or optimization-defined layer?</strong> Prefer implicit differentiation or adjoint for a converged equation solve; short unrolls can still be useful for short horizons, nonconverged iterative processes, or when solver internals are part of the model.</li>
+    <li><strong>Long or chaotic rollout?</strong> Truncated backprop + checkpointing + gradient decay; tune the unroll horizon empirically; consider multi-step penalty losses.</li>
+    <li><strong>Noisy, sparse experimental data?</strong> Check identifiability first; then use physics-informed loss for regularization + Bayesian or ensemble treatment for calibrated uncertainty + multi-fidelity or transfer; denoise before differentiating.</li>
+    <li><strong>Multi-modal inverse problem?</strong> Use posterior sampling, diffusion or flow priors, or ensembles; report more than a single deterministic design unless the application genuinely needs one.</li>
+    <li><strong>Geometry or topology inverse design?</strong> Treat the representation as part of the model: constraints, manufacturability, and final-solver validation often matter more than the optimizer.</li>
+    <li><strong>Before claiming a win:</strong> benchmark against a <em>tuned</em> classical solver and a simple ML baseline; most reported advantages evaporate otherwise (§9.1).</li>
+  </ul>
+</section>
+
+<section class="article-section sourcing-note" id="sourcing-note">
+  <h2>Sourcing Note</h2>
+  <p><em>Coverage reflects literature available on July 5, 2026. Several cited works are preprints or recently published papers; figures are schematic and drawn for intuition, with schematic scale. The article emphasizes reusable gradient machinery and validation practice across application areas.</em></p>
+</section>
+
+</div>
+        </article>
+
+        <aside class="reference-rail" aria-label="Article references">
+            <div class="reference-panel">
+                <div class="reference-panel-header">
+                    <p class="eyebrow">Literature</p>
+                    <h2>References</h2>
+                    <p id="reference-status">Scroll the review or tap a paragraph reference to surface the sources behind that claim.</p>
+                </div>
+                <label class="reference-filter-label" for="reference-filter">Search references</label>
+                <input id="reference-filter" class="reference-filter" type="search" placeholder="Author, topic, year, ref #">
+                <button id="show-all-references" class="reference-reset" type="button">Show all references</button>
+                <ol class="reference-list">
+                    <li class="reference-group" data-group-title="Differentiable simulation platforms and domains">Differentiable simulation platforms and domains</li>
+                    <li id="ref-1" class="reference-card" data-ref="1" data-group="Differentiable simulation platforms and domains"><a class="reference-number" href="#ref-1" data-ref-link="1">1</a><p>Newbury et al. <em>A Review of Differentiable Simulators.</em> arXiv:2407.05560. Broad survey of differentiable simulation stacks and design tradeoffs.</p></li>
+                    <li id="ref-2" class="reference-card" data-ref="2" data-group="Differentiable simulation platforms and domains"><a class="reference-number" href="#ref-2" data-ref-link="2">2</a><p><em>Learning Embodied Intelligence from Physical Simulators and World Models.</em> arXiv:2507.00917. Places differentiable simulation in the wider world-model and embodied-learning arc.</p></li>
+                    <li id="ref-3" class="reference-card" data-ref="3" data-group="Differentiable simulation platforms and domains"><a class="reference-number" href="#ref-3" data-ref-link="3">3</a><p>Kaiser et al. <em>Cheetah: high-speed differentiable beam dynamics.</em> arXiv:2401.05815. Accelerator system identification and control through differentiable beam dynamics.</p></li>
+                    <li id="ref-4" class="reference-card" data-ref="4" data-group="Differentiable simulation platforms and domains"><a class="reference-number" href="#ref-4" data-ref-link="4">4</a><p>Deistler et al. <em>Jaxley: differentiable simulation enables large-scale training of detailed biophysical models of neural dynamics.</em> <em>Nature Methods</em> 22, 2649–2657 (2025).</p></li>
+                    <li id="ref-5" class="reference-card" data-ref="5" data-group="Differentiable simulation platforms and domains"><a class="reference-number" href="#ref-5" data-ref-link="5">5</a><p><em>Differentiable multiphase reservoir flow.</em> <em>Scientific Reports</em> (2026), s41598-026-37063-3. End-to-end differentiable reservoir-flow assimilation.</p></li>
+
+                    <li class="reference-group" data-group-title="Contact, non-smoothness, and smoothing">Contact, non-smoothness, and smoothing</li>
+                    <li id="ref-6" class="reference-card" data-ref="6" data-group="Contact, non-smoothness, and smoothing"><a class="reference-number" href="#ref-6" data-ref-link="6">6</a><p>de Avila Belbute-Peres et al. (2018) and Degrave et al. (2019). Early analytical LCP-style gradients for contact in differentiable rigid-body systems.</p></li>
+                    <li id="ref-7" class="reference-card" data-ref="7" data-group="Contact, non-smoothness, and smoothing"><a class="reference-number" href="#ref-7" data-ref-link="7">7</a><p>Geilinger et al. <em>ADD: Analytically Differentiable Dynamics with Frictional Contact.</em> arXiv:2007.00987.</p></li>
+                    <li id="ref-8" class="reference-card" data-ref="8" data-group="Contact, non-smoothness, and smoothing"><a class="reference-number" href="#ref-8" data-ref-link="8">8</a><p>Suh, Simchowitz, Zhang, Tedrake. <em>Do Differentiable Simulators Give Better Policy Gradients?</em> ICML 2022; arXiv:2202.00817. Shows when first-order gradients become empirically biased.</p></li>
+                    <li id="ref-9" class="reference-card" data-ref="9" data-group="Contact, non-smoothness, and smoothing"><a class="reference-number" href="#ref-9" data-ref-link="9">9</a><p>Zhong, Han, Dey, Brikis. <em>Improving Gradient Computation for Differentiable Physics Simulation with Contacts.</em> PMLR 211 / L4DC 2023; arXiv:2305.00092.</p></li>
+                    <li id="ref-10" class="reference-card" data-ref="10" data-group="Contact, non-smoothness, and smoothing"><a class="reference-number" href="#ref-10" data-ref-link="10">10</a><p>Lidec et al. <em>Augmenting Differentiable Physics with Randomized Smoothing.</em> arXiv:2206.11884.</p></li>
+                    <li id="ref-11" class="reference-card" data-ref="11" data-group="Contact, non-smoothness, and smoothing"><a class="reference-number" href="#ref-11" data-ref-link="11">11</a><p>Petersen et al. <em>Generalizing Stochastic Smoothing for Differentiation and Gradient Estimation.</em> arXiv:2410.08125.</p></li>
+
+                    <li class="reference-group" data-group-title="Discrete relaxations and routing tools">Discrete relaxations and routing tools</li>
+                    <li id="ref-12" class="reference-card" data-ref="12" data-group="Discrete relaxations and routing tools"><a class="reference-number" href="#ref-12" data-ref-link="12">12</a><p>Jang, Gu, Poole. <em>Categorical Reparameterization with Gumbel-Softmax.</em> ICLR 2017; arXiv:1611.01144.</p></li>
+                    <li id="ref-13" class="reference-card" data-ref="13" data-group="Discrete relaxations and routing tools"><a class="reference-number" href="#ref-13" data-ref-link="13">13</a><p>Maddison, Mnih, Teh. <em>The Concrete Distribution: A Continuous Relaxation of Discrete Random Variables.</em> ICLR 2017; arXiv:1611.00712.</p></li>
+                    <li id="ref-14" class="reference-card" data-ref="14" data-group="Discrete relaxations and routing tools"><a class="reference-number" href="#ref-14" data-ref-link="14">14</a><p>Joo et al. <em>Generalized Gumbel-Softmax for Generic Discrete Random Variables.</em> arXiv:2003.01847.</p></li>
+                    <li id="ref-15" class="reference-card" data-ref="15" data-group="Discrete relaxations and routing tools"><a class="reference-number" href="#ref-15" data-ref-link="15">15</a><p>Paulus et al. <em>Rao-Blackwellizing the Straight-Through Gumbel-Softmax Estimator.</em> arXiv:2010.04838; Shekhovtsov on cold-analysis and ZGR variants.</p></li>
+                    <li id="ref-16" class="reference-card" data-ref="16" data-group="Discrete relaxations and routing tools"><a class="reference-number" href="#ref-16" data-ref-link="16">16</a><p>Petersen et al. Differentiable or monotonic sorting networks and related “differentiate almost everything” routing tools; arXiv:2203.09630.</p></li>
+                    <li id="ref-17" class="reference-card" data-ref="17" data-group="Discrete relaxations and routing tools"><a class="reference-number" href="#ref-17" data-ref-link="17">17</a><p>Amos &amp; Kolter. <em>OptNet: Differentiable Optimization as a Layer in Neural Networks.</em> ICML 2017; arXiv:1703.00443.</p></li>
+                    <li id="ref-18" class="reference-card" data-ref="18" data-group="Discrete relaxations and routing tools"><a class="reference-number" href="#ref-18" data-ref-link="18">18</a><p>Agrawal et al. <em>Differentiable Convex Optimization Layers.</em> NeurIPS 2019; arXiv:1910.12430. Often referred to via CVXPYLayers.</p></li>
+
+                    <li class="reference-group" data-group-title="Neural operators, diffusion, and benchmark suites">Neural operators, diffusion, and benchmark suites</li>
+                    <li id="ref-19" class="reference-card" data-ref="19" data-group="Neural operators, diffusion, and benchmark suites"><a class="reference-number" href="#ref-19" data-ref-link="19">19</a><p>Lu, Jin, Karniadakis. <em>DeepONet: Learning nonlinear operators for identifying differential equations based on the universal approximation theorem of operators.</em> <em>Nature Machine Intelligence</em> 3, 218–229 (2021).</p></li>
+                    <li id="ref-20" class="reference-card" data-ref="20" data-group="Neural operators, diffusion, and benchmark suites"><a class="reference-number" href="#ref-20" data-ref-link="20">20</a><p>Li et al. <em>Fourier Neural Operator for Parametric Partial Differential Equations.</em> ICLR 2021; and <em>Physics-Informed Neural Operator</em>, arXiv:2111.03794.</p></li>
+                    <li id="ref-21" class="reference-card" data-ref="21" data-group="Neural operators, diffusion, and benchmark suites"><a class="reference-number" href="#ref-21" data-ref-link="21">21</a><p>Mikuni &amp; Nachman on <em>CaloScore v2</em>; Shu, Li, Farimani on physics-informed diffusion for flow reconstruction; Shysheya et al. on conditional diffusion for PDE simulation; Utkarsh et al. on physics-constrained flow matching.</p></li>
+                    <li id="ref-22" class="reference-card" data-ref="22" data-group="Neural operators, diffusion, and benchmark suites"><a class="reference-number" href="#ref-22" data-ref-link="22">22</a><p>Takamoto et al. <em>PDEBench</em> (NeurIPS 2022) and Koehler et al. <em>APEBench</em> (NeurIPS 2024).</p></li>
+                    <li id="ref-23" class="reference-card" data-ref="23" data-group="Neural operators, diffusion, and benchmark suites"><a class="reference-number" href="#ref-23" data-ref-link="23">23</a><p><em>CFDBench</em>, <em>Multiphysics Bench</em>, and Goel et al. <em>PDEInvBench: A Comprehensive Dataset and Design Space Exploration of Neural Networks for PDE Inverse Problems.</em> TMLR 2026; arXiv:2605.25353.</p></li>
+
+                    <li class="reference-group" data-group-title="Inverse workflows and uncertainty">Inverse workflows and uncertainty</li>
+                    <li id="ref-24" class="reference-card" data-ref="24" data-group="Inverse workflows and uncertainty"><a class="reference-number" href="#ref-24" data-ref-link="24">24</a><p>Yang, Meng, Karniadakis. <em>B-PINNs: Bayesian Physics-Informed Neural Networks for Forward and Inverse PDE Problems with Noisy Data.</em> <em>Journal of Computational Physics</em> 425 (2021); arXiv:2003.06097.</p></li>
+                    <li id="ref-25" class="reference-card" data-ref="25" data-group="Inverse workflows and uncertainty"><a class="reference-number" href="#ref-25" data-ref-link="25">25</a><p>Zheng et al. <em>InverseBench: Benchmarking Plug-and-Play Diffusion Priors for Inverse Problems in Physical Sciences.</em> arXiv:2503.11043. See also hard-constraint sampling work such as physics-constrained flow matching.</p></li>
+
+                    <li class="reference-group" data-group-title="Estimators, data, and scarcity">Estimators, data, and scarcity</li>
+                    <li id="ref-26" class="reference-card" data-ref="26" data-group="Estimators, data, and scarcity"><a class="reference-number" href="#ref-26" data-ref-link="26">26</a><p>Mohamed, Rosca, Figurnov, Mnih. <em>Monte Carlo Gradient Estimation in Machine Learning.</em> JMLR 21 (2020); arXiv:1906.10652.</p></li>
+                    <li id="ref-27" class="reference-card" data-ref="27" data-group="Estimators, data, and scarcity"><a class="reference-number" href="#ref-27" data-ref-link="27">27</a><p>van den Oord, Vinyals, Kavukcuoglu. <em>Neural Discrete Representation Learning</em> (VQ-VAE), NeurIPS 2017; Zheng &amp; Vedaldi on codebook collapse and dead-code behavior, ICCV 2023.</p></li>
+                    <li id="ref-28" class="reference-card" data-ref="28" data-group="Estimators, data, and scarcity"><a class="reference-number" href="#ref-28" data-ref-link="28">28</a><p>Li et al. <em>Physics-Informed Bayesian Neural Networks for the phonon BTE with sparse, noisy data.</em> <em>ASME Journal of Heat and Mass Transfer</em> (2025).</p></li>
+                    <li id="ref-29" class="reference-card" data-ref="29" data-group="Estimators, data, and scarcity"><a class="reference-number" href="#ref-29" data-ref-link="29">29</a><p><em>PINN-based discovery of hyperelastic constitutive models from extremely scarce data.</em> arXiv:2504.19494.</p></li>
+
+                    <li class="reference-group" data-group-title="Training and optimization tricks">Training and optimization tricks</li>
+                    <li id="ref-30" class="reference-card" data-ref="30" data-group="Training and optimization tricks"><a class="reference-number" href="#ref-30" data-ref-link="30">30</a><p>Jang, Gu, Poole. Gumbel-Softmax temperature annealing schedules and straight-through variants; ICLR 2017.</p></li>
+                    <li id="ref-31" class="reference-card" data-ref="31" data-group="Training and optimization tricks"><a class="reference-number" href="#ref-31" data-ref-link="31">31</a><p>van den Oord, Vinyals, Kavukcuoglu. VQ-VAE commitment loss, EMA codebook updates, and straight-through training details; NeurIPS 2017.</p></li>
+                    <li id="ref-32" class="reference-card" data-ref="32" data-group="Training and optimization tricks"><a class="reference-number" href="#ref-32" data-ref-link="32">32</a><p>Tucker et al. <em>REBAR</em> and Grathwohl et al. <em>RELAX</em>. Variance-reduced control-variate estimators for discrete variables.</p></li>
+                    <li id="ref-33" class="reference-card" data-ref="33" data-group="Training and optimization tricks"><a class="reference-number" href="#ref-33" data-ref-link="33">33</a><p>Wang, Teng, Perdikaris. <em>Understanding and Mitigating Gradient Pathologies in Physics-Informed Neural Networks.</em> SIAM J. Sci. Comput. 43(5), A3055–A3081 (2021); arXiv:2001.04536.</p></li>
+                    <li id="ref-34" class="reference-card" data-ref="34" data-group="Training and optimization tricks"><a class="reference-number" href="#ref-34" data-ref-link="34">34</a><p>Wang, Yu, Perdikaris. <em>When and why PINNs fail to train: a neural tangent kernel perspective.</em> arXiv:2007.14527.</p></li>
+                    <li id="ref-35" class="reference-card" data-ref="35" data-group="Training and optimization tricks"><a class="reference-number" href="#ref-35" data-ref-link="35">35</a><p>Wang, Sankaran, Perdikaris. <em>Respecting causality for training physics-informed neural networks.</em> CMAME 421 (2024); arXiv:2203.07404.</p></li>
+                    <li id="ref-36" class="reference-card" data-ref="36" data-group="Training and optimization tricks"><a class="reference-number" href="#ref-36" data-ref-link="36">36</a><p>Metz, Freeman, Schoenholz, Kachman. <em>Gradients are Not All You Need.</em> arXiv:2111.05803. Long-horizon gradient pathologies and Jacobian-spectrum failure.</p></li>
+
+                    <li class="reference-group" data-group-title="Critical analyses and boundary conditions">Critical analyses and boundary conditions</li>
+                    <li id="ref-37" class="reference-card" data-ref="37" data-group="Critical analyses and boundary conditions"><a class="reference-number" href="#ref-37" data-ref-link="37">37</a><p>McGreivy &amp; Hakim. <em>Weak baselines and reporting biases lead to overoptimism in machine learning for fluid-related PDEs.</em> <em>Nature Machine Intelligence</em> 6, 1256–1269 (2024); plus Krishnapriyan et al. on PINN failure modes for simple forward PDEs.</p></li>
+                </ol>
+            </div>
+        </aside>
+    </main>
+
+    <script src="../script.js"></script>
+</body>
+</html>
