@@ -397,6 +397,49 @@ a:hover {
     font-weight: 600;
 }
 
+.essay-body h3 {
+    margin: 38px 0 12px;
+    color: #111111;
+    font-size: 1.14rem;
+    font-weight: 600;
+    line-height: 1.35;
+}
+
+.essay-body ul,
+.essay-body ol {
+    margin: 0 0 1.55rem;
+    padding-left: 1.25rem;
+}
+
+.essay-body li {
+    margin-bottom: 0.72rem;
+    color: #252525;
+    font-weight: 300;
+}
+
+.essay-body blockquote {
+    margin: 26px 0 30px;
+    padding: 18px 22px;
+    border-left: 3px solid #111111;
+    border-radius: 0 12px 12px 0;
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.essay-body blockquote p {
+    margin-bottom: 0.85rem;
+}
+
+.essay-body blockquote p:last-child {
+    margin-bottom: 0;
+}
+
+.essay-break {
+    width: 74px;
+    height: 1px;
+    margin: 42px 0 22px;
+    background: var(--border-color);
+}
+
 .article-outline {
     margin: 34px 0 62px;
     padding: 22px 0 20px;
@@ -911,6 +954,35 @@ a:hover {
     color: #0f6e56;
 }
 
+.essay-body table.tbl {
+    width: 100%;
+    margin: 0;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+}
+
+.essay-body table.tbl th,
+.essay-body table.tbl td {
+    padding: 11px 12px;
+    border-bottom: 1px solid var(--border-color);
+    color: #252525;
+    text-align: left;
+    vertical-align: top;
+    overflow-wrap: anywhere;
+}
+
+.essay-body table.tbl th {
+    color: var(--accent-color);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.essay-body table.tbl tr:last-child td {
+    border-bottom: none;
+}
+
 .review-body .lin {
     margin: -4px 0 18px;
     padding: 2px 0 2px 14px;
@@ -1332,9 +1404,14 @@ a:hover {
         margin-left: 0.2rem;
     }
 
+    .essay-body h3,
     .review-body h3 {
         font-size: 1.04rem;
         line-height: 1.35;
+    }
+
+    .essay-body blockquote {
+        padding: 16px 18px;
     }
 
     .review-body .eq {
@@ -1440,6 +1517,7 @@ a:hover {
         padding-left: 10px;
     }
 
+    .essay-body table.tbl,
     .review-body table.tbl,
     .artifact-modal table.tbl {
         font-size: 0.84rem;

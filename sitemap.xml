@@ -7,8 +7,13 @@
     </url>
     <url>
         <loc>https://emilyhsiang.com/blog.html</loc>
-        <lastmod>2026-07-06</lastmod>
+        <lastmod>2026-07-18</lastmod>
         <priority>0.6</priority>
+    </url>
+    <url>
+        <loc>https://emilyhsiang.com/articles/how-would-we-know-if-ai-solves-p-np.html</loc>
+        <lastmod>2026-07-18</lastmod>
+        <priority>0.8</priority>
     </url>
     <url>
         <loc>https://emilyhsiang.com/articles/making-the-non-differentiable-differentiable.html</loc>
