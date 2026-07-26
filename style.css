@@ -369,6 +369,26 @@ a:hover {
     font-size: 0.92rem;
 }
 
+.featured-figure {
+    margin: 36px 0 0;
+}
+
+.featured-figure iframe {
+    display: block;
+    width: 100%;
+    height: 560px;
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    background: #ffffff;
+}
+
+.featured-figure figcaption {
+    margin-top: 10px;
+    color: var(--accent-color);
+    font-size: 0.88rem;
+    line-height: 1.5;
+}
+
 .article-disclaimer {
     margin-top: 28px;
     padding: 18px 20px;
@@ -1433,6 +1453,10 @@ a:hover {
         font-size: 2.35rem;
     }
 
+    .featured-figure iframe {
+        height: 500px;
+    }
+
     .article-body {
         font-size: 1rem;
     }
@@ -1541,6 +1565,10 @@ a:hover {
 
     .article-dek {
         font-size: 1.08rem;
+    }
+
+    .featured-figure iframe {
+        height: 460px;
     }
 
     .article-body h2 {

@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Verification Bottleneck — figure</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Gaegu:wght@400;700&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FFFFFF;
+    --paper2:#F5F5F5;
+    --ink:#2B2620;
+    --ink-soft:#5A5044;
+    --faint:#9A8C72;
+    --gold:#C79A3B;      /* the rare real proof */
+    --gold-deep:#A8781E;
+    --teal:#3C6A6F;      /* collected value */
+    --red:#A8433A;       /* filter / fatigue accent */
+    --junk:#8C7F68;      /* discarded */
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:
+      radial-gradient(circle at 15% 20%, rgba(168,67,58,0.045), transparent 42%),
+      radial-gradient(circle at 88% 78%, rgba(60,106,111,0.06), transparent 46%),
+      var(--paper);
+    min-height:100vh;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:26px 16px 40px;
+    font-family:'Kalam',cursive;color:var(--ink);
+  }
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;opacity:0.45;
+    background-image:
+      repeating-linear-gradient(0deg, rgba(139,126,104,0.03) 0 1px, transparent 1px 3px),
+      repeating-linear-gradient(90deg, rgba(139,126,104,0.025) 0 1px, transparent 1px 4px);
+    mix-blend-mode:multiply;
+  }
+  .frame{
+    width:min(920px,98vw);
+    background:linear-gradient(180deg,#FFFFFF,#F7F7F7);
+    border:2.5px solid var(--ink);
+    border-radius:20px 16px 20px 16px/16px 20px 16px 20px;
+    box-shadow:5px 7px 0 rgba(43,38,32,0.12);
+    padding:22px 18px 16px;
+    position:relative;
+    z-index:2;
+  }
+  .tab{
+    position:absolute;top:-14px;left:28px;
+    background:var(--red);color:#FFFFFF;
+    font-family:'Gaegu',cursive;font-weight:700;font-size:13px;
+    letter-spacing:1.5px;text-transform:uppercase;
+    padding:3px 14px;border-radius:9px;transform:rotate(-1.5deg);
+  }
+  h2{
+    font-family:'Caveat',cursive;font-weight:700;
+    font-size:clamp(24px,3.6vw,34px);line-height:1;
+    text-align:center;margin:6px 0 2px;transform:rotate(-0.4deg);
+  }
+  .sub{
+    text-align:center;font-size:clamp(13px,1.9vw,15px);
+    color:var(--ink-soft);max-width:640px;margin:0 auto 6px;
+  }
+  svg{width:100%;height:auto;display:block;overflow:visible}
+
+  .legend{
+    display:flex;gap:18px;justify-content:center;flex-wrap:wrap;
+    margin-top:10px;font-family:'Gaegu',cursive;font-size:13.5px;color:var(--ink-soft);
+  }
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .sw{width:14px;height:14px;border:2px solid var(--ink);border-radius:3px;display:inline-block}
+  .sw.gold{background:var(--gold)}
+  .sw.junk{background:var(--junk)}
+  .sw.teal{background:var(--teal)}
+
+  @media (prefers-reduced-motion:reduce){
+    .doc{animation:none!important;opacity:1!important}
+  }
+</style>
+</head>
+<body>
+<div class="frame">
+  <div class="tab">the bottleneck</div>
+  <h2>Generation is free. Verification is not.</h2>
+  <p class="sub">Hundreds of plausible artifacts pour in. A few exhausted readers can inspect only a trickle. One in hundreds is the real thing — and it only has value if someone catches it.</p>
+
+  <svg id="fig" viewBox="0 0 920 470" role="img" aria-label="Hundreds of paper artifacts flow from the left into a filter staffed by tired readers; a rare gold one is collected as value on the right, the rest fall to a recycle bin below.">
+    <defs>
+      <filter id="rough"><feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="2" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.6"/></filter>
+      <filter id="rough2"><feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="9" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="1.6"/></filter>
+
+      <!-- a single paper artifact: sheet with scribbled formula lines -->
+      <g id="doc">
+        <rect x="-11" y="-14" width="22" height="28" rx="2.5" fill="#F4ECDA" stroke="#2B2620" stroke-width="1.4" filter="url(#rough2)"/>
+        <line x1="-7" y1="-8" x2="7" y2="-8" stroke="#7A6E58" stroke-width="1.1"/>
+        <line x1="-7" y1="-3" x2="4" y2="-3" stroke="#7A6E58" stroke-width="1.1"/>
+        <line x1="-7" y1="2" x2="7" y2="2" stroke="#7A6E58" stroke-width="1.1"/>
+        <line x1="-7" y1="7" x2="2" y2="7" stroke="#7A6E58" stroke-width="1.1"/>
+      </g>
+      <!-- the rare golden artifact -->
+      <g id="docGold">
+        <rect x="-12" y="-15" width="24" height="30" rx="2.5" fill="#F6E4B0" stroke="#A8781E" stroke-width="2" filter="url(#rough2)"/>
+        <path d="M0,-9 L1.8,-4 L7,-4 L2.8,-1 L4.4,4 L0,1 L-4.4,4 L-2.8,-1 L-7,-4 L-1.8,-4 Z" fill="#C79A3B" stroke="#A8781E" stroke-width="0.8"/>
+        <line x1="-7" y1="8" x2="7" y2="8" stroke="#A8781E" stroke-width="1.2"/>
+      </g>
+      <marker id="ar" viewBox="0 0 12 12" refX="8" refY="6" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+        <path d="M1,1 L10,6 L1,11" fill="none" stroke="#8C7F68" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </marker>
+    </defs>
+
+    <!-- ============ LEFT: inflow label ============ -->
+    <text x="86" y="40" text-anchor="middle" font-family="Gaegu,cursive" font-weight="700" font-size="15" fill="#5A5044">the flood</text>
+    <text x="86" y="57" text-anchor="middle" font-family="Kalam,cursive" font-size="12" fill="#9A8C72">hundreds / second</text>
+
+    <!-- inflow lanes (guides) -->
+    <g stroke="#B7A98C" stroke-width="1" stroke-dasharray="3 6" opacity="0.5">
+      <line x1="20" y1="120" x2="330" y2="150"/>
+      <line x1="20" y1="175" x2="330" y2="185"/>
+      <line x1="20" y1="235" x2="330" y2="235"/>
+      <line x1="20" y1="295" x2="330" y2="285"/>
+      <line x1="20" y1="350" x2="330" y2="320"/>
+    </g>
+
+    <!-- animated incoming docs get injected here -->
+    <g id="stream"></g>
+
+    <!-- ============ CENTER: the filter machine ============ -->
+    <g id="machine">
+      <!-- housing -->
+      <rect x="330" y="120" width="150" height="230" rx="14" fill="#F5F5F5" stroke="#2B2620" stroke-width="2.6" filter="url(#rough)"/>
+      <rect x="330" y="120" width="150" height="34" rx="14" fill="#2B2620"/>
+      <text x="405" y="143" text-anchor="middle" font-family="Gaegu,cursive" font-weight="700" font-size="15" fill="#FFFFFF" letter-spacing="1">THE FILTER</text>
+
+      <!-- intake grate (many slots, few open) -->
+      <g stroke="#8C7F68" stroke-width="2">
+        <line x1="330" y1="175" x2="342" y2="175"/>
+        <line x1="330" y1="200" x2="342" y2="200"/>
+        <line x1="330" y1="225" x2="342" y2="225"/>
+        <line x1="330" y1="250" x2="342" y2="250"/>
+        <line x1="330" y1="275" x2="342" y2="275"/>
+        <line x1="330" y1="300" x2="342" y2="300"/>
+      </g>
+
+      <!-- three tired readers as desks/heads inside -->
+      <!-- reader 1 -->
+      <g transform="translate(378,205)">
+        <circle cx="0" cy="0" r="12" fill="#D9C6A0" stroke="#2B2620" stroke-width="2" filter="url(#rough2)"/>
+        <!-- tired eyes: half-closed -->
+        <path d="M-6,-2 q3,3 6,0" fill="none" stroke="#2B2620" stroke-width="1.6" stroke-linecap="round"/>
+        <path d="M1,-2 q3,3 6,0" fill="none" stroke="#2B2620" stroke-width="1.6" stroke-linecap="round"/>
+        <!-- eye bags -->
+        <path d="M-6,3 q3,2 6,0" fill="none" stroke="#A8433A" stroke-width="1" opacity="0.6"/>
+        <path d="M1,3 q3,2 6,0" fill="none" stroke="#A8433A" stroke-width="1" opacity="0.6"/>
+        <!-- slumped shoulders -->
+        <path d="M-13,20 q13,-10 26,0" fill="#C9B58E" stroke="#2B2620" stroke-width="2" filter="url(#rough2)"/>
+        <!-- sweat/tired drop -->
+        <path d="M12,-8 q3,4 0,7 q-3,-3 0,-7Z" fill="#6E9599" opacity="0.7"/>
+      </g>
+      <!-- reader 2 -->
+      <g transform="translate(378,258)">
+        <circle cx="0" cy="0" r="12" fill="#D9C6A0" stroke="#2B2620" stroke-width="2" filter="url(#rough2)"/>
+        <line x1="-6" y1="-2" x2="0" y2="-2" stroke="#2B2620" stroke-width="1.6" stroke-linecap="round"/>
+        <line x1="2" y1="-2" x2="8" y2="-2" stroke="#2B2620" stroke-width="1.6" stroke-linecap="round"/>
+        <path d="M-6,3 q3,2 6,0" fill="none" stroke="#A8433A" stroke-width="1" opacity="0.6"/>
+        <path d="M1,3 q3,2 6,0" fill="none" stroke="#A8433A" stroke-width="1" opacity="0.6"/>
+        <path d="M-13,20 q13,-10 26,0" fill="#C9B58E" stroke="#2B2620" stroke-width="2" filter="url(#rough2)"/>
+      </g>
+      <!-- reader 3 (head down, exhausted) -->
+      <g transform="translate(378,312)">
+        <circle cx="0" cy="2" r="12" fill="#D9C6A0" stroke="#2B2620" stroke-width="2" filter="url(#rough2)"/>
+        <path d="M-6,0 q3,3 6,0" fill="none" stroke="#2B2620" stroke-width="1.6" stroke-linecap="round"/>
+        <path d="M1,0 q3,3 6,0" fill="none" stroke="#2B2620" stroke-width="1.6" stroke-linecap="round"/>
+        <text x="14" y="-8" font-family="Caveat,cursive" font-size="16" fill="#5A5044">z</text>
+        <text x="19" y="-14" font-family="Caveat,cursive" font-size="12" fill="#9A8C72">z</text>
+      </g>
+
+      <!-- capacity note -->
+      <text x="405" y="340" text-anchor="middle" font-family="Kalam,cursive" font-size="11" fill="#A8433A">3 readers · a trickle</text>
+
+      <!-- output splitter on the right side of machine -->
+      <path d="M480,215 L520,215" stroke="#2B2620" stroke-width="2.4" fill="none" filter="url(#rough2)"/>
+      <path d="M480,300 L520,300" stroke="#2B2620" stroke-width="2.4" fill="none" filter="url(#rough2)"/>
+    </g>
+
+    <!-- ============ RIGHT-TOP: value container ============ -->
+    <!-- path from filter to jar -->
+    <path d="M520,214 C600,210 640,196 700,196" class="outPath" fill="none" stroke="#C79A3B" stroke-width="2.4" stroke-dasharray="4 6" marker-end="url(#ar)" opacity="0.85"/>
+    <text x="612" y="182" text-anchor="middle" font-family="Gaegu,cursive" font-weight="700" font-size="13" fill="#A8781E">the real thing</text>
+
+    <!-- the collecting jar (small) -->
+    <g transform="translate(748,205)">
+      <path d="M-34,-30 L34,-30 L34,-24 L28,-18 L28,40 Q28,48 20,48 L-20,48 Q-28,48 -28,40 L-28,-18 L-34,-24 Z"
+            fill="#EAF0EC" stroke="#2B2620" stroke-width="2.4" filter="url(#rough)"/>
+      <!-- collected gold pieces settling at bottom -->
+      <g id="collected"></g>
+      <text x="0" y="66" text-anchor="middle" font-family="Gaegu,cursive" font-weight="700" font-size="13" fill="#3C6A6F">VALUE</text>
+      <text x="0" y="82" text-anchor="middle" font-family="Kalam,cursive" font-size="11" fill="#9A8C72">verified &amp; kept</text>
+    </g>
+
+    <!-- ============ RIGHT-BOTTOM: recycle bin ============ -->
+    <path d="M520,300 C580,320 600,352 640,372" class="outPath" fill="none" stroke="#8C7F68" stroke-width="2.4" stroke-dasharray="4 6" marker-end="url(#ar)" opacity="0.8"/>
+    <text x="586" y="336" text-anchor="middle" font-family="Gaegu,cursive" font-weight="700" font-size="13" fill="#8C7F68">the rest</text>
+
+    <!-- bin -->
+    <g transform="translate(700,395)">
+      <path d="M-40,-18 L40,-18 L34,52 Q33,60 25,60 L-25,60 Q-33,60 -34,52 Z"
+            fill="#D8CBB2" stroke="#2B2620" stroke-width="2.4" filter="url(#rough)"/>
+      <rect x="-46" y="-26" width="92" height="10" rx="3" fill="#C9B896" stroke="#2B2620" stroke-width="2.2" filter="url(#rough2)"/>
+      <!-- recycle mark -->
+      <g transform="translate(0,20)" opacity="0.55" stroke="#5A5044" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M-9,-3 L-4,-11 L2,-11" marker-end=""/>
+        <path d="M8,-4 L11,4 L5,9"/>
+        <path d="M-11,6 L-8,13 L0,13"/>
+      </g>
+      <!-- crumpled junk near top -->
+      <g id="binPile"></g>
+      <text x="0" y="76" text-anchor="middle" font-family="Kalam,cursive" font-size="11" fill="#9A8C72">discarded, unread-through</text>
+    </g>
+
+    <!-- ratio caption bottom-left -->
+    <g transform="translate(150,430)">
+      <rect x="-118" y="-22" width="236" height="42" rx="10" fill="#F7F7F7" stroke="#2B2620" stroke-width="2" filter="url(#rough)"/>
+      <text x="0" y="-3" text-anchor="middle" font-family="Caveat,cursive" font-weight="700" font-size="19" fill="#A8781E">1 in ~hundreds is real</text>
+      <text x="0" y="14" text-anchor="middle" font-family="Kalam,cursive" font-size="11.5" fill="#5A5044">and only if a reader has capacity to find it</text>
+    </g>
+  </svg>
+
+  <div class="legend">
+    <span><i class="sw gold"></i> the rare real proof / innovation</span>
+    <span><i class="sw junk"></i> plausible but worthless</span>
+    <span><i class="sw teal"></i> value, once verified</span>
+  </div>
+</div>
+
+<script>
+(function(){
+  const NS="http://www.w3.org/2000/svg";
+  const stream=document.getElementById("stream");
+  const collected=document.getElementById("collected");
+  const binPile=document.getElementById("binPile");
+  const reduce=window.matchMedia("(prefers-reduced-motion:reduce)").matches;
+
+  // entry lanes (y positions on the left) and the machine intake point
+  const lanes=[120,150,180,210,240,270,300,330];
+  const INTAKE_X=332, INTAKE_Y0=175, INTAKE_Y1=300;
+
+  let goldCollectedCount=0;
+  let binCount=0;
+  const MAX_JAR=5, MAX_BIN=9;
+
+  function rand(a,b){return a+Math.random()*(b-a);}
+
+  // place a settled gold star in the jar
+  function addToJar(){
+    if(goldCollectedCount>=MAX_JAR) return;
+    const i=goldCollectedCount++;
+    const cols=[-14,0,14,-7,7];
+    const x=cols[i%cols.length];
+    const yy=38 - (i>2?12:0); // bottom row, then a second row
+    const g=document.createElementNS(NS,"path");
+    g.setAttribute("d","M0,-6 L1.6,-2 L6,-2 L2.5,1 L3.8,5 L0,2 L-3.8,5 L-2.5,1 L-6,-2 L-1.6,-2 Z");
+    g.setAttribute("transform",`translate(${x},${yy})`);
+    g.setAttribute("fill","#C79A3B");
+    g.setAttribute("stroke","#A8781E");
+    g.setAttribute("stroke-width","0.8");
+    g.setAttribute("opacity","0");
+    collected.appendChild(g);
+    requestAnimationFrame(()=>{g.style.transition="opacity .5s";g.setAttribute("opacity","1");});
+  }
+
+  // add a crumpled junk ball to the bin (recycles when full so discard reads as continuous)
+  function addToBin(){
+    if(binCount>=MAX_BIN){
+      // recycle: fade out the oldest few, reset count, keep the flow going
+      while(binPile.childElementCount>3){ binPile.removeChild(binPile.firstChild); }
+      binCount=binPile.childElementCount;
+    }
+    const i=binCount++;
+    const x=rand(-26,26), y=rand(-14,6);
+    const c=document.createElementNS(NS,"circle");
+    c.setAttribute("cx",x);c.setAttribute("cy",y);
+    c.setAttribute("r",rand(5,8).toFixed(1));
+    c.setAttribute("fill","#B7A98C");
+    c.setAttribute("stroke","#7A6E58");
+    c.setAttribute("stroke-width","1.4");
+    c.setAttribute("opacity","0");
+    binPile.appendChild(c);
+    requestAnimationFrame(()=>{c.style.transition="opacity .4s";c.setAttribute("opacity","0.9");});
+  }
+
+  // spawn one incoming doc that flies left->intake, then MOST fall to bin, FEW pass
+  let spawned=0;
+  function spawnDoc(){
+    const gold = (Math.random()<0.012); // ~1 in 80+ visually rare; guaranteed periodic below
+    makeDoc(gold);
+  }
+
+  function makeDoc(isGold){
+    const use=document.createElementNS(NS,"use");
+    use.setAttribute("href", isGold?"#docGold":"#doc");
+    const laneY=lanes[Math.floor(Math.random()*lanes.length)];
+    const startX=rand(-30,10);
+    const rot=rand(-25,25);
+    use.setAttribute("transform",`translate(${startX},${laneY}) rotate(${rot})`);
+    use.style.opacity="0";
+    stream.appendChild(use);
+
+    const intakeY=rand(INTAKE_Y0,INTAKE_Y1);
+    const t0=performance.now();
+    const flyDur=reduce?0:rand(2600,4200);
+    // decide fate: only a small fraction are "inspected & pass"; gold that is caught goes to jar
+    // capacity is tiny: independent small chance to be processed
+    const caught = Math.random()<0.10;      // reader had capacity to actually inspect
+    const passes = isGold && caught;         // real AND inspected -> value
+    // a rare non-gold false-catch is discarded after inspection anyway
+
+    function frame(now){
+      let p=(now-t0)/flyDur; if(p>1)p=1;
+      const ease=p<0.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
+      const x=startX + ease*(INTAKE_X-6-startX);
+      const y=laneY + ease*(intakeY-laneY);
+      const r=rot*(1-ease*0.6);
+      use.setAttribute("transform",`translate(${x.toFixed(1)},${y.toFixed(1)}) rotate(${r.toFixed(1)})`);
+      use.style.opacity = p<0.1? (p*10).toFixed(2) : (p>0.9? "1":"1");
+      if(p<1){requestAnimationFrame(frame);}
+      else{ atIntake(use,intakeY,passes,isGold); }
+    }
+    if(reduce){ use.style.opacity="1"; atIntake(use,intakeY,passes,isGold); }
+    else requestAnimationFrame(frame);
+  }
+
+  function atIntake(use,intakeY,passes,isGold){
+    // from intake, either route up-right to jar (passes) or down-right to bin (most)
+    const sx=INTAKE_X-6, sy=intakeY;
+    const t0=performance.now();
+    const dur=reduce?0:rand(900,1400);
+    const target = passes ? {x:744,y:235} : {x:695,y:388};
+    function frame(now){
+      let p=(now-t0)/dur; if(p>1)p=1;
+      const ease=1-Math.pow(1-p,2);
+      const x=sx+ease*(target.x-sx);
+      const y=sy+ease*(target.y-sy);
+      use.setAttribute("transform",`translate(${x.toFixed(1)},${y.toFixed(1)}) rotate(${(p*40*(passes?-1:1)).toFixed(1)})`);
+      use.style.opacity=(1-p*0.85).toFixed(2);
+      if(p<1)requestAnimationFrame(frame);
+      else{
+        use.remove();
+        if(passes) addToJar(); else addToBin();
+      }
+    }
+    if(reduce){ use.remove(); if(passes)addToJar(); else addToBin(); return; }
+    requestAnimationFrame(frame);
+  }
+
+  // guarantee the story reads: force one gold that PASSES early, and keep a steady flood
+  function forceGoldPass(){
+    // custom gold that always gets caught
+    const use=document.createElementNS(NS,"use");
+    use.setAttribute("href","#docGold");
+    const laneY=lanes[2];
+    use.setAttribute("transform",`translate(0,${laneY})`);
+    use.style.opacity="0";
+    stream.appendChild(use);
+    const startX=0, intakeY=215;
+    const t0=performance.now(); const flyDur=reduce?0:3400;
+    function frame(now){
+      let p=(now-t0)/flyDur;if(p>1)p=1;
+      const ease=p<0.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
+      const x=startX+ease*(INTAKE_X-6-startX);
+      const y=laneY+ease*(intakeY-laneY);
+      use.setAttribute("transform",`translate(${x.toFixed(1)},${y.toFixed(1)})`);
+      use.style.opacity=p<0.1?(p*10).toFixed(2):"1";
+      if(p<1)requestAnimationFrame(frame); else atIntake(use,intakeY,true,true);
+    }
+    if(reduce){atIntake(use,intakeY,true,true);} else requestAnimationFrame(frame);
+  }
+
+  if(reduce){
+    // static: show a handful in, a couple in bin, one in jar
+    for(let i=0;i<10;i++) makeDoc(false);
+    addToJar(); addToBin();addToBin();addToBin();
+  }else{
+    // steady flood — dense inflow, only a trickle ever caught
+    let count=0;
+    const flood=setInterval(()=>{
+      const n=3+Math.floor(Math.random()*3); // 3-5 docs per tick => reads as "hundreds"
+      for(let k=0;k<n;k++) spawnDoc();
+      count++;
+      // a real one that actually gets caught only every ~7 ticks: rare, but the jar slowly grows
+      if(count%7===0 && goldCollectedCount<MAX_JAR) forceGoldPass();
+    }, 620);
+    // kick off a gold pass early so the eye learns the color mapping
+    setTimeout(forceGoldPass, 1400);
+  }
+})();
+</script>
+</body>
+</html>
