@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Do We Know If We Have Solved P = NP? (Archived Version 1) | Emily Hsiang</title>
+    <meta name="author" content="Emily Hsiang">
+    <meta name="description" content="An essay on AI, originality, expertise, and why verification and domain judgment are the bottleneck in domains without cheap external oracles.">
+    <meta name="robots" content="noindex,nofollow,noarchive">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="canonical" href="https://emilyhsiang.com/articles/how-would-we-know-if-ai-solves-p-np-v1.html">
+    <meta property="og:type" content="article">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:site_name" content="Emily Hsiang">
+    <meta property="og:title" content="How Do We Know If We Have Solved P = NP? (Archived Version 1)">
+    <meta property="og:description" content="An essay on AI, originality, expertise, and why verification and domain judgment are the bottleneck in domains without cheap external oracles.">
+    <meta property="og:url" content="https://emilyhsiang.com/articles/how-would-we-know-if-ai-solves-p-np-v1.html">
+    <meta property="og:image" content="https://emilyhsiang.com/assets/images/eh-cropped.png">
+    <meta property="og:image:width" content="904">
+    <meta property="og:image:height" content="1024">
+    <meta property="og:image:alt" content="Portrait of Emily Hsiang">
+    <meta property="article:author" content="Emily Hsiang">
+    <meta property="article:section" content="Generative AI and Expertise">
+    <meta property="article:tag" content="generative AI">
+    <meta property="article:tag" content="expertise">
+    <meta property="article:tag" content="verification">
+    <meta property="article:tag" content="P versus NP">
+    <meta property="article:published_time" content="2026-07-18">
+    <meta property="article:modified_time" content="2026-07-18">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="How Do We Know If We Have Solved P = NP? (Archived Version 1)">
+    <meta name="twitter:description" content="An essay on AI, originality, expertise, and why verification and domain judgment are the bottleneck in domains without cheap external oracles.">
+    <meta name="twitter:image" content="https://emilyhsiang.com/assets/images/eh-cropped.png">
+    <meta name="twitter:image:alt" content="Portrait of Emily Hsiang">
+    <link rel="icon" type="image/png" href="../assets/images/eh-cropped.png">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "@id": "https://emilyhsiang.com/articles/how-would-we-know-if-ai-solves-p-np-v1.html#article",
+        "url": "https://emilyhsiang.com/articles/how-would-we-know-if-ai-solves-p-np-v1.html",
+        "headline": "How Do We Know If We Have Solved P = NP? (Archived Version 1)",
+        "description": "An essay on AI, originality, expertise, and why verification and domain judgment are the bottleneck in domains without cheap external oracles.",
+        "datePublished": "2026-07-18",
+        "dateCreated": "2026-07-18",
+        "dateModified": "2026-07-18",
+        "creativeWorkStatus": "Public review",
+        "inLanguage": "en-US",
+        "isAccessibleForFree": true,
+        "image": {
+            "@type": "ImageObject",
+            "url": "https://emilyhsiang.com/assets/images/eh-cropped.png",
+            "width": 904,
+            "height": 1024,
+            "caption": "Portrait of Emily Hsiang"
+        },
+        "keywords": [
+            "generative AI",
+            "P versus NP",
+            "P = NP",
+            "AI verification",
+            "expertise",
+            "creativity",
+            "absorptive capacity",
+            "Erdős problems",
+            "AI and science",
+            "human judgment",
+            "cheap verifiers"
+        ],
+        "articleSection": [
+            "Generative AI",
+            "Creativity",
+            "Expertise",
+            "Verification",
+            "Science and technology"
+        ],
+        "about": [
+            { "@type": "Thing", "name": "generative AI" },
+            { "@type": "Thing", "name": "P versus NP" },
+            { "@type": "Thing", "name": "expertise" },
+            { "@type": "Thing", "name": "creativity" },
+            { "@type": "Thing", "name": "verification" }
+        ],
+        "author": {
+            "@type": "Person",
+            "@id": "https://emilyhsiang.com/#person",
+            "name": "Emily Hsiang",
+            "url": "https://emilyhsiang.com/"
+        },
+        "publisher": {
+            "@type": "Person",
+            "@id": "https://emilyhsiang.com/#person",
+            "name": "Emily Hsiang"
+        },
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https://emilyhsiang.com/articles/how-would-we-know-if-ai-solves-p-np-v1.html"
+        },
+        "isPartOf": {
+            "@type": "Blog",
+            "@id": "https://emilyhsiang.com/blog.html#blog"
+        }
+    }
+    </script>
+</head>
+<body class="article-page">
+    <canvas id="matrix-bg"></canvas>
+
+    <nav class="navbar">
+        <a href="../index.html" class="nav-brand">Emily Hsiang</a>
+        <div class="nav-links">
+            <a href="../index.html">Home</a>
+            <a href="../index.html#attryx">Attryx</a>
+            <a href="../blog.html">Blog</a>
+            <button class="background-motion-toggle" type="button" aria-pressed="true">Pause background motion</button>
+        </div>
+    </nav>
+
+    <main class="article-shell">
+        <article class="article-card">
+            <a class="back-link" href="../blog.html">Back to Blog</a>
+            <header class="article-header">
+                <p class="eyebrow">Archived essay · Version 1</p>
+                <h1>How Do We Know If We Have Solved P = NP?</h1>
+                <p class="article-dek">Novelty is cheap now. Knowing which page matters remains scarce.</p>
+                <p class="article-meta">By Emily Hsiang · Public review opened <time datetime="2026-07-18">2026-07-18</time> · Archived version 1</p>
+            </header>
+
+            <div class="article-body essay-body">
+                    <p>Suppose tomorrow there were an announcement that P = NP had been solved.</p>
+                    <p>In the conventional sense, that announcement should mean a community has already done the work: experts have read the proof, objections have failed, formal checks have held where they can, and a peer-reviewed journal is willing to put its name behind the result. The claim becomes knowledge because a field can recognize it.</p>
+                    <p>This essay starts one step earlier, before the journal page and the headline, at the moment when a possible answer is still one page among many. The central problem is the reader: the trained capacity that can separate a real answer from a plausible one.</p>
+                <nav id="essay-sections" class="article-outline" aria-label="Essay sections">
+                    <p class="article-outline-label">Sections</p>
+                    <ul>
+                        <li>
+                            <a href="#the-myth">The myth</a>
+                            <span>The monkey/typewriter problem, and why recognition is the missing half of originality.</span>
+                        </li>
+                        <li>
+                            <a href="#what-the-record-shows">What the record shows</a>
+                            <span>The historical pattern behind breakthroughs: long contact with a domain’s constraints.</span>
+                        </li>
+                        <li>
+                            <a href="#what-ten-thousand-hours-actually-means">What &quot;ten thousand hours&quot; actually means</a>
+                            <span>What deliberate practice really means, and why depth remains the entry ticket.</span>
+                        </li>
+                        <li>
+                            <a href="#why-the-machinery-underneath">Why: the machinery underneath</a>
+                            <span>The cognitive mechanics of chunks, perception, critics, and domain judgment.</span>
+                        </li>
+                        <li>
+                            <a href="#the-economics-why-depth-is-the-binding-constraint">The economics: why depth is the binding constraint</a>
+                            <span>Why ideas are abundant and evaluation capacity is scarce.</span>
+                        </li>
+                        <li>
+                            <a href="#the-same-story-told-five-ways">The same story, told five ways</a>
+                            <span>How the same depth requirement appears in math, science, business, movement, and art.</span>
+                        </li>
+                        <li>
+                            <a href="#now-machines-can-print-phd-thesis-artifacts-every-minute">Now machines can print &quot;PhD thesis&quot; artifacts every minute</a>
+                            <span>What changes when fluent, expert-shaped artifacts become abundant.</span>
+                        </li>
+                        <li>
+                            <a href="#the-cancer-drug">The cancer drug</a>
+                            <span>Why expensive physical verification breaks the fantasy of a prompt-level cure.</span>
+                        </li>
+                        <li>
+                            <a href="#the-strongest-objections">The strongest objections</a>
+                            <span>The best counters: outsiders, young innovators, novelty ratings, practice variance, and ensembles.</span>
+                        </li>
+                        <li>
+                            <a href="#will-we-solve-p-np">Will we solve P = NP?</a>
+                            <span>Why the next bottleneck is the disrupted process that trains people who can verify the pile.</span>
+                        </li>
+                        <li>
+                            <a href="#predictions">Predictions</a>
+                            <span>Falsifiable expectations about verifiers, expertise, diversity, and agent-built systems.</span>
+                        </li>
+                    </ul>
+                </nav>
+                <section class="article-section" id="the-myth" data-refs="1,2,3,4">
+                    <h2>The myth</h2>
+                    <p>There is a thought experiment everyone knows. Put enough monkeys in front of enough typewriters and, given enough time, one of them will produce the complete works of Shakespeare. It is usually offered as a joke about probability, or a parable about randomness eventually producing order.</p>
+                    <p>But there is a second, quieter problem inside it that almost nobody notices.</p>
+                    <p>Suppose it happened. Suppose that tomorrow, in a room full of monkeys and paper, one of them typed out <em>Hamlet</em>, clean, from &quot;Who&#x27;s there?&quot; to the final dead march. Who in that room would know?</p>
+                    <p>The pages would go into the pile with all the other pages. The room would contain a hundred thousand tons of gibberish and one masterpiece, with no capacity to tell them apart. The value of <em>Hamlet</em> would emerge only when a reader walked in who knew what he was holding, and that reader would have to know the English language, the conventions of Elizabethan revenge tragedy, the blank verse line, and roughly what had been tried before, or he would put it back on the pile.</p>
+                    <p>Originality is half of the thing. The other half is <em>recognition</em>. Recognition requires trained attention.</p>
+                    <p data-refs="1,3,4,5" data-ref-label="Creativity myth and field judgment">This essay is about the second half, because our culture has developed a near-total obsession with the first, and the obsession has produced a belief that I think is one of the most quietly destructive ideas in circulation: <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-1" data-ref-link="1" aria-label="Show reference 1">1</a> <a class="ref-chip inline-ref" href="#ref-3" data-ref-link="3" aria-label="Show reference 3">3</a> <a class="ref-chip inline-ref" href="#ref-4" data-ref-link="4" aria-label="Show reference 4">4</a> <a class="ref-chip inline-ref" href="#ref-5" data-ref-link="5" aria-label="Show reference 5">5</a></span></p>
+                    <blockquote><p>That a regular person, with no particular knowledge of anything, needs only a single original idea, and it can change the world.</p></blockquote>
+                    <p>You hear it everywhere. In the founder mythology. In the &quot;disruption&quot; literature. In the way we tell the story of every scientific breakthrough as a flash with the slog cropped out. In the advice given to young people, which increasingly amounts to: <em>don&#x27;t get bogged down in expertise, expertise makes you conventional, just think differently.</em></p>
+                    <p>The evidence rejects that belief across psychology, neuroscience, economics, and the historical record of every domain human beings have ever practiced. The interesting question is why the belief survives.</p>
+                    <p>I think it survives because the alternative is unbearable. The thing which separates many world-changing people from the crowd is roughly ten years of unglamorous, invisible, largely unrewarded work. That is a much worse story.</p>
+                    <div class="essay-break" aria-hidden="true"></div>
+                    <p>Two guardrails before we begin, because the argument I am making is narrower and stronger than it might first appear.</p>
+                    <p data-refs="7,8" data-ref-label="Depth as necessary condition">First, depth is necessary. Serious innovation needs the vocabulary, constraints, feedback, and judgment of a field. Necessary does not mean sufficient. Ten years of work does not prove that a person will produce original work, win the prize, or change the field. Depth is the entry ticket to the room where originality becomes possible, not the trophy waiting inside it. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-7" data-ref-link="7" aria-label="Show reference 7">7</a> <a class="ref-chip inline-ref" href="#ref-8" data-ref-link="8" aria-label="Show reference 8">8</a></span></p>
+                    <p>Second: separate depth from credentials. This distinction matters enormously, and I want it on the table early, because the standard rebuttal to everything I am about to say is a list of famous dropouts.</p>
+                    <p>Ramanujan had no degree. Faraday was a bookbinder&#x27;s apprentice. Katalin Karikó, who made the mRNA vaccines possible, was demoted and defunded and worked for decades without the institutional standing her work deserved. None of these people were shallow. They were the opposite of shallow. What they lacked was a <em>certificate</em>.</p>
+                    <p data-refs="24,68,69" data-ref-label="Credentials and domain contact">And the modern examples that get cited, Gates and Zuckerberg, left the credential while staying inside the domain. The variable that matters is contact with a domain&#x27;s real constraints and real feedback. School can provide that contact, but it is only one route. In software, formal education is common, yet Stack Overflow&#x27;s 2024 survey found that 82% of developers learned through online resources, 50% through online courses or certification, 49% through school, and 45% through on-the-job training. In entrepreneurship, the stronger evidence points to industry-specific experience rather than dropout anecdotes: Azoulay, Jones, Kim, and Miranda used U.S. administrative data and found that the founders of the top 0.1% fastest-growing new ventures were 45 years old on average, and a 2026 population-wide study found that about 75% of entrepreneurs start firms in the same industry as their previous employment. Credentials can signal depth. They are not depth itself. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-24" data-ref-link="24" aria-label="Show reference 24">24</a> <a class="ref-chip inline-ref" href="#ref-68" data-ref-link="68" aria-label="Show reference 68">68</a> <a class="ref-chip inline-ref" href="#ref-69" data-ref-link="69" aria-label="Show reference 69">69</a></span></p>
+                    <p>With those two guardrails in place, let us look at what actually happened.</p>
+                    <div class="essay-break" aria-hidden="true"></div>
+                </section>
+                <section class="article-section" id="what-the-record-shows" data-refs="1,2,3,4">
+                    <h2>What the record shows</h2>
+                    <h3>Shakespeare had a domain</h3>
+                    <p>Start with the man in the thought experiment, because he is the purest case of the myth we are trying to kill.</p>
+                    <p data-refs="4,5" data-ref-label="Historical creativity and preparation">Shakespeare is our culture&#x27;s archetype of the natural genius, the untutored bird who simply sang. The record shows a long apprenticeship. He went through an Elizabethan grammar school, which meant a brutal, decade-long immersion in Latin rhetoric: Ovid, Seneca, Terence, and the formal apparatus of persuasion, memorized and drilled until it was reflex. He then spent roughly twenty years as a working actor and company man in the London theatre, in a commercial industry with immediate, savage, unambiguous feedback, an audience that either threw things or did not. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-4" data-ref-link="4" aria-label="Show reference 4">4</a> <a class="ref-chip inline-ref" href="#ref-5" data-ref-link="5" aria-label="Show reference 5">5</a></span></p>
+                    <p>And the plays grew from older material. <em>King Lear</em> was an existing play. <em>Hamlet</em> was an existing story. He worked from Holinshed&#x27;s <em>Chronicles</em>, from Plutarch&#x27;s <em>Lives</em>, from Italian novellas, from Ovid, taking material that other people had already shaped and reshaping it with a mastery of dramatic structure and English metre that took him two decades to build.</p>
+                    <p>Shakespeare is one of the clearest illustrations of the ten-year rule: unusual gifts, twenty years inside a domain, and a market that punished failure immediately.</p>
+                    <h3>The decade before the flash</h3>
+                    <p>Once you start looking, the pattern is everywhere, and it is remarkably consistent.</p>
+                    <p data-refs="6,26" data-ref-label="Picasso, Guernica, and conceptual innovators">Picasso is remembered for shattering the rules of representation. He is less often remembered for the decade of rigorous academic training he completed first, or that by his early twenties he could draw with the fluency of a Beaux-Arts master. And <em>Guernica</em>, the archetype of the bolt from the blue, painted in a rush of moral fury, survives in roughly forty-five preparatory sketches documenting an incremental, effortful, knowledge-driven process. Robert Weisberg went through them. There is no lightning in the sketchbook. There is <em>work</em>. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-6" data-ref-link="6" aria-label="Show reference 6">6</a> <a class="ref-chip inline-ref" href="#ref-26" data-ref-link="26" aria-label="Show reference 26">26</a></span></p>
+                    <p data-refs="4,5" data-ref-label="Historical creators and accumulated work">Bach copied out other composers&#x27; scores by hand, at night, by moonlight, as a boy. This is a physical act of internalization, the eighteenth-century equivalent of transcribing every solo on a record until your fingers know them. He inherited the fugue and went so deep into it that he exhausted it. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-4" data-ref-link="4" aria-label="Show reference 4">4</a> <a class="ref-chip inline-ref" href="#ref-5" data-ref-link="5" aria-label="Show reference 5">5</a></span></p>
+                    <p data-refs="4,5,60" data-ref-label="Darwin, Wallace, and long preparation">Darwin had the essential idea in 1838 and published in 1859. In between, he spent eight years on barnacles, a task so tedious that his children assumed every father in England had a study full of them. Then Alfred Russel Wallace forced the question into the open. Wallace had left school young, worked as a surveyor and teacher, supported himself as a specimen collector, and spent years in the Amazon and the Malay Archipelago. From that fieldwork he independently reached natural selection and sent Darwin his 1858 essay from Ternate. Lyell and Hooker arranged the joint Linnean Society presentation that placed Darwin and Wallace together. The useful story is the network around the claim: Darwin&#x27;s barnacles, Wallace&#x27;s biogeography, Hooker and Lyell&#x27;s judgment, and a field capable of deciding what the claim meant. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-4" data-ref-link="4" aria-label="Show reference 4">4</a> <a class="ref-chip inline-ref" href="#ref-5" data-ref-link="5" aria-label="Show reference 5">5</a> <a class="ref-chip inline-ref" href="#ref-60" data-ref-link="60" aria-label="Show reference 60">60</a></span></p>
+                    <p data-refs="65" data-ref-label="Ramanujan and depth without credentials">Ramanujan, the great supposed exception, was self-taught. Self-taught still meant intensely trained. He worked obsessively through Carr&#x27;s <em>Synopsis</em>, thousands of results, for years, in isolation, filling notebooks. And when his results reached England, they required G. H. Hardy, one of the deepest analysts of his generation, to validate, contextualize, and in places repair them. Ramanujan shows that depth can be built outside a school. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-65" data-ref-link="65" aria-label="Show reference 65">65</a></span></p>
+                    <p data-refs="58,59" data-ref-label="Penicillin discovery and development">Alexander Fleming noticed a mould killing bacteria on a contaminated plate. He noticed it because he was a trained bacteriologist who recognized <em>lysis</em> when he saw it; a lab technician would have washed the plate. This is Pasteur&#x27;s line, <em>chance favours the prepared mind</em>. Chance mattered because preparation made the observation usable. And note what happened next: Fleming&#x27;s observation sat inert for over a decade until Florey and Chain brought twelve years of deep biochemistry to the problem of actually turning it into a drug. Discovery was the cheap part. Remember that; we will come back to it. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-58" data-ref-link="58" aria-label="Show reference 58">58</a> <a class="ref-chip inline-ref" href="#ref-59" data-ref-link="59" aria-label="Show reference 59">59</a></span></p>
+                    <p data-refs="56" data-ref-label="mRNA depth before payoff">Katalin Karikó spent roughly forty years on nucleoside-modified mRNA, through demotion, through defunding, through decades of being told the work was a dead end. The 2005 result she produced with Drew Weissman, showing that modified nucleosides let mRNA slip past the innate immune system, is what made the COVID vaccines possible. Nobody arrives at that by having an idea. She got there because she was the person who had stared at one unfashionable problem for four decades and knew <em>precisely</em> why everyone else&#x27;s mRNA kept setting the immune system on fire. Nobel Prize, 2023. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-56" data-ref-link="56" aria-label="Show reference 56">56</a></span></p>
+                    <p data-refs="57" data-ref-label="CRISPR history">CRISPR traces back to Francisco Mojica noticing strange repeated sequences in the DNA of salt-marsh archaea, useless-looking microbiology, pursued for years by people who simply found it interesting, decades before Doudna and Charpentier turned it into a tool that will reshape medicine. The depth was accumulated long before anybody knew what it was <em>for</em>. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-57" data-ref-link="57" aria-label="Show reference 57">57</a></span></p>
+                    <p data-refs="61" data-ref-label="Dance innovation after training">Martha Graham&#x27;s contraction-and-release technique was a real new movement language, a codified alternative to classical ballet, but it did not appear before training. She began dance study in 1913, entered Denishawn in 1916, performed with the company from 1919 to 1923, and then built the technique and repertory that made her name nearly synonymous with modern dance. Pina Bausch&#x27;s Tanztheater follows the same shape: Folkwang training under Kurt Jooss, Juilliard, work with New American Ballet and the Metropolitan Opera, then Wuppertal. Nobody has ever invented a language before learning one. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-61" data-ref-link="61" aria-label="Show reference 61">61</a></span></p>
+                    <p data-refs="62" data-ref-label="Faraday and depth without credentials">Michael Faraday, the bookbinder&#x27;s apprentice, read the scientific books he was binding, took meticulous notes on Humphry Davy&#x27;s lectures, and entered the Royal Institution as a laboratory assistant. His formal schooling was limited, but his apprenticeship became a curriculum: books, lectures, instruments, correspondence, and laboratory work. He is the depth-without-credentials case in its purest form. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-62" data-ref-link="62" aria-label="Show reference 62">62</a></span></p>
+                    <p data-refs="7,63,64" data-ref-label="Domain-specific creativity evidence">The research version of these examples is domain specificity, and it is as important as the examples themselves. Ericsson&#x27;s deliberate-practice work gives the mechanism. Long training builds increasingly fine representations of a field, ties those representations to feedback, and makes error visible at a level of detail the novice cannot perceive. Domain-specific creativity research then explains why those representations matter for originality: the move that changes a field has to be legible inside that field&#x27;s constraints. A generally imaginative person can produce variation. A field-changing creator has to know which variation counts as a move. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-7" data-ref-link="7" aria-label="Show reference 7">7</a> <a class="ref-chip inline-ref" href="#ref-63" data-ref-link="63" aria-label="Show reference 63">63</a> <a class="ref-chip inline-ref" href="#ref-64" data-ref-link="64" aria-label="Show reference 64">64</a></span></p>
+                    <p data-refs="63,64" data-ref-label="Domain-specific creativity evidence">Baer states the stronger creativity version directly: creative performance depends on domain-specific expertise, so general cleverness does not substitute for knowing the domain. Ward gives the mechanism from creative cognition: prior domain knowledge constrains what a person can generate, recognize, and revise. So the Graham, Bausch, Faraday, Darwin, Wallace, Fleming, Karikó, and Mojica examples are not just illustrative biographies. They are cases of the general rule: field-changing moves are made inside a learned vocabulary of constraints, materials, standards, and failure modes. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-63" data-ref-link="63" aria-label="Show reference 63">63</a> <a class="ref-chip inline-ref" href="#ref-64" data-ref-link="64" aria-label="Show reference 64">64</a></span></p>
+                    <h3>The equal-odds rule</h3>
+                    <p>There is one more piece of the historical picture, and it is the least romantic of all.</p>
+                    <p data-refs="5" data-ref-label="Equal-odds rule">Dean Keith Simonton, who has spent a career doing quantitative history on eminent creators, found what he called the equal-odds rule: great creators have roughly ordinary hit rates at extraordinary volume. Bach&#x27;s masterworks sit inside a mountain of routine cantatas. Edison&#x27;s patents sit inside a mountain of failures. Picasso produced tens of thousands of works, and you can name perhaps six. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-5" data-ref-link="5" aria-label="Show reference 5">5</a></span></p>
+                    <p>Quality, in other words, is largely a probabilistic function of quantity. Which means:</p>
+                    <blockquote><p>Hits require an enormous base of attempts, and an enormous base of attempts requires years inside a domain.</p></blockquote>
+                    <p>The base rate <em>is</em> the depth. There is no shortcut through it, because the shortcut is precisely what you are trying to skip.</p>
+                    <div class="essay-break" aria-hidden="true"></div>
+                </section>
+                <section class="article-section" id="what-ten-thousand-hours-actually-means" data-refs="1">
+                    <h2>What &quot;ten thousand hours&quot; actually means</h2>
+                    <p>Malcolm Gladwell put a number on this and made it famous, and the number is now doing more harm than good, so it is worth being precise.</p>
+                    <p data-refs="7" data-ref-label="Deliberate practice">The research it came from is Anders Ericsson&#x27;s, and Ericsson spent the rest of his life objecting to the way it was used. Ten thousand hours is a rough marker, varying enormously by field, and the kind of practice matters. Ericsson&#x27;s construct was deliberate practice: effortful work at the edge of your current ability, with immediate feedback, aimed at correcting specific weaknesses. Twenty years of comfortable competence is twenty repetitions of one year. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-7" data-ref-link="7" aria-label="Show reference 7">7</a></span></p>
+                    <p data-refs="4,5" data-ref-label="Ten-year rule">The more defensible version comes from John Hayes, who examined roughly five hundred composers and found that, with almost no exceptions, no masterwork appeared before about ten years of immersion. Not Mozart&#x27;s; his early works are competent juvenilia, and the pieces that entered the repertoire came after the decade mark. Simonton replicated the pattern across domains. It is now known, unglamorously, as the ten-year rule. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-4" data-ref-link="4" aria-label="Show reference 4">4</a> <a class="ref-chip inline-ref" href="#ref-5" data-ref-link="5" aria-label="Show reference 5">5</a></span></p>
+                    <p>The ten-year rule also needs its boundary.</p>
+                    <p data-refs="8" data-ref-label="Practice meta-analysis">Macnamara, Hambrick and Oswald ran the meta-analysis. Deliberate practice explains roughly 26% of the variance in games, 21% in music, 18% in sports, and under 1% in professions. Practice leaves room for talent, circumstance, and the structure of the field. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-8" data-ref-link="8" aria-label="Show reference 8">8</a></span></p>
+                    <p>That finding says depth is necessary and insufficient. In those domains, field-recognized original work still comes from people who have done the work. Practice explains variance among people already inside the domain; it does not explain the difference between the top and the street.</p>
+                    <p>Depth is the entry ticket. The prize depends on what you do once you are inside.</p>
+                    <div class="essay-break" aria-hidden="true"></div>
+                </section>
+                <section class="article-section" id="why-the-machinery-underneath" data-refs="1,2,4">
+                    <h2>Why: the machinery underneath</h2>
+                    <p>So why is depth actually necessary? The answer is mechanical: it follows from how minds produce novelty.</p>
+                    <h3>Creativity has two criteria</h3>
+                    <p data-refs="1" data-ref-label="Creativity definition">The standard definition in the field requires originality and appropriateness together. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-1" data-ref-link="1" aria-label="Show reference 1">1</a></span></p>
+                    <p>This is the whole argument in a sentence, and everything else in this essay is a gloss on it.</p>
+                    <p>Anybody can produce originality. A random number generator is maximally original. What makes a thing <em>appreciated</em>, by a field, by a market, by history, is the second criterion, and appropriateness is a domain judgment. Evaluating whether a proof holds, a molecule can be synthesized, a chord voicing is the right one, or a business model survives contact with unit economics requires internalizing the domain&#x27;s constraints.</p>
+                    <p>A shallow generator can still generate. What it lacks is the evaluator.</p>
+                    <h3>Rule-breaking requires seeing the rule</h3>
+                    <p data-refs="2" data-ref-label="Boden creativity taxonomy">Margaret Boden divides creativity into three kinds, and the taxonomy is the cleanest thing in the literature. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-2" data-ref-link="2" aria-label="Show reference 2">2</a></span></p>
+                    <p>Combinatorial creativity is the novel combination of familiar ideas. Everyone can do it. This is what people mean when they say &quot;anyone can be creative, just combine two fields.&quot; It is true, and it is cheap.</p>
+                    <p>Exploratory creativity is finding new points inside an existing conceptual space, including its unexplored edges. This requires knowing the space.</p>
+                    <p>Transformational creativity is <em>altering the space itself</em>, breaking one of the constraints that defines it. This is the kind that changes fields. And it requires knowing which constraint is load-bearing, why it is there, and what survives its removal.</p>
+                    <blockquote><p>Rule-breaking starts with seeing the rule.</p></blockquote>
+                    <p>Schoenberg wrote tonal music of the highest craft before he abandoned tonality. Picasso could draw academically before he dismantled the figure. Every act of rule-breaking that a field <em>appreciates</em> is legible as rule-breaking only because the artist and the audience share a knowledge of the rule. To the person who never learned it, the broken rule and the incompetent mistake look identical, and, in an important sense, they are.</p>
+                    <h3>Depth opens the combinatorial space</h3>
+                    <p>This is the counterintuitive part, and it is the mechanical heart of the argument.</p>
+                    <p>The naive picture says: knowledge constrains you; the expert is trapped in convention; the novice is free. The neuroscience says the reverse, and says it decisively.</p>
+                    <p data-refs="11" data-ref-label="Chess chunking">Chase and Simon showed that chess masters reconstruct board positions far better than novices, but on random positions, the advantage vanishes entirely. The advantage is chunk quality. Where a novice sees thirty-two separate pieces, a master sees six meaningful structures. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-11" data-ref-link="11" aria-label="Show reference 11">11</a></span></p>
+                    <p data-refs="12" data-ref-label="Long-term working memory">Ericsson and Kintsch formalized this as <em>long-term working memory</em>: experts encode problems into structured long-term representations, effectively routing around the brutal four-item limit of working memory. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-12" data-ref-link="12" aria-label="Show reference 12">12</a></span></p>
+                    <p>Now think about what creativity actually is, physically. It is combination. Combination happens in working memory. Working memory holds about four things.</p>
+                    <blockquote><p>Expertise makes each working-memory slot hold vastly more.</p></blockquote>
+                    <p>The expert and the novice are both combining four things. The expert&#x27;s four things are each an entire compressed structure. The expert is therefore searching a combinatorial space orders of magnitude larger because their units are bigger.</p>
+                    <p>The person with no depth and an infinite library is still combining four shallow things. Retrieval can be outsourced. Representation remains local.</p>
+                    <p data-refs="13" data-ref-label="Motor degrees of freedom">The motor-control literature gives the same result in a form you can watch. Bernstein observed that novices <em>freeze</em> degrees of freedom: they lock joints, rigidify, collapse the movement into something low-dimensional enough to control. Experts <em>release</em> those degrees of freedom and exploit them. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-13" data-ref-link="13" aria-label="Show reference 13">13</a></span></p>
+                    <p>The trained body has more available moves. The trained mind has more available chunks. Depth is the aperture.</p>
+                    <h3>Training changes what you can see</h3>
+                    <p>There is an experiment I find genuinely startling, and it should be better known.</p>
+                    <p data-refs="14" data-ref-label="Embodied perception">Calvo-Merino and colleagues put expert ballet dancers, expert capoeira dancers, and non-dancers in a scanner and showed all of them videos of both ballet and capoeira. The action observation network, premotor cortex, intraparietal sulcus, superior temporal sulcus, responded significantly more strongly when a dancer watched movements inside their own trained repertoire. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-14" data-ref-link="14" aria-label="Show reference 14">14</a></span></p>
+                    <p>Same visual input. Different brains. Different perception.</p>
+                    <p>Expertise changes what you are capable of perceiving. A trained dancer watching a phrase sees quotations, errors, departures, possibilities. An untrained viewer sees &quot;someone moving.&quot;</p>
+                    <p>And this generalizes, and it is why the expert&#x27;s advantage is invisible from outside. The trained mathematician <em>sees</em> that a lemma is doing suspicious work. The trained chemist <em>sees</em> that a proposed molecule will not survive a synthesis. The trained editor <em>sees</em> that a sentence was borrowed. Their perception is doing work before explicit reasoning begins.</p>
+                    <p>This perceptual layer is built by years of contact.</p>
+                    <h3>A generator is useless without a critic</h3>
+                    <p data-refs="15" data-ref-label="Generator and critic networks">Beaty and colleagues found that people with high creative ability show a characteristic coupling between the default mode network, which does associative, spontaneous idea generation, and the executive control and salience networks, which do evaluation, selection, and inhibition of the obvious. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-15" data-ref-link="15" aria-label="Show reference 15">15</a></span></p>
+                    <p>Creative ability requires cooperation between a generator and a critic that are ordinarily antagonistic.</p>
+                    <p>This is the single most important fact in this essay. It returns in <a href="#now-machines-can-print-phd-thesis-artifacts-every-minute">Now machines can print &quot;PhD thesis&quot; artifacts every minute</a>, where machine generation makes the separation between generator and critic impossible to dodge.</p>
+                    <h3>The cost, stated honestly</h3>
+                    <p>Depth has a failure mode, and I want to name it clearly.</p>
+                    <p data-refs="17,66" data-ref-label="Expertise and mental set">Bilalić, McLeod and Gobet showed expert chess players a board containing a familiar good solution and a better unfamiliar one. Once the experts spotted the familiar solution, they became measurably blind to the better one. Eye-tracking showed their gaze returning, helplessly, to the pattern they already knew. Wiley found the same tension in creative problem solving: domain knowledge can help efficient search, and it can also confine search when the answer sits outside the familiar region of the problem space. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-17" data-ref-link="17" aria-label="Show reference 17">17</a> <a class="ref-chip inline-ref" href="#ref-66" data-ref-link="66" aria-label="Show reference 66">66</a></span></p>
+                    <p data-refs="5" data-ref-label="Education and eminence inverted U">Simonton found something related at the population level, an inverted-U between formal education and eminence. Too little, and you never reach the domain. Too much, and you may be over-socialized into its orthodoxy. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-5" data-ref-link="5" aria-label="Show reference 5">5</a></span></p>
+                    <p data-refs="67" data-ref-label="Blind variation and selective retention">Simonton&#x27;s blind-variation and selective-retention account sharpens the mechanism. Creative work needs variation and selection. Expertise improves selection, and it can narrow the raw variants a person is willing or able to try, especially when the field has trained them to reject strange moves too early. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-67" data-ref-link="67" aria-label="Show reference 67">67</a></span></p>
+                    <p>The remedy for the pathology of depth is <em>diverse</em> depth: multiple experts with different training histories, different instruments, and different blind spots. Later, when the essay turns to AI-generated proof-like artifacts, this is why independence matters more than the number of generated pages.</p>
+                    <h3>&quot;Appreciation&quot; is a field verdict</h3>
+                    <p data-refs="3" data-ref-label="Person, domain, field">Finally, and most usefully: Mihaly Csikszentmihalyi argues that creativity is not a property of a person at all. It is a judgment rendered by a field, practitioners, critics, gatekeepers, about a change made to a domain. The unit of analysis is <em>Person × Domain × Field</em>. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-3" data-ref-link="3" aria-label="Show reference 3">3</a></span></p>
+                    <p>Which means the word &quot;appreciated,&quot; which I have been using loosely, refers to field judgment. To make a move a field will recognize as valuable, you must have internalized the domain, because that is the only way to know what would <em>count</em> as a move at all.</p>
+                    <p>This also explains something we are going to need: work can be superficially stunning and still fail to register as creative to practitioners. It can be an artifact <em>in the style of</em> a domain while failing to become a move <em>in the game of</em> that domain. Everyone can see the artifact. Only the field can see the move.</p>
+                    <div class="essay-break" aria-hidden="true"></div>
+                </section>
+                <section class="article-section" id="the-economics-why-depth-is-the-binding-constraint" data-refs="3,4">
+                    <h2>The economics: why depth is the binding constraint</h2>
+                    <p>The psychology tells you why depth works. The economics tells you something more useful: why it is the bottleneck.</p>
+                    <h3>Recognition makes information usable</h3>
+                    <p data-refs="18" data-ref-label="Absorptive capacity">In 1990, Cohen and Levinthal introduced the concept of absorptive capacity: the ability to <em>recognize the value of new information, assimilate it, and apply it</em>. Their central finding is that this ability is a function of prior related knowledge. Absorptive capacity is a by-product of having already done deep work in the area. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-18" data-ref-link="18" aria-label="Show reference 18">18</a></span></p>
+                    <p>The corollary is brutal, and it is the sharpest single sentence in this essay:</p>
+                    <blockquote><p>Information has no value to an agent with no absorptive capacity for it.</p></blockquote>
+                    <p>You can hand a person with no biology training a complete, correct, novel oncology hypothesis, and they will be unable to recognize it, evaluate it, or act on it. It will go into the pile with all the other pages.</p>
+                    <p>We are back in the room with the monkeys.</p>
+                    <h3>Evaluation is the scarce thing</h3>
+                    <p data-refs="19" data-ref-label="Recombinant growth">In 1998 Martin Weitzman published <em>Recombinant Growth</em>, modelling ideas as recombinations of existing ideas. The number of possible combinations, he showed, explodes hyper-exponentially, far faster than we could ever explore. And his conclusion was this: <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-19" data-ref-link="19" aria-label="Show reference 19">19</a></span></p>
+                    <blockquote><p>The binding constraint on innovation is the human and institutional capacity to evaluate, test, and develop an astronomical supply of possible combinations.</p></blockquote>
+                    <p>This is the most underrated result in the economics of innovation, and it demolishes the entire folk theory of creativity in one line. The bottleneck is trained judgment: the capacity to separate the one good candidate from the ten thousand plausible ones. That judgment is exactly what absorptive capacity is.</p>
+                    <h3>Novelty only pays when it is anchored in mastery</h3>
+                    <p data-refs="20" data-ref-label="Atypical combinations">If you want this empirically: Uzzi, Mukherjee, Stringer and Jones analyzed 17.9 million scientific papers, measuring how conventional or atypical each paper&#x27;s combinations of prior work were. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-20" data-ref-link="20" aria-label="Show reference 20">20</a></span></p>
+                    <p>The highest-impact papers combined a deep conventional core with a tail of atypical combinations. Papers built from novelty alone underperformed.</p>
+                    <p data-refs="21" data-ref-label="Recombinant uncertainty">Fleming found the complement in patents: recombining unfamiliar components lowers the average usefulness of inventions while increasing variance. That is the shape of recombinant uncertainty. Breadth makes unfamiliar combinations possible; depth is what lets an inventor select, test, and develop the few combinations that can survive. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-21" data-ref-link="21" aria-label="Show reference 21">21</a></span></p>
+                    <blockquote><p>Originality only pays when it is grounded in mastery. Novelty on its own is noise.</p></blockquote>
+                    <h3>The frontier is getting farther away</h3>
+                    <p data-refs="22" data-ref-label="Burden of knowledge">Benjamin Jones, in a paper wonderfully titled <em>The Burden of Knowledge and the &quot;Death of the Renaissance Man,&quot;</em> went into large patent micro-datasets and found three trends running consistently through the twentieth century: <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-22" data-ref-link="22" aria-label="Show reference 22">22</a></span></p>
+                    <ul>
+                        <li>Age at first invention is rising, about 0.6 years per decade.</li>
+                        <li>Team size is rising, about 17% per decade.</li>
+                        <li>Specialization is increasing, and it increases fastest in the deepest fields.</li>
+                    </ul>
+                    <p data-refs="23" data-ref-label="Ideas getting harder to find">Innovators compensate for a growing knowledge burden by narrowing and by teaming up. And Bloom, Jones, Van Reenen and Webb showed the macro consequence: ideas are getting harder to find. Research productivity is falling; it takes ever more researchers to sustain the same rate of progress. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-23" data-ref-link="23" aria-label="Show reference 23">23</a></span></p>
+                    <p>The educational burden of reaching the frontier is increasing. The trend has run in one direction for a hundred years, and it is <em>away</em> from the lone amateur with a good idea.</p>
+                    <h3>And the founders are forty-five</h3>
+                    <p>Here administrative data overturns the myth.</p>
+                    <p data-refs="24" data-ref-label="Founder age">Azoulay, Jones, Kim and Miranda used US Census Bureau records on 2.7 million founders, the actual universe of the dataset, and found: <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-24" data-ref-link="24" aria-label="Show reference 24">24</a></span></p>
+                    <ul>
+                        <li>Mean founder age across all firms: 41.9</li>
+                        <li>Mean founder age of the top 0.1% fastest-growing new ventures: 45.0</li>
+                        <li>The same for high-tech sectors, for entrepreneurial hubs, and for successful exits</li>
+                        <li>A 50-year-old founder is about 1.8× more likely than a 30-year-old to achieve upper-tail growth</li>
+                        <li>Founders in their early twenties have the lowest likelihood of a successful exit</li>
+                        <li>And the single strongest predictor of success: prior experience in the specific industry</li>
+                    </ul>
+                    <p>The young dropout genius is a selection artifact of media coverage and venture-capital narrative. It is what happens when you take the six most-photographed exceptions and mistake them for the distribution.</p>
+                    <h3>The two ceilings on written knowledge</h3>
+                    <p>Two more findings, because they will matter more than anything else when we get to AI.</p>
+                    <p data-refs="31,32" data-ref-label="Tacit knowledge and TEA lasers">The first is tacit knowledge. In the 1970s the sociologist Harry Collins studied laboratories attempting to build TEA lasers. His finding is one of the most important in the history of science, and almost nobody outside the field knows it: <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-31" data-ref-link="31" aria-label="Show reference 31">31</a> <a class="ref-chip inline-ref" href="#ref-32" data-ref-link="32" aria-label="Show reference 32">32</a></span></p>
+                    <blockquote><p>No laboratory succeeded in building a working TEA laser from the published papers alone. Every successful build involved personal contact with someone who already had one working.</p></blockquote>
+                    <p>The published record was necessary and radically insufficient. And the missing knowledge could not simply be written down, because the people who had it did not know they had it. This is Polanyi&#x27;s point: we know more than we can tell.</p>
+                    <p data-refs="33,34" data-ref-label="Preclinical reproducibility">The second is that the written record is substantially wrong. In 2012, Begley and Ellis reported that Amgen scientists had attempted to reproduce 53 landmark preclinical cancer papers. They succeeded with six. That is roughly 11%. Bayer, running a similar exercise, got 20 to 25%. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-33" data-ref-link="33" aria-label="Show reference 33">33</a> <a class="ref-chip inline-ref" href="#ref-34" data-ref-link="34" aria-label="Show reference 34">34</a></span></p>
+                    <p>Think about what that means. The published literature of preclinical cancer biology is a map in which most of the landmarks are in the wrong place. And there is no annotation telling you which. The knowledge of <em>which papers to disbelieve</em> is held socially, in labs, in corridors, in the shared judgment of people who have been in the field for twenty years and have watched things fail to replicate.</p>
+                    <blockquote><p>The expert&#x27;s most valuable asset is knowing which of the literature is wrong. That asset lives outside the literature.</p></blockquote>
+                    <div class="essay-break" aria-hidden="true"></div>
+                </section>
+                <section class="article-section" id="the-same-story-told-five-ways" data-refs="1,2,3,4">
+                    <h2>The same story, told five ways</h2>
+                    <p>The pattern holds across every domain, and it is worth seeing it hold, because the mechanism looks different each time while being the same underneath.</p>
+                    <p data-refs="9,10" data-ref-label="Mathematical invention and rigor">Mathematics. Poincaré gave the classic account of mathematical invention, preparation, incubation, illumination, verification, and everyone quotes the illumination. What he actually said about it is that the unconscious combinations are fruitful <em>only because they have been pre-constrained by long conscious preparation</em>, and that the aesthetic sense which selects the beautiful combination from the useless ones is itself a product of training. The muse only visits an address she has been given. Terence Tao describes three stages, <em>pre-rigorous</em>, <em>rigorous</em>, <em>post-rigorous</em>, in which intuition is finally restored, but now trustworthy, because it has been disciplined by years of rigour. The novice&#x27;s intuition and the master&#x27;s may look identical from outside, but they operate very differently. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-9" data-ref-link="9" aria-label="Show reference 9">9</a> <a class="ref-chip inline-ref" href="#ref-10" data-ref-link="10" aria-label="Show reference 10">10</a></span></p>
+                    <p data-refs="56,57,58,59" data-ref-label="Historical science cases">Science. Karikó, CRISPR, penicillin. The recurring shape is that the depth was accumulated <em>before anyone knew what it was for</em>, in unfashionable corners, by people who could not have told you the application. And that the discovery was the cheap step: Fleming&#x27;s mould sat inert for a decade until Florey and Chain brought the deep chemistry required to turn an observation into a drug. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-56" data-ref-link="56" aria-label="Show reference 56">56</a> <a class="ref-chip inline-ref" href="#ref-57" data-ref-link="57" aria-label="Show reference 57">57</a> <a class="ref-chip inline-ref" href="#ref-58" data-ref-link="58" aria-label="Show reference 58">58</a> <a class="ref-chip inline-ref" href="#ref-59" data-ref-link="59" aria-label="Show reference 59">59</a></span></p>
+                    <p data-refs="25" data-ref-label="Prior knowledge and opportunity">Business. The most instructive finding here is Scott Shane&#x27;s. He took the same MIT technology and gave it to different entrepreneurs. They saw entirely different opportunities, and which opportunity each person saw was predicted by their prior knowledge. Same information; different absorptive capacity; different world. Opportunity recognition is domain knowledge in action. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-25" data-ref-link="25" aria-label="Show reference 25">25</a></span></p>
+                    <p data-refs="27" data-ref-label="Conditions for expert intuition">Domain structure sets real limits on this argument. Kahneman and Klein established that expert intuition is valid only in high-validity environments with rapid, unambiguous feedback. Chess, firefighting, anaesthesiology: yes. Long-range market prediction, political forecasting: no. There, &quot;experts&quot; are frequently no better than novices, and sometimes worse. The returns to depth depend on the structure of the domain. This limit returns in <a href="#now-machines-can-print-phd-thesis-artifacts-every-minute">Now machines can print &quot;PhD thesis&quot; artifacts every minute</a>, because it turns out to be the key to the whole AI question. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-27" data-ref-link="27" aria-label="Show reference 27">27</a></span></p>
+                    <p data-refs="14,16" data-ref-label="Embodied skill and improvisation">Movement. The domain where nobody can bluff, which is why it is so clarifying. Choreographic invention is bounded by the vocabulary you have embodied. Calvo-Merino showed you literally cannot fully perceive a movement you cannot perform. New tricks in gymnastics and skateboarding are invented by people with tens of thousands of hours because they possess the sub-movements to combine. And improvisation, the freest-looking creativity that exists, is the most tightly gated of all, because a dancer improvising in real time cannot deliberate. They can only recombine what is automatic. And automaticity <em>is</em> depth. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-14" data-ref-link="14" aria-label="Show reference 14">14</a> <a class="ref-chip inline-ref" href="#ref-16" data-ref-link="16" aria-label="Show reference 16">16</a></span></p>
+                    <p>Nobody, I notice, believes you can talk your way into inventing a new movement. The absurdity is obvious, because the knowledge is visibly in a body. The knowledge in a chemist&#x27;s hands or a mathematician&#x27;s eye is the same kind of thing, only less visible.</p>
+                    <p data-refs="26" data-ref-label="Conceptual and experimental innovators">Art. Bach copying scores. Picasso&#x27;s academic decade and <em>Guernica</em>&#x27;s forty-five sketches. Cézanne grinding away for thirty years. The economist David Galenson adds a genuine and honest qualification here: there are two types of innovator. Conceptual innovators, Picasso, Warhol, Welles, work from a bold idea and peak young. Experimental innovators, Cézanne, Rothko, work by accumulation and peak late. Some great work pays off early. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-26" data-ref-link="26" aria-label="Show reference 26">26</a></span></p>
+                    <p>Look closely at the conceptual innovators. Picasso painted <em>Les Demoiselles</em> at twenty-six, after the decade of academic training. Galenson&#x27;s finding is about payoff timing. The depth is still there.</p>
+                    <div class="essay-break" aria-hidden="true"></div>
+                </section>
+                <section class="article-section" id="now-machines-can-print-phd-thesis-artifacts-every-minute" data-refs="5">
+                    <h2>Now machines can print &quot;PhD thesis&quot; artifacts every minute</h2>
+                    <p>Everything above was true in 1600, and in 1900, and in 2015. The question that makes it urgent is what happens now.</p>
+                    <p>Because something has genuinely changed. We have built machines that produce fluent, plausible, well-formed output at essentially zero marginal cost. Text, images, code, molecules, proofs. The infinite monkeys have finally been given a typewriter that writes in grammatical English.</p>
+                    <p>And a very large number of intelligent people have concluded from this that the ten-year rule is over, that expertise was a bottleneck the machines have now removed, and that the age of the amateur with a good prompt has arrived.</p>
+                    <p>Under these conditions, expertise becomes more valuable. The reason has to be stated precisely: not because AI is incapable of producing novelty, but because novelty and value are different achievements.</p>
+                    <h3>The claim that fails</h3>
+                    <p>One common claim is: <em>AI cannot produce anything genuinely new.</em></p>
+                    <p>That claim is false.</p>
+                    <p data-refs="49" data-ref-label="AI contributions to Erdos problems">Between January and April 2026, the Erdős Problems database recorded a series of AI contributions: Lean-formalized full solutions, partial results, variants, and candidates. Some were later connected to prior literature; some were less original than they first looked. That caveat matters. The load-bearing case is 13 April 2026: Problem #1196, a 1968 conjecture, open for nearly sixty years, was solved by GPT-5.4 Pro, prompted by Liam Price, a person with no advanced mathematical training who reportedly did not know the problem&#x27;s significance. The proof was later formalized in Lean and marked &quot;proved&quot; on the Erdős Problems database. Tao read it within a day, said the argument revealed a connection that &quot;would be a meaningful contribution to the anatomy of integers that goes well beyond the solution of this particular Erdős problem,&quot; and then extended it himself into the seed of a new theory. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-49" data-ref-link="49" aria-label="Show reference 49">49</a></span></p>
+                    <p>This is still interpolation: pattern-matching, recombination, search. It is conducted across a compression of nearly the whole written record of mathematics, at a scale and reach no human could hold in one head. That is an enormous amount. Tao described the machine as taking a route the field had missed: &quot;the humans that looked at it just collectively made a slight wrong turn at move one.&quot; There are a great many real results sitting as low-hanging fruit like that, in the gaps <em>between</em> fields that no single human ever had the breadth to connect, and the machine will find some of them. A companion essay in this series argues, carefully and with the mathematics, that we can say precisely <em>what these systems are missing</em>, and why the missing thing is structural and durable.</p>
+                    <p>The one detail on which the whole story turns is the Shakespeare problem again, in a lab coat. The proof was worth something the moment Lean and Tao confirmed it. The prompter produced a candidate. The candidate became knowledge only when it passed through a mechanical verifier and a human one. Strip those two away and you have a confident page in a pile of confident pages, and no way on earth to know it is <em>Hamlet</em>. The generation was cheap and abundant; the value was created entirely at the point of verification. Which is exactly why the domains where AI already shows its clearest worth, coding above all, are the domains where verification is cheap: a compiler and a test suite say <em>yes</em> or <em>no</em> in milliseconds, so the machine can generate ten thousand candidates and the oracle sorts them for free. Where the verifier is cheap, the value is real. The question the rest of this essay presses is what happens everywhere the verifier is expensive, which is almost everywhere that matters.</p>
+                    <p>This happened. The argument has to begin there.</p>
+                    <p>The surviving question is where the value entered.</p>
+                    <h3>The claim that holds</h3>
+                    <p>Return to the two criteria. Creativity is novelty × value.</p>
+                    <p>Generative AI has driven the marginal cost of novelty toward zero.</p>
+                    <p>The cost of value remains high, because value is a domain judgment, made by trained perception, executed by a trained critic, on a substrate of absorptive capacity.</p>
+                    <p>And now apply the most elementary result in economics: when one input to a product becomes free, the return to the complementary scarce input rises.</p>
+                    <blockquote><p>Depth has been repriced upward. The market value of shallow novelty has collapsed, and that is precisely the thing most people had been mistaking for creativity all along.</p></blockquote>
+                    <h3>The organizing principle: AI advances where there is a verifier</h3>
+                    <p>Here is the single idea that I think explains everything, and it is the most useful thing in this essay.</p>
+                    <blockquote><p>AI progress tracks the availability of a cheap external verifier.</p></blockquote>
+                    <p>Look at where AI has advanced spectacularly, and ask what these domains have in common:</p>
+                    <div class="review-table-wrap essay-table-wrap">
+                    <table class="tbl">
+                    <thead><tr>
+                    <th>Domain</th>
+                    <th>The verifier</th>
+                    <th>Result</th>
+                    </tr></thead>
+                    <tbody>
+                    <tr>
+                    <td>Formal mathematics</td>
+                    <td>Lean, free, mechanical, instantaneous</td>
+                    <td>Selected Erdős problems fall</td>
+                    </tr>
+                    <tr>
+                    <td>Software</td>
+                    <td>Compilers, type checkers, test suites</td>
+                    <td>Large, real gains</td>
+                    </tr>
+                    <tr>
+                    <td>Protein structure</td>
+                    <td>Fifty years of crystallography in the Protein Data Bank</td>
+                    <td>AlphaFold, and a Nobel Prize</td>
+                    </tr>
+                    <tr>
+                    <td>Games</td>
+                    <td>A win condition</td>
+                    <td>Superhuman, long ago</td>
+                    </tr>
+                    </tbody>
+                    </table>
+                    </div>
+                    <p>Every one of them has an oracle, a fast, cheap, mechanical judge that says <em>yes</em> or <em>no</em> without human deliberation. You can generate ten thousand candidates and let the oracle sort them. Generation is free and verification is free, so the whole loop runs at machine speed.</p>
+                    <p>Now look at where AI progress remains slow, no matter how fluent the output has become:</p>
+                    <div class="review-table-wrap essay-table-wrap">
+                    <table class="tbl">
+                    <thead><tr>
+                    <th>Domain</th>
+                    <th>The verifier</th>
+                    <th>Result</th>
+                    </tr></thead>
+                    <tbody>
+                    <tr>
+                    <td>Oncology</td>
+                    <td>A thirteen-year clinical trial with a 3.3% pass rate, run on human beings</td>
+                    <td>Zero approved AI-discovered drugs</td>
+                    </tr>
+                    <tr>
+                    <td>Strategy, policy, design, art, most of life</td>
+                    <td>Reality, arriving years late, confounded, ambiguous</td>
+                    <td>Fluent output, unverifiable value</td>
+                    </tr>
+                    </tbody>
+                    </table>
+                    </div>
+                    <p data-refs="30,49,52,55" data-ref-label="Verifier availability across domains">This single principle explains why AI has made genuine progress on the Erdős list while the clearest AI-native drug-discovery stories remain clinical-stage and awaiting approval. Mathematics has an oracle. Biology has a thirteen-year contact point with reality. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-30" data-ref-link="30" aria-label="Show reference 30">30</a> <a class="ref-chip inline-ref" href="#ref-49" data-ref-link="49" aria-label="Show reference 49">49</a> <a class="ref-chip inline-ref" href="#ref-52" data-ref-link="52" aria-label="Show reference 52">52</a> <a class="ref-chip inline-ref" href="#ref-55" data-ref-link="55" aria-label="Show reference 55">55</a></span></p>
+                    <p>And there is a cost buried inside the word <em>cheap</em> that deserves its own essay, so it gets one. Verifiers range from fast (a compiler, milliseconds) to slow (an expert reading a proof) to catastrophic (a thirteen-year clinical trial). The moment generation becomes free, that verification cost becomes the entire ballgame: flood a cheap verifier and you merely exhaust the humans running it; flood an expensive one and there is no way to check the good candidate at all. A companion essay in this series follows that cost gradient down into medicine, materials, and energy, where the counterargument, <em>just keep an expert on hand to verify</em>, breaks against the fact that verification is a scarce, physical, resource-bound thing that generation has just overwhelmed.</p>
+                    <p data-refs="27" data-ref-label="Conditions for expert intuition">And notice, this is exactly Kahneman and Klein&#x27;s finding from <a href="#the-same-story-told-five-ways">The same story, told five ways</a>, restated. Expert intuition is valid in high-validity, rapid-feedback environments. So is machine learning. The same structural property that makes a domain learnable by a human expert makes it learnable by a machine. The domains where AI is running away from us are the domains where a human could also become superb quickly. The domains where AI is stuck are the domains where human expertise takes twenty years, and it takes twenty years for the same reason: there is no oracle, so the only way to acquire judgment is to slowly, painfully, accumulate it. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-27" data-ref-link="27" aria-label="Show reference 27">27</a></span></p>
+                    <p>Business is the sharpest case of the no-oracle problem, and it is worth pausing on because it is where the &quot;just prompt it&quot; fantasy is loudest. A learning system, human or machine, improves by following a gradient: do the thing, get graded, adjust, repeat. The biggest business successes have almost no usable gradient, because they are rare events that worked under conditions that no longer exist. The winning move was inseparable from a specific moment, a regulatory gap, a technology just cheap enough, a culture just ready, and the moment does not recur. The same Uber, launched into 2026, would face conditions spent in the making of the original. The historical record is a graveyard of things that worked once, and the pattern extracted from a thousand successes is the average. Business succeeds, when it succeeds, at a point off the edge of the distribution that looked reckless until it was inevitable. Averaging the past is precisely the wrong operation, and averaging the past is the one operation the machine is built to perform. This is the same trap as the monkey&#x27;s <em>Hamlet</em>: even where an AI happened to emit a genuinely good strategy, there is no cheap verifier to tell you it is good <em>before</em> you have bet the company, and the market, the only true verifier, returns its verdict years late, confounded, and too expensive to have been worth waiting for.</p>
+                    <p>Which yields the sentence the whole essay has been building toward:</p>
+                    <blockquote><p><strong>Where there is no cheap oracle, the verifier is a trained human being.</strong></p></blockquote>
+                    <p>That is what makes trained human beings the scarcest input in the entire system, and it means the value of expertise is now a direct function of how much unverifiable output the world is producing. Which is to say: it is rising very fast.</p>
+                    <h3>Coding tasks and systems are different</h3>
+                    <p>There is a slippage in the phrase &quot;AI can code now&quot; that hides most of what matters, and it is worth being exact about, because the same slippage runs through &quot;AI can do math&quot; and &quot;AI can do science.&quot;</p>
+                    <p>Solving a coding problem differs from building software. Writing a function that passes its tests is a bounded task with a cheap verifier: the compiler and the test suite say yes or no, and the machine can iterate against them at no cost. This is the domain where AI is genuinely, remarkably good, and it should be. A great deal of real software is exactly this: plumbing, glue, a form that needs validating, a pain point that a thousand prior examples already solved. Where a pattern exists and enough examples exist to interpolate it, the machine will produce good work, and there is enormous, legitimate value in that.</p>
+                    <p>Complex software is architecture. Figma, MATLAB, a database engine, a photo editor that stays responsive on a billion-pixel canvas: these are sustained structures of abstraction, held together by human intention, in which a thousand decisions about layering, data flow, and interface are made so that the <em>whole</em> remains fast, extensible, and comprehensible as it grows. And an architecture has no cheap verifier. The tests pass; the demo works; the thing on the surface looks identical to the real product. It can still be quietly, structurally wrong in a way that only shows up later, as sluggish performance, as a feature that cannot be integrated, as an extension that requires tearing the whole thing down. The user sees the same surface, while the difference lives precisely where the verifier is expensive and slow, which, by the argument above, is precisely where the machine is weakest and the expert is indispensable.</p>
+                    <p data-refs="54" data-ref-label="Recursive generation and model collapse">&quot;Spin up a thousand agents&quot; produces the average of what a thousand agents interpolate from the corpus. As the recursive-generation research keeps showing, iteration inside a closed loop converges to the mean, not to a masterpiece. The mean is competent plumbing. Architecture is a <em>point off the edge of the distribution</em> held in place by an intention the corpus does not contain. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-54" data-ref-link="54" aria-label="Show reference 54">54</a></span></p>
+                    <p>Notice the honest exception, because it is the one that fools people. If the finished software already sits in the training data, and if the model can plainly copy what exists, the output can look extraordinary. Much of the &quot;AI built a whole app&quot; magic is exactly this: the tooling ships full working templates, and the model starts from a complete, product-grade artefact and adjusts a few things at the edges. That is real, useful, and easy to misread. It is <em>starting with Hamlet and changing the character names.</em> You can take Hamlet and interpolate it toward the modern era, and the result may impress a great many people. It does not show that the machine could have written Hamlet. Take the template away and point the loop at a genuinely novel architecture, and it stalls, because now there is no finished artefact to copy and no cheap verifier to climb toward.</p>
+                    <p>The same structure holds in mathematics, and stating it carefully protects the argument from its own overreach. When a mathematician has already done eighty or ninety percent of the work, has the shape of the proof, understands the terrain, and needs the last mile, a particular lemma or a path between two known points, then AI is genuinely powerful, because it can search a compressed image of nearly all recorded mathematics for the missing step. That is a real and valuable use, and the Erdős results largely have this shape: an expert-shaped problem, a searchable gap, and a human who could recognise the answer as right. The machine supplied the search. Verification and judgement made it knowledge. The danger is mistaking the last mile for the whole road, and concluding that because the machine walked the final step, it could have walked the first ninety.</p>
+                    <p>The through-line is the same in every domain. Where the task is bounded and the verifier is cheap, generation is the bottleneck and the machine relieves it, real value, and a lot of it. Where the task is the sustained holding-together of a complex whole toward a purpose, the verifier is expensive or absent, and the scarce input is the trained human judgement that knows what &quot;right&quot; even means. Confusing the first for the second is the central error of the age, and it is an easy one to make, because <em>on the surface the two look identical</em>, which is exactly the warning this series is built around.</p>
+                    <h3>The machine has facts but misses constraints</h3>
+                    <p>There is a small, comic, and extremely revealing failure that went around in early 2026.</p>
+                    <p><em>&quot;The car wash is 100 metres away. Should I walk or drive?&quot;</em></p>
+                    <p data-refs="50" data-ref-label="Car wash problem">Many leading models said <em>walk</em>. It is very close, after all; walking is healthier and greener. The correct answer is <em>drive</em>, because the car has to be at the car wash. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-50" data-ref-link="50" aria-label="Show reference 50">50</a></span></p>
+                    <p data-refs="50" data-ref-label="Car wash benchmark">The actual research is more interesting than a joke about machines being stupid. When people built this into a proper benchmark, they found: <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-50" data-ref-link="50" aria-label="Show reference 50">50</a></span></p>
+                    <ul>
+                        <li>The distance cue exerted 8.7 to 38 times more influence on the answer than the goal did.</li>
+                        <li>Token-level attribution showed patterns consistent with keyword association, not compositional inference.</li>
+                        <li>And, critically: the failure is in constraint inference, not missing knowledge. The model <em>knows</em> a car must be present to be washed. It simply fails to apply it.</li>
+                        <li>It generalizes: across fourteen models and five hundred constructed instances, no model exceeded 75% under strict evaluation. &quot;Presence constraints&quot;, the constraint that the object must physically be there, sat at 44%.</li>
+                        <li>And a structured reasoning scaffold lifted performance from 0% to 85 to 100%. A human has to supply the frame.</li>
+                    </ul>
+                    <p>So the lesson is:</p>
+                    <blockquote><p>Constraint application is a separate capacity from fact possession.</p></blockquote>
+                    <p>And <em>that</em> gap, between having the information and having the constraint, is exactly what Cohen and Levinthal called absorptive capacity. It is exactly what ten years in a domain installs. It is the whole thing, appearing in miniature, in a joke about a car wash.</p>
+                    <p>And it is why verification cannot be a layer the machine supplies for itself. Return to the room: the monkey that types <em>Hamlet</em> cannot know it typed <em>Hamlet</em>, and neither can the typewriter. The value and the correctness of the page are established from <em>outside</em>, by a reader with a capacity the generator does not have. The car wash shows that a language model occupies the monkey&#x27;s role: it can produce the constraint as a <em>sentence</em> (&quot;a car must be present to be washed&quot;) while failing to <em>apply</em> it as a constraint. It has the words about the frame without the frame. Generation and verification are different capacities, and the second is the one the architecture does not have. <em>(There is a deeper, architectural reason for this, a reason the failure is a signature of what these systems are. I take it up in the companion essay on machine error. For now the behavioural fact is enough: the machine cannot certify its own output, making a human verifier the load-bearing element.)</em></p>
+                    <h3>It raises the floor while leaving the ceiling alone</h3>
+                    <p data-refs="38" data-ref-label="AI and story creativity">Doshi and Hauser ran the experiment properly, in <em>Science Advances</em>. Roughly three hundred people wrote short stories; some had access to LLM-generated ideas. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-38" data-ref-link="38" aria-label="Show reference 38">38</a></span></p>
+                    <p>The results are the thesis of this essay, measured:</p>
+                    <ul>
+                        <li>AI-assisted stories were rated more creative, better written, more enjoyable.</li>
+                        <li>The gains went almost entirely to the <em>least</em> creative writers, over 10% novelty gains at the bottom of the distribution.</li>
+                        <li>The most creative writers gained essentially nothing.</li>
+                        <li>And AI-assisted stories were measurably more similar to one another than human-only stories. Collective diversity fell.</li>
+                    </ul>
+                    <blockquote><p>AI raises the floor while leaving the ceiling alone. It makes the shallow look accomplished, gives the deep little extra lift, and pulls everyone toward the same attractor. Collective novelty falls, and collective novelty is the kind that matters at the level of a field.</p></blockquote>
+                    <p>There is a strategic sting in this that I think most people have not noticed. When everyone&#x27;s floor rises to the same level, the floor stops being a differentiator at all. Competent-looking output becomes worthless <em>as a signal</em>. And the only thing left that distinguishes anyone is what sits above the floor.</p>
+                    <p>Nothing but depth puts you there.</p>
+                    <h3>The most expensive thing in the world is a plausible falsehood</h3>
+                    <p data-refs="51" data-ref-label="Toner-Rodgers research-integrity case">In late 2024, a PhD student in economics at MIT published a paper claiming that an AI tool deployed in a materials-science lab had produced a 44% increase in materials discovered and large gains in patent filings. It became one of the cleanest-looking empirical claims that AI accelerates science. It was covered by the <em>Wall Street Journal</em>, by <em>Nature</em>, by <em>The Atlantic</em>. It was praised publicly by David Autor and by Daron Acemoglu, a Nobel laureate in economics. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-51" data-ref-link="51" aria-label="Show reference 51">51</a></span></p>
+                    <p>Then it collapsed. In May 2025 MIT stated it had no confidence in the provenance, reliability, or validity of the data, requested its withdrawal from the <em>Quarterly Journal of Economics</em> and from arXiv, and confirmed the author was no longer at the institution.</p>
+                    <p>Now the part that matters. Who caught it?</p>
+                    <p>A computer scientist with materials-science experience caught it by reading the paper and recognizing, from <em>domain knowledge</em>, that the AI tool it described and the laboratory it described did not make sense.</p>
+                    <blockquote><p>One of the cleanest-looking empirical claims that &quot;AI accelerates scientific discovery&quot; collapsed under research-integrity scrutiny, and it took deep domain expertise to detect it, after two of the best economists alive had publicly endorsed it.</p></blockquote>
+                    <p>That is the entire argument, compressed into one event.</p>
+                    <p>Expertise is the error-detection layer of civilization. And the value of an error-detection layer scales with the volume of plausible-looking output. AI has increased that volume by several orders of magnitude.</p>
+                    <h3>The machine lacks reliable self-knowledge, and this comes from the labs</h3>
+                    <p>You might hope the model would at least <em>warn</em> you. The people who build these systems document the weakness.</p>
+                    <p data-refs="47" data-ref-label="GPT-4 calibration">OpenAI&#x27;s own GPT-4 technical report showed that the pretrained model was well-calibrated: its stated confidence tracked its actual accuracy. It also showed that RLHF destroyed the calibration. The finished, helpful, deployed model is <em>more useful</em> and less able to tell you when it is guessing. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-47" data-ref-link="47" aria-label="Show reference 47">47</a></span></p>
+                    <p data-refs="48" data-ref-label="Hallucination incentives">And OpenAI&#x27;s 2025 paper on hallucination argues that the training and evaluation regime rewards confident guessing over admitting ignorance: a model that says &quot;I don&#x27;t know&quot; scores worse on benchmarks than a model that bluffs. We have, in effect, selected for confidence. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-48" data-ref-link="48" aria-label="Show reference 48">48</a></span></p>
+                    <blockquote><p>The system that cannot tell you when it is wrong is the system that most requires someone who can.</p></blockquote>
+                    <h3>Model ensembles share failure modes</h3>
+                    <p>And here is where people reach for the obvious rebuttal. <em>Fine, but we can just use the machines to check the machines. Run three models. Have them debate. Build a multi-agent system. Manufacture the critic.</em></p>
+                    <p>The formal reason is simple.</p>
+                    <p data-refs="37" data-ref-label="Independent errors in collective judgment">Condorcet&#x27;s Jury Theorem, the mathematical basis for why a group outperforms an individual, requires two conditions: that voters be better than chance, and that their errors be independent. Drop the independence and the theorem collapses entirely. An ensemble of correlated voters is not a jury. It is one voter, repeated. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-37" data-ref-link="37" aria-label="Show reference 37">37</a></span></p>
+                    <p>Now: are frontier models&#x27; errors independent?</p>
+                    <p data-refs="46" data-ref-label="Algorithmic monoculture">They share overlapping pretraining corpora. Similar architectures. Similar post-training recipes. They are extensively distilled from one another. This is what Kleinberg and Raghavan call algorithmic monoculture, and correlated failure is the defining pathology of a monoculture. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-46" data-ref-link="46" aria-label="Show reference 46">46</a></span></p>
+                    <p>And we have the empirical demonstration sitting right there. The car wash problem: many models failed in the same direction, driven by the same spurious cue. The ensemble produced one shared failure pattern with several voices.</p>
+                    <p data-refs="45" data-ref-label="LLM self-preference">It is worse than that, actually. Panickssery and colleagues found that LLM evaluators recognize and preferentially favour their own generations. An AI review panel becomes a mutual admiration society. Layer sycophancy on top, the well-documented tendency to converge toward the user&#x27;s stated view, and multi-agent debate converges reliably on agreement at truth&#x27;s expense. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-45" data-ref-link="45" aria-label="Show reference 45">45</a></span></p>
+                    <p>The deepest reason is institutional.</p>
+                    <p>Peer review works because of a social architecture with five properties, and it is worth writing them down:</p>
+                    <div class="review-table-wrap essay-table-wrap">
+                    <table class="tbl">
+                    <thead><tr>
+                    <th></th>
+                    <th>A panel of human experts</th>
+                    <th>Three frontier models</th>
+                    </tr></thead>
+                    <tbody>
+                    <tr>
+                    <td>Decorrelated priors, different training, fields, countries, eras</td>
+                    <td>✅</td>
+                    <td>❌ shared corpus</td>
+                    </tr>
+                    <tr>
+                    <td>Adversarial incentives, a rival <em>gains</em> by finding your error</td>
+                    <td>✅</td>
+                    <td>❌ none</td>
+                    </tr>
+                    <tr>
+                    <td>Skin in the game, career, reputation, liability</td>
+                    <td>✅</td>
+                    <td>❌ none</td>
+                    </tr>
+                    <tr>
+                    <td>Accountability, a name attached; you pay for being wrong</td>
+                    <td>✅</td>
+                    <td>❌ none</td>
+                    </tr>
+                    <tr>
+                    <td>Independent physical replication, go and check</td>
+                    <td>✅</td>
+                    <td>❌ can only re-read the corpus</td>
+                    </tr>
+                    </tbody>
+                    </table>
+                    </div>
+                    <p>Zero out of five.</p>
+                    <p data-refs="35,36" data-ref-label="Social epistemology">Helen Longino argued that objectivity is produced by communities, and specified what a community needs to produce it: venues for criticism, genuine <em>uptake</em> of criticism, shared public standards, and a tempered equality of intellectual authority. An ensemble of language models satisfies none of the four. Popper put it more bluntly: knowledge grows by attempted refutation, and refutation requires someone who wants you to be wrong. A model has no stake in your being wrong. A rival scientist has a career riding on it. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-35" data-ref-link="35" aria-label="Show reference 35">35</a> <a class="ref-chip inline-ref" href="#ref-36" data-ref-link="36" aria-label="Show reference 36">36</a></span></p>
+                    <p>And notice the symmetry with the Einstellung effect from <a href="#why-the-machinery-underneath">Why: the machinery underneath</a>. The fix for an expert&#x27;s blind spot is another expert with a different history, with decorrelated blind spots. That is precisely the mechanism that makes a room of scientists from different fields find the real bottleneck. A rack of GPUs running the same model family lacks that mechanism.</p>
+                    <blockquote><p>Three frontier models can behave like one expert with a stutter.</p></blockquote>
+                    <p>Science&#x27;s error-correction is a social technology. More agents from the same distribution do not instantiate it.</p>
+                    <h3>The irony that should frighten everyone</h3>
+                    <p>There is one more argument, and it is the one that keeps me up.</p>
+                    <p>The deeper problem is this:</p>
+                    <blockquote><p>AI systematically erodes the supply of the very expertise it depends on for verification.</p></blockquote>
+                    <p>This has a name, and it is forty-three years old.</p>
+                    <p data-refs="43" data-ref-label="Ironies of automation">In 1983 Lisanne Bainbridge published a paper called &quot;Ironies of Automation.&quot; It came out of aviation and industrial process control, and its central observation is this: the more reliable the automation, the less the human operator practises, so the more their skill decays. And yet the human is retained precisely to handle the cases the automation cannot. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-43" data-ref-link="43" aria-label="Show reference 43">43</a></span></p>
+                    <p>Automation therefore guarantees that the operator is least capable exactly at the moment they are most needed.</p>
+                    <p>Air France 447 is the textbook case. The autopilot disengaged in conditions it could not handle, and the crew had lost the manual stall-recovery skill they had been kept in the cockpit to supply.</p>
+                    <p data-refs="42" data-ref-label="Critical thinking and generative AI">Now the modern data. Microsoft Research and Carnegie Mellon surveyed 319 knowledge workers about 936 real workplace uses of generative AI. Workers reported <em>less</em> or <em>much less</em> cognitive effort in 72% of knowledge tasks, 79% of comprehension tasks, 76% of synthesis tasks. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-42" data-ref-link="42" aria-label="Show reference 42">42</a></span></p>
+                    <p>And they found this, which belongs on a poster in every office in the world:</p>
+                    <blockquote><p>Higher confidence in the AI → less critical thinking. Higher confidence in one&#x27;s own ability → more critical thinking.</p></blockquote>
+                    <p>The people least equipped to check are precisely the ones who check least.</p>
+                    <p>The authors describe the shift in the nature of the work itself: from information gathering to information verification; from problem-solving to response integration; from doing to supervising.</p>
+                    <p>And that leaves us with a loop that I do not know how to escape:</p>
+                    <blockquote><p>Expertise is produced by doing the hard parts.</p><p>If the machine does the hard parts for every junior, you get no seniors in twenty years.</p><p>But you need seniors to verify the machine.</p><p>The system consumes its own precondition.</p></blockquote>
+                    <p>The Erdős wiki works because Terence Tao exists. Nothing in the current arrangement is producing the next Terence Tao, and a great deal of it is actively interfering.</p>
+                    <p>This is a supply-chain failure with a date on it.</p>
+                    <h3>What the labs actually pay for</h3>
+                    <p>If all of this were merely my opinion, you would be right to discount it. So let me offer the strongest kind of evidence there is: revealed preference.</p>
+                    <p>The firms with the most information about what AI can do, and the strongest possible financial incentive to believe human expertise is obsolete, are collectively spending billions of dollars a year buying deep human expertise by the hour.</p>
+                    <p>Look at the rate card, as of 2026:</p>
+                    <div class="review-table-wrap essay-table-wrap">
+                    <table class="tbl">
+                    <thead><tr>
+                    <th>Tier</th>
+                    <th>Rate</th>
+                    </tr></thead>
+                    <tbody>
+                    <tr>
+                    <td>Bulk crowd labelling</td>
+                    <td>~$2 to $15/hr</td>
+                    </tr>
+                    <tr>
+                    <td>Generalist annotation and RLHF rating</td>
+                    <td>~$20 to $40/hr</td>
+                    </tr>
+                    <tr>
+                    <td>Credentialed specialists (PhD / MD / JD)</td>
+                    <td>$100 to $250/hr</td>
+                    </tr>
+                    <tr>
+                    <td>Medical fellows</td>
+                    <td>$250 to $450/hr</td>
+                    </tr>
+                    <tr>
+                    <td>Venture partners and C-suite executives</td>
+                    <td>$500 to $1,000/hr</td>
+                    </tr>
+                    </tbody>
+                    </table>
+                    </div>
+                    <p data-refs="53" data-ref-label="Expert-evaluation market">Mercor says it pays out more than $2 million a day to more than 30,000 weekly active contractors, while current expert listings across Mercor, Handshake AI, Surge, and similar platforms routinely pay credentialed specialists far above generalist annotation rates. The data-annotation market is now measured in billions of dollars and is projected to keep growing through 2030. Expert rates are rising, and firms are competing aggressively for scarce specialists. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-53" data-ref-link="53" aria-label="Show reference 53">53</a></span></p>
+                    <p data-refs="54" data-ref-label="Recursive training degradation">And the reason this market exists at all is the quiet part: models trained on their own outputs degrade. The loop requires a continuously replenished supply of fresh human ground truth. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-54" data-ref-link="54" aria-label="Show reference 54">54</a></span></p>
+                    <p>Now look at <em>what</em> they are paying most for. Surge pays physicians to evaluate diagnoses. It pays venture partners to evaluate strategy. They are paying for judgment.</p>
+                    <blockquote><p>The frontier labs are, with their own money, pricing the exact thesis of this essay: generation is cheap, judgment is scarce. Expertise is the bottleneck input to AI itself.</p></blockquote>
+                    <p>The rate card spans two to three orders of magnitude, and every single rung of that ladder is a rung of depth.</p>
+                    <p>The natural objection is that this is transitional: the labs are distilling the expertise into the model. But distillation requires the expert to exist first, and the loop must be replenished every time the frontier moves. The expert becomes the ground-truth generator, a structural role that persists.</p>
+                    <p>And combine it with Bainbridge, and you get something genuinely alarming: the labs depend on a supply of deep human expertise that the technology they are building is simultaneously eroding.</p>
+                    <p data-refs="53" data-ref-label="Expert price and public appreciation">That price signal should not be mistaken for reassurance. Experts can be paid more without being appreciated more. The firms closest to these systems have been burned by their failures, so they can see what verification is worth. People outside that verification loop see the polished artifact, not the caught error, and can draw the opposite conclusion: if the surface looks expert, the expert must be replaceable. The first signal buys today&#x27;s scarce experts. The second shapes whether a society funds, respects, and trains tomorrow&#x27;s experts. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-53" data-ref-link="53" aria-label="Show reference 53">53</a></span></p>
+                    <h3>Nobody can tell how well this is going, not even the experts</h3>
+                    <p>One last piece, because it closes the circle.</p>
+                    <p data-refs="40,41" data-ref-label="METR developer productivity">The research organization METR ran a randomized controlled trial: sixteen experienced open-source developers, 246 real tasks, in their own mature repositories. These were million-line codebases they had worked on for five years. Half the tasks allowed AI; half did not. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-40" data-ref-link="40" aria-label="Show reference 40">40</a> <a class="ref-chip inline-ref" href="#ref-41" data-ref-link="41" aria-label="Show reference 41">41</a></span></p>
+                    <p>The developers predicted a 24% speed-up. Afterwards, they reported a 20% speed-up. They were, in fact, 19% slower.</p>
+                    <p>A thirty-nine-point gap between what they felt and what happened, in experts, on their own code. METR calls this a snapshot of early-2025 tooling, and a follow-up found some evidence of speed-up with newer tools. The calibration point still lands.</p>
+                    <p>The point is about calibration. The perception of AI-assisted productivity is systematically unreliable, even among the people best positioned to judge. And if the experts cannot calibrate on home turf, then a person with no domain knowledge has no calibration signal at all. They cannot know whether the output in front of them is brilliant or catastrophically wrong. And they will feel confident either way.</p>
+                    <p data-refs="39" data-ref-label="Jagged frontier field experiment">Dell&#x27;Acqua and colleagues found the shape of this in a field experiment with roughly 750 consultants: inside the frontier of AI capability, AI use improved performance substantially. On tasks outside it, AI use made consultants worse; they accepted plausible, wrong output and ran with it. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-39" data-ref-link="39" aria-label="Show reference 39">39</a></span></p>
+                    <p>They called it the jagged frontier, and the phrase is exactly right.</p>
+                    <blockquote><p>You cannot see the frontier without domain knowledge. And the people most likely to fall off it are the people least equipped to notice they have.</p></blockquote>
+                    <div class="essay-break" aria-hidden="true"></div>
+                </section>
+                <section class="article-section" id="the-cancer-drug" data-refs="3,4,5">
+                    <h2>The cancer drug</h2>
+                    <p>Let me make all of this concrete with the case people actually care about, because it is the one where the fantasy is most seductive and most dangerous.</p>
+                    <p><em>Surely, somewhere, a bright teenager with a good prompt is about to find a cure for cancer.</em></p>
+                    <p>The machine can generate a plausible molecule. The hard part begins immediately afterward.</p>
+                    <p>Consider what actually has to happen.</p>
+                    <p>Target identification and validation requires a wet lab, animal models, orthogonal assays, and it must be done against a literature in which, as we saw, roughly 11% of landmark preclinical cancer findings replicate. The model&#x27;s map of cancer biology is distilled from that literature. It has no way to know which parts of its own map are fiction, and it will describe the fiction with exactly the same fluency as the fact.</p>
+                    <p>Hit finding and medicinal chemistry is where AI genuinely contributes. Insilico&#x27;s lead compound was the 55th of 79 molecules its system generated, and that is a real acceleration.</p>
+                    <p>And then everything else. Synthesis. Assays. Pharmacokinetics. Physical hands, tacit craft, instruments. Preclinical toxicology. The IND filing. GLP laboratories, regulatory expertise, capital. And then Phase I, II, and III: patients, hospitals, ethics boards, contract research organizations, statisticians, regulators, and hundreds of millions to billions of dollars.</p>
+                    <p data-refs="30" data-ref-label="Clinical trial success rates">The numbers, from a study of over 400,000 clinical trial records: <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-30" data-ref-link="30" aria-label="Show reference 30">30</a></span></p>
+                    <ul>
+                        <li>Oncology, Phase 1 to approval: about 3.3%.</li>
+                        <li>Median time in the clinic for oncology: 13.1 years.</li>
+                        <li>Oncology has the worst trial completion rates of any therapeutic area.</li>
+                    </ul>
+                    <p>And the fact that settles it:</p>
+                    <blockquote><p>As of July 2026, the clearest AI-native drug-discovery success stories remain investigational and awaiting approval.</p></blockquote>
+                    <p data-refs="52" data-ref-label="Rentosertib Phase III">The furthest-advanced fully AI-originated compound, rentosertib, from Insilico Medicine, targets idiopathic pulmonary fibrosis and has only just entered Phase III. Getting it there took Insilico roughly a decade: hundreds of scientists, robotic wet laboratories, a Hong Kong IPO, and partnerships with Lilly and Takeda. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-52" data-ref-link="52" aria-label="Show reference 52">52</a></span></p>
+                    <p>The single most successful AI drug-discovery story on Earth required a company full of PhDs, physical laboratories, and ten years.</p>
+                    <p>This is the prediction. Oncology&#x27;s verifier is a thirteen-year trial with a 3% pass rate. There is no oracle. So there is no shortcut.</p>
+                    <p>The bottleneck is the thirteen years, the 3%, the billion dollars, the unwritten craft of the bench, and above all, the judgment required to know which of ten thousand plausible targets is worth betting a decade of your life on.</p>
+                    <p>That judgment is absorptive capacity. And it is acquired the only way it has ever been acquired.</p>
+                    <div class="essay-break" aria-hidden="true"></div>
+                </section>
+                <section class="article-section" id="the-strongest-objections" data-refs="1,3,4,5">
+                    <h2>The strongest objections</h2>
+                    <p>I want to end the argument by testing it against its strongest counterattacks.</p>
+                    <p data-refs="28,29" data-ref-label="Outsider solutions and brokerage">&quot;Outsiders solve problems that insiders cannot.&quot; This is true, and it is evidenced: Lakhani and colleagues found, studying InnoCentive, that problems were more likely to be solved by people at the margins of the relevant field. Read the sample. Those solvers were PhDs with deep expertise in an adjacent field. This is cross-domain depth beating single-domain depth. Ronald Burt&#x27;s work on structural holes says the same thing: brokerage between clusters is where value is created, but you must be deeply embedded in at least one cluster to have anything to broker. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-28" data-ref-link="28" aria-label="Show reference 28">28</a> <a class="ref-chip inline-ref" href="#ref-29" data-ref-link="29" aria-label="Show reference 29">29</a></span></p>
+                    <p>Which gives the synthesis, and it is the correct one:</p>
+                    <blockquote><p>Creativity is combination, but the elements combined must be deep, and the combiner must be deep in at least one of them.</p><p>Recombination without depth is pastiche.</p></blockquote>
+                    <p>&quot;Young people escape stale paradigms.&quot; Partly true, and answered by the Census data: the top 0.1% of high-growth founders average forty-five, and prior industry experience is the strongest predictor. Galenson&#x27;s young conceptual innovators peaked early but were already trained.</p>
+                    <p data-refs="44" data-ref-label="LLM research ideas">&quot;LLMs generate ideas that expert reviewers rate as <em>more novel</em> than the experts&#x27; own.&quot; This is real; a Stanford study found exactly that. Those same ideas were rated less feasible, and rated novelty is not realized value. This is the novelty/appropriateness split appearing precisely where the theory predicts: the machine wins the free half and loses the expensive half. <span class="paragraph-refs" aria-label="Reference"><a class="ref-chip inline-ref" href="#ref-44" data-ref-link="44" aria-label="Show reference 44">44</a></span></p>
+                    <p>So the durable claim is:</p>
+                    <blockquote><p>A grant committee is buying a judgment about which idea matters. Novelty is free. Problem selection is scarce. Knowing which of a thousand plausible questions is worth a decade of your life and fifty million dollars is taste, and taste is what a field installs in you over years. It is exactly the judgment with no oracle.</p></blockquote>
+                    <p>&quot;Deliberate practice explains less variance than you claim.&quot; Correct, which is why the claim is necessity. Depth is the entry ticket. The prize depends on what happens after entry.</p>
+                    <p>&quot;AI ensembles will supply the missing critic.&quot; The most sophisticated objection, and <a href="#now-machines-can-print-phd-thesis-artifacts-every-minute">Now machines can print &quot;PhD thesis&quot; artifacts every minute</a> is the answer. Ensembles reduce error only when errors are independent. These errors are correlated. Three frontier models are not three experts.</p>
+                    <div class="essay-break" aria-hidden="true"></div>
+                </section>
+                <section class="article-section" id="will-we-solve-p-np" data-refs="1,2,3,4,5">
+                    <h2>Will we solve P = NP?</h2>
+                    <p>Maybe. That is no longer the strangest possibility.</p>
+                    <p data-refs="49,52,55" data-ref-label="Verified AI-era examples">The stranger possibility is that the machine produces something real and it arrives looking like everything else in the pile: fluent, technical, confident, and dense. That is already the shape of the moment. A proof of an Erdős problem. A protein structure. A molecule that might, in a decade, do some good. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-49" data-ref-link="49" aria-label="Show reference 49">49</a> <a class="ref-chip inline-ref" href="#ref-52" data-ref-link="52" aria-label="Show reference 52">52</a> <a class="ref-chip inline-ref" href="#ref-55" data-ref-link="55" aria-label="Show reference 55">55</a></span></p>
+                    <p>A P = NP proof would not become knowledge by appearing on a screen. Lean might check formal steps. Mathematicians would still have to choose the formalization, understand the argument, notice what it implies, and connect it to the field. Solving P = NP in public would be a social and educational event as much as a mathematical one.</p>
+                    <p>This is where the next problem begins. A human in the loop who cannot check the work is a liability shield, and the human becomes competent by doing the hard parts: the derivation, the failed replication, the tedious source trace, the edge case, the day spent touching the data. Those tasks are the work that makes a reader.</p>
+                    <p data-refs="42,43" data-ref-label="Automation and reader training">Now the same machine that prints the pages also does the junior&#x27;s homework. It writes the summary, the first pass, the boilerplate code, the plausible proof sketch, the literature map. That can be useful. It also moves the learner from doing to supervising before they have built the perception needed to supervise. Bainbridge saw the structure forty-three years ago: automation preserves the human for the exceptional case while steadily removing the practice that would make the human useful there. <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-42" data-ref-link="42" aria-label="Show reference 42">42</a> <a class="ref-chip inline-ref" href="#ref-43" data-ref-link="43" aria-label="Show reference 43">43</a></span></p>
+                    <p>So the bottleneck after cheap generation is the pipeline that produces verifiers. We are increasing the demand for readers while weakening the apprenticeship that makes readers possible.</p>
+                    <p>The public version is just as important. A patient can ask an AI and receive a fluent, expert-shaped answer, then lose sight of what a doctor contributes. This is not a claim that every doctor is right or every model is wrong. It is a claim that the surface of an answer hides the verification process behind it. The same misunderstanding scales into policy, education funding, institutional trust, and whether young people see years of deep training as worth the cost.</p>
+                    <p>The next essay follows this disruption through the systems that used to manufacture readers: the market that paid for junior work, the classroom that made students struggle, and the laboratory that made people touch the data. It asks the question this one leaves behind: who will read the pile?</p>
+                    <p>Everyone can have an original idea. Generation has ceased to be the bottleneck, and it is now worth approximately nothing.</p>
+                    <p><strong>The scarce thing, the thing it has always been and now urgently is, is knowing which idea is any good.</strong></p>
+                    <div class="essay-break" aria-hidden="true"></div>
+                </section>
+                <section class="article-section" id="predictions" data-refs="5">
+                    <h2>Predictions</h2>
+                    <p>An argument that predicts nothing is decoration. So, falsifiably:</p>
+                    <ol>
+                        <li>The first regulatory-approved AI-discovered drug will come from an organization full of domain PhDs with physical laboratories. <em>(Currently on track: rentosertib.)</em></li>
+                        <li>AI progress will remain concentrated in domains with cheap external verifiers and will stall in domains without them. This is the sharpest test of the whole thesis.</li>
+                        <li>AI-assisted output will show rising mean quality and falling diversity across domains, already observed in writing; it should replicate in design, music, and code.</li>
+                        <li>The market price of verification skill will rise even as public respect for expertise becomes more fragile. The $500 to $1,000/hour expert-evaluation market is the price signal; the harder question is whether funding, status, and trust in long training move the other way.</li>
+                        <li>Stacking more frontier models will show sharply diminishing returns against the theoretical ceiling because the errors are correlated.</li>
+                        <li>The age of top innovators should remain high. If AI genuinely substituted for accumulated expertise, the burden-of-knowledge trend should reverse. Watch it. If it falls, I am wrong.</li>
+                        <li>Complex, product-grade software will depend on deep human architects. Where AI ships whole systems that hold up under real load and real extension, look closely and you will find either a pre-existing template it copied or an expert directing it. Purely agent-built architecture, absent that guidance, will underperform on exactly the axes users don&#x27;t see at first, speed, extensibility, integration, and the gap will widen as the system grows.</li>
+                    </ol>
+                    <div class="essay-break" aria-hidden="true"></div>
+                </section>
+                <section class="article-section sourcing-note" id="sourcing-note" data-refs="1,2,3,4,5">
+                    <h2>Sourcing Note</h2>
+                    <p data-refs="30,33,38,40,49,51" data-ref-label="Sourcing note"><em>A note on sourcing: the load-bearing empirical figures above, including the Erdős events and Tao&#x27;s remark, the MIT research-integrity statement, the Wong, Siah, and Lo trial rates, the Azoulay founder-age data, the Begley and Ellis reproducibility rate, and the Doshi and Hauser and METR results, were checked against primary or primary-adjacent sources (journal articles, the authors&#x27; own papers, institutional statements, the Erdős Problems database, and the Erdős-problems wiki) rather than loose summaries. Quotations are kept short and attributed; where a figure is disputed or context-dependent (e.g. the METR follow-up, the contested Hong and Page proof), the essay says so.</em> <span class="paragraph-refs" aria-label="References"><a class="ref-chip inline-ref" href="#ref-30" data-ref-link="30" aria-label="Show reference 30">30</a> <a class="ref-chip inline-ref" href="#ref-33" data-ref-link="33" aria-label="Show reference 33">33</a> <a class="ref-chip inline-ref" href="#ref-38" data-ref-link="38" aria-label="Show reference 38">38</a> <a class="ref-chip inline-ref" href="#ref-40" data-ref-link="40" aria-label="Show reference 40">40</a> <a class="ref-chip inline-ref" href="#ref-49" data-ref-link="49" aria-label="Show reference 49">49</a> <a class="ref-chip inline-ref" href="#ref-51" data-ref-link="51" aria-label="Show reference 51">51</a></span></p>
+                </section>
+            </div>
+        </article>
+        <a class="sections-fab" href="#essay-sections" aria-label="Go to essay sections">Sections</a>
+
+        <aside class="reference-rail" aria-label="Article references">
+            <div class="reference-panel">
+                <div class="reference-panel-header">
+                    <p class="eyebrow">Literature</p>
+                    <h2>Sources</h2>
+                    <p id="reference-status">Scroll the essay to surface the sources behind each paragraph.</p>
+                </div>
+                <label class="reference-filter-label" for="reference-filter">Search sources</label>
+                <input id="reference-filter" class="reference-filter" type="search" placeholder="Author, topic, year, source #">
+                <button id="show-all-references" class="reference-reset" type="button">Show all sources</button>
+                <ol class="reference-list">
+                    <li class="reference-group" data-group-title="Creativity And Expertise">Creativity And Expertise</li>
+                    <li id="ref-1" class="reference-card" data-ref="1" data-group="Creativity And Expertise"><a class="reference-number" href="#ref-1" data-ref-link="1">1</a><p>Runco, M. A., &amp; Jaeger, G. J. (2012). The standard definition of creativity. <em>Creativity Research Journal, 24</em>(1), 92 to 96. (Creativity as originality plus effectiveness.)</p></li>
+                    <li id="ref-2" class="reference-card" data-ref="2" data-group="Creativity And Expertise"><a class="reference-number" href="#ref-2" data-ref-link="2">2</a><p>Boden, M. A. (2004). <em>The Creative Mind: Myths and Mechanisms.</em> Routledge. (Combinatorial, exploratory, and transformational creativity.)</p></li>
+                    <li id="ref-3" class="reference-card" data-ref="3" data-group="Creativity And Expertise"><a class="reference-number" href="#ref-3" data-ref-link="3">3</a><p>Csikszentmihalyi, M. (1996). <em>Creativity: Flow and the Psychology of Discovery and Invention.</em> HarperCollins. (Creativity as a judgment involving person, domain, and field.)</p></li>
+                    <li id="ref-4" class="reference-card" data-ref="4" data-group="Creativity And Expertise"><a class="reference-number" href="#ref-4" data-ref-link="4">4</a><p>Hayes, J. R. (1989). Cognitive processes in creativity. In J. A. Glover, R. R. Ronning, &amp; C. R. Reynolds (Eds.), <em>Handbook of Creativity.</em> Plenum. (The ten-year rule in composers.)</p></li>
+                    <li id="ref-5" class="reference-card" data-ref="5" data-group="Creativity And Expertise"><a class="reference-number" href="#ref-5" data-ref-link="5">5</a><p>Simonton, D. K. (1988, 1997, 1999). Quantitative studies of creative productivity, the equal-odds rule, and the education/eminent-achievement inverted U.</p></li>
+                    <li id="ref-6" class="reference-card" data-ref="6" data-group="Creativity And Expertise"><a class="reference-number" href="#ref-6" data-ref-link="6">6</a><p>Weisberg, R. W. (1993). <em>Creativity: Beyond the Myth of Genius.</em> W. H. Freeman. (Incremental, expertise-driven accounts of work such as <em>Guernica</em>.)</p></li>
+                    <li id="ref-7" class="reference-card" data-ref="7" data-group="Creativity And Expertise"><a class="reference-number" href="#ref-7" data-ref-link="7">7</a><p>Ericsson, K. A., Krampe, R. T., &amp; Tesch-Romer, C. (1993). The role of deliberate practice in the acquisition of expert performance. <em>Psychological Review, 100</em>(3), 363 to 406.</p></li>
+                    <li id="ref-8" class="reference-card" data-ref="8" data-group="Creativity And Expertise"><a class="reference-number" href="#ref-8" data-ref-link="8">8</a><p>Macnamara, B. N., Hambrick, D. Z., &amp; Oswald, F. L. (2014). Deliberate practice and performance in music, games, sports, education, and professions. <em>Psychological Science, 25</em>(8), 1608 to 1618.</p></li>
+                    <li id="ref-9" class="reference-card" data-ref="9" data-group="Creativity And Expertise"><a class="reference-number" href="#ref-9" data-ref-link="9">9</a><p>Wallas, G. (1926). <em>The Art of Thought.</em> Harcourt Brace. / Hadamard, J. (1945). <em>The Psychology of Invention in the Mathematical Field.</em> Princeton University Press. (Preparation, incubation, illumination, verification, and Poincare.)</p></li>
+                    <li id="ref-10" class="reference-card" data-ref="10" data-group="Creativity And Expertise"><a class="reference-number" href="#ref-10" data-ref-link="10">10</a><p>Tao, T. (2007). <a href="https://terrytao.wordpress.com/career-advice/theres-more-to-mathematics-than-rigour-and-proofs/" target="_blank" rel="noopener noreferrer">There is more to mathematics than rigour and proofs.</a> (Pre-rigorous, rigorous, and post-rigorous stages.)</p></li>
+                    <li class="reference-group" data-group-title="Cognition And Perception">Cognition And Perception</li>
+                    <li id="ref-11" class="reference-card" data-ref="11" data-group="Cognition And Perception"><a class="reference-number" href="#ref-11" data-ref-link="11">11</a><p>Chase, W. G., &amp; Simon, H. A. (1973). Perception in chess. <em>Cognitive Psychology, 4</em>(1), 55 to 81. / de Groot, A. D. (1965). <em>Thought and Choice in Chess.</em> Mouton.</p></li>
+                    <li id="ref-12" class="reference-card" data-ref="12" data-group="Cognition And Perception"><a class="reference-number" href="#ref-12" data-ref-link="12">12</a><p>Ericsson, K. A., &amp; Kintsch, W. (1995). Long-term working memory. <em>Psychological Review, 102</em>(2), 211 to 245.</p></li>
+                    <li id="ref-13" class="reference-card" data-ref="13" data-group="Cognition And Perception"><a class="reference-number" href="#ref-13" data-ref-link="13">13</a><p>Bernstein, N. A. (1967). <em>The Co-ordination and Regulation of Movements.</em> Pergamon. (Degrees of freedom in motor learning.)</p></li>
+                    <li id="ref-14" class="reference-card" data-ref="14" data-group="Cognition And Perception"><a class="reference-number" href="#ref-14" data-ref-link="14">14</a><p>Calvo-Merino, B., Glaser, D. E., Grezes, J., Passingham, R. E., &amp; Haggard, P. (2005). Action observation and acquired motor skills. <em>Cerebral Cortex, 15</em>(8), 1243 to 1249.</p></li>
+                    <li id="ref-15" class="reference-card" data-ref="15" data-group="Cognition And Perception"><a class="reference-number" href="#ref-15" data-ref-link="15">15</a><p>Beaty, R. E., Benedek, M., Silvia, P. J., &amp; Schacter, D. L. (2016, 2018). Default-mode, salience, and executive-control network cooperation in creative ability.</p></li>
+                    <li id="ref-16" class="reference-card" data-ref="16" data-group="Cognition And Perception"><a class="reference-number" href="#ref-16" data-ref-link="16">16</a><p>Limb, C. J., &amp; Braun, A. R. (2008). Neural substrates of spontaneous musical performance. <em>PLoS ONE, 3</em>(2), e1679. / Pinho, A. L. et al. (2014). Connecting to create. <em>Journal of Neuroscience, 34</em>(18), 6156 to 6163.</p></li>
+                    <li id="ref-17" class="reference-card" data-ref="17" data-group="Cognition And Perception"><a class="reference-number" href="#ref-17" data-ref-link="17">17</a><p>Bilalic, M., McLeod, P., &amp; Gobet, F. (2008). Why good thoughts block better ones: The Einstellung effect. <em>Cognition, 108</em>(3), 652 to 661.</p></li>
+                    <li class="reference-group" data-group-title="Innovation Economics">Innovation Economics</li>
+                    <li id="ref-18" class="reference-card" data-ref="18" data-group="Innovation Economics"><a class="reference-number" href="#ref-18" data-ref-link="18">18</a><p>Cohen, W. M., &amp; Levinthal, D. A. (1990). Absorptive capacity: A new perspective on learning and innovation. <em>Administrative Science Quarterly, 35</em>(1), 128 to 152.</p></li>
+                    <li id="ref-19" class="reference-card" data-ref="19" data-group="Innovation Economics"><a class="reference-number" href="#ref-19" data-ref-link="19">19</a><p>Weitzman, M. L. (1998). Recombinant growth. <em>The Quarterly Journal of Economics, 113</em>(2), 331 to 360.</p></li>
+                    <li id="ref-20" class="reference-card" data-ref="20" data-group="Innovation Economics"><a class="reference-number" href="#ref-20" data-ref-link="20">20</a><p>Uzzi, B., Mukherjee, S., Stringer, M., &amp; Jones, B. (2013). Atypical combinations and scientific impact. <em>Science, 342</em>(6157), 468 to 472.</p></li>
+                    <li id="ref-21" class="reference-card" data-ref="21" data-group="Innovation Economics"><a class="reference-number" href="#ref-21" data-ref-link="21">21</a><p>Fleming, L. (2001). <a href="https://doi.org/10.1287/mnsc.47.1.117.10671" target="_blank" rel="noopener noreferrer">Recombinant uncertainty in technological search.</a> <em>Management Science, 47</em>(1), 117 to 132.</p></li>
+                    <li id="ref-22" class="reference-card" data-ref="22" data-group="Innovation Economics"><a class="reference-number" href="#ref-22" data-ref-link="22">22</a><p>Jones, B. F. (2009). The burden of knowledge and the death of the Renaissance man. <em>Review of Economic Studies, 76</em>(1), 283 to 317.</p></li>
+                    <li id="ref-23" class="reference-card" data-ref="23" data-group="Innovation Economics"><a class="reference-number" href="#ref-23" data-ref-link="23">23</a><p>Bloom, N., Jones, C. I., Van Reenen, J., &amp; Webb, M. (2020). Are ideas getting harder to find? <em>American Economic Review, 110</em>(4), 1104 to 1144.</p></li>
+                    <li id="ref-24" class="reference-card" data-ref="24" data-group="Innovation Economics"><a class="reference-number" href="#ref-24" data-ref-link="24">24</a><p>Azoulay, P., Jones, B. F., Kim, J. D., &amp; Miranda, J. (2020). Age and high-growth entrepreneurship. <em>AER: Insights, 2</em>(1), 65 to 82.</p></li>
+                    <li id="ref-25" class="reference-card" data-ref="25" data-group="Innovation Economics"><a class="reference-number" href="#ref-25" data-ref-link="25">25</a><p>Shane, S. (2000). Prior knowledge and the discovery of entrepreneurial opportunities. <em>Organization Science, 11</em>(4), 448 to 469.</p></li>
+                    <li id="ref-26" class="reference-card" data-ref="26" data-group="Innovation Economics"><a class="reference-number" href="#ref-26" data-ref-link="26">26</a><p>Galenson, D. W. (2006). <em>Old Masters and Young Geniuses.</em> Princeton University Press. (Conceptual and experimental innovators.)</p></li>
+                    <li id="ref-27" class="reference-card" data-ref="27" data-group="Innovation Economics"><a class="reference-number" href="#ref-27" data-ref-link="27">27</a><p>Kahneman, D., &amp; Klein, G. (2009). Conditions for intuitive expertise. <em>American Psychologist, 64</em>(6), 515 to 526.</p></li>
+                    <li id="ref-28" class="reference-card" data-ref="28" data-group="Innovation Economics"><a class="reference-number" href="#ref-28" data-ref-link="28">28</a><p>Lakhani, K. R., Jeppesen, L. B., Lohse, P. A., &amp; Panetta, J. A. (2007). The value of openness in scientific problem solving. <em>Harvard Business School Working Paper.</em> (InnoCentive and marginality.)</p></li>
+                    <li id="ref-29" class="reference-card" data-ref="29" data-group="Innovation Economics"><a class="reference-number" href="#ref-29" data-ref-link="29">29</a><p>Burt, R. S. (1992, 2004). <em>Structural Holes</em> and brokerage as a source of value across clusters.</p></li>
+                    <li id="ref-30" class="reference-card" data-ref="30" data-group="Innovation Economics"><a class="reference-number" href="#ref-30" data-ref-link="30">30</a><p>Wong, C. H., Siah, K. W., &amp; Lo, A. W. (2019). Estimation of clinical trial success rates and related parameters. <em>Biostatistics, 20</em>(2), 273 to 286.</p></li>
+                    <li class="reference-group" data-group-title="Tacit Knowledge And Social Epistemology">Tacit Knowledge And Social Epistemology</li>
+                    <li id="ref-31" class="reference-card" data-ref="31" data-group="Tacit Knowledge And Social Epistemology"><a class="reference-number" href="#ref-31" data-ref-link="31">31</a><p>Polanyi, M. (1966). <em>The Tacit Dimension.</em> University of Chicago Press. (We know more than we can tell.)</p></li>
+                    <li id="ref-32" class="reference-card" data-ref="32" data-group="Tacit Knowledge And Social Epistemology"><a class="reference-number" href="#ref-32" data-ref-link="32">32</a><p>Collins, H. M. (1974, 1985). Tacit knowledge and replication in the TEA laser case; later developed in <em>Changing Order.</em></p></li>
+                    <li id="ref-33" class="reference-card" data-ref="33" data-group="Tacit Knowledge And Social Epistemology"><a class="reference-number" href="#ref-33" data-ref-link="33">33</a><p>Begley, C. G., &amp; Ellis, L. M. (2012). Drug development: Raise standards for preclinical cancer research. <em>Nature, 483</em>, 531 to 533.</p></li>
+                    <li id="ref-34" class="reference-card" data-ref="34" data-group="Tacit Knowledge And Social Epistemology"><a class="reference-number" href="#ref-34" data-ref-link="34">34</a><p>Prinz, F., Schlange, T., &amp; Asadullah, K. (2011). Believe it or not: How much can we rely on published data on potential drug targets? <em>Nature Reviews Drug Discovery, 10</em>, 712.</p></li>
+                    <li id="ref-35" class="reference-card" data-ref="35" data-group="Tacit Knowledge And Social Epistemology"><a class="reference-number" href="#ref-35" data-ref-link="35">35</a><p>Longino, H. E. (1990). <em>Science as Social Knowledge.</em> Princeton University Press.</p></li>
+                    <li id="ref-36" class="reference-card" data-ref="36" data-group="Tacit Knowledge And Social Epistemology"><a class="reference-number" href="#ref-36" data-ref-link="36">36</a><p>Popper, K. (1963). <em>Conjectures and Refutations.</em> Routledge. (Knowledge growth through attempted refutation.)</p></li>
+                    <li id="ref-37" class="reference-card" data-ref="37" data-group="Tacit Knowledge And Social Epistemology"><a class="reference-number" href="#ref-37" data-ref-link="37">37</a><p>Condorcet's Jury Theorem and its independence condition; Hong, L., &amp; Page, S. E. (2004). Groups of diverse problem solvers can outperform groups of high-ability problem solvers. <em>PNAS, 101</em>(46), 16385 to 16389. (Formal proof contested; ensemble intuition noted.)</p></li>
+                    <li class="reference-group" data-group-title="The AI Era">The AI Era</li>
+                    <li id="ref-38" class="reference-card" data-ref="38" data-group="The AI Era"><a class="reference-number" href="#ref-38" data-ref-link="38">38</a><p>Doshi, A. R., &amp; Hauser, O. P. (2024). Generative AI enhances individual creativity but reduces collective diversity of novel content. <em>Science Advances, 10</em>(28), eadn5290.</p></li>
+                    <li id="ref-39" class="reference-card" data-ref="39" data-group="The AI Era"><a class="reference-number" href="#ref-39" data-ref-link="39">39</a><p>Dell'Acqua, F. et al. (2023). Navigating the jagged technological frontier: Field experimental evidence of the effects of AI on knowledge worker productivity and quality. Harvard Business School working paper.</p></li>
+                    <li id="ref-40" class="reference-card" data-ref="40" data-group="The AI Era"><a class="reference-number" href="#ref-40" data-ref-link="40">40</a><p>METR. (2025). <a href="https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/" target="_blank" rel="noopener noreferrer">Measuring the impact of early-2025 AI on experienced open-source developer productivity.</a></p></li>
+                    <li id="ref-41" class="reference-card" data-ref="41" data-group="The AI Era"><a class="reference-number" href="#ref-41" data-ref-link="41">41</a><p>METR. (2026). <a href="https://metr.org/blog/2026-02-24-uplift-update/" target="_blank" rel="noopener noreferrer">Uplift update.</a> (Follow-up with newer tooling and caveats.)</p></li>
+                    <li id="ref-42" class="reference-card" data-ref="42" data-group="The AI Era"><a class="reference-number" href="#ref-42" data-ref-link="42">42</a><p>Lee, H.-P., Sarkar, A., Tankelevitch, L., et al. (2025). The impact of generative AI on critical thinking. CHI 2025 / Microsoft Research and Carnegie Mellon.</p></li>
+                    <li id="ref-43" class="reference-card" data-ref="43" data-group="The AI Era"><a class="reference-number" href="#ref-43" data-ref-link="43">43</a><p>Bainbridge, L. (1983). Ironies of automation. <em>Automatica, 19</em>(6), 775 to 779.</p></li>
+                    <li id="ref-44" class="reference-card" data-ref="44" data-group="The AI Era"><a class="reference-number" href="#ref-44" data-ref-link="44">44</a><p>Si, C., Yang, D., &amp; Hashimoto, T. (Stanford). LLMs generate novel research ideas at expert level but struggle on feasibility and evaluation.</p></li>
+                    <li id="ref-45" class="reference-card" data-ref="45" data-group="The AI Era"><a class="reference-number" href="#ref-45" data-ref-link="45">45</a><p>Panickssery, N. et al. LLM evaluators recognize and preferentially favour their own generations.</p></li>
+                    <li id="ref-46" class="reference-card" data-ref="46" data-group="The AI Era"><a class="reference-number" href="#ref-46" data-ref-link="46">46</a><p>Kleinberg, J., &amp; Raghavan, M.; Bommasani, R. et al. Work on algorithmic monoculture and correlated model failures.</p></li>
+                    <li id="ref-47" class="reference-card" data-ref="47" data-group="The AI Era"><a class="reference-number" href="#ref-47" data-ref-link="47">47</a><p>OpenAI. (2023). <a href="https://openai.com/index/gpt-4-research/" target="_blank" rel="noopener noreferrer">GPT-4 Technical Report.</a> (Calibration before and after post-training.)</p></li>
+                    <li id="ref-48" class="reference-card" data-ref="48" data-group="The AI Era"><a class="reference-number" href="#ref-48" data-ref-link="48">48</a><p>OpenAI. (2025). <a href="https://openai.com/index/why-language-models-hallucinate/?asuniq=e6134c50" target="_blank" rel="noopener noreferrer">Why language models hallucinate.</a></p></li>
+                    <li id="ref-49" class="reference-card" data-ref="49" data-group="The AI Era"><a class="reference-number" href="#ref-49" data-ref-link="49">49</a><p>Tao et al. <a href="https://github.com/teorth/erdosproblems/wiki/AI-contributions-to-Erd%C5%91s-problems" target="_blank" rel="noopener noreferrer">AI contributions to Erdős problems</a>; <a href="https://www.erdosproblems.com/forum/thread/1196?curius=526" target="_blank" rel="noopener noreferrer">Erdős #1196 thread</a>; <a href="https://github.com/math-inc/Erdos1196/tree/main" target="_blank" rel="noopener noreferrer">Lean formalization</a>.</p></li>
+                    <li id="ref-50" class="reference-card" data-ref="50" data-group="The AI Era"><a class="reference-number" href="#ref-50" data-ref-link="50">50</a><p>Jo, Y. (2026). IGR-Bench / car-wash style implicit goal reasoning, plus the Heuristic Override Benchmark. (Presence constraints and heuristic override failures.)</p></li>
+                    <li id="ref-51" class="reference-card" data-ref="51" data-group="The AI Era"><a class="reference-number" href="#ref-51" data-ref-link="51">51</a><p>MIT Economics. (2025). <a href="https://economics.mit.edu/news/assuring-accurate-research-record" target="_blank" rel="noopener noreferrer">Assuring an accurate research record.</a> (MIT statement on Toner-Rodgers.)</p></li>
+                    <li id="ref-52" class="reference-card" data-ref="52" data-group="The AI Era"><a class="reference-number" href="#ref-52" data-ref-link="52">52</a><p>Insilico Medicine. (2026). <a href="https://insilico.com/news/xmjsn4l091-insilico-initiates-phase-iii-clinical-tr?amp=true" target="_blank" rel="noopener noreferrer">Rentosertib Phase III initiation.</a></p></li>
+                    <li id="ref-53" class="reference-card" data-ref="53" data-group="The AI Era"><a class="reference-number" href="#ref-53" data-ref-link="53">53</a><p>Mercor, Handshake AI, Surge AI, and adjacent expert-evaluation platform listings and company materials, checked in 2026.</p></li>
+                    <li id="ref-54" class="reference-card" data-ref="54" data-group="The AI Era"><a class="reference-number" href="#ref-54" data-ref-link="54">54</a><p>Shumailov, I. et al. (2024). AI models collapse when trained on recursively generated data. <em>Nature, 631</em>, 755 to 759.</p></li>
+                    <li id="ref-55" class="reference-card" data-ref="55" data-group="The AI Era"><a class="reference-number" href="#ref-55" data-ref-link="55">55</a><p>Jumper, J. et al. (2021). Highly accurate protein structure prediction with AlphaFold. <em>Nature, 596</em>, 583 to 589; Nobel Prize in Chemistry 2024 context.</p></li>
+                    <li class="reference-group" data-group-title="Historical Science Cases">Historical Science Cases</li>
+                    <li id="ref-56" class="reference-card" data-ref="56" data-group="Historical Science Cases"><a class="reference-number" href="#ref-56" data-ref-link="56">56</a><p>Karikó, K., Buckstein, M., Ni, H., &amp; Weissman, D. (2005). Suppression of RNA recognition by Toll-like receptors. <em>Immunity, 23</em>(2), 165 to 175; Nobel Prize in Physiology or Medicine 2023 context.</p></li>
+                    <li id="ref-57" class="reference-card" data-ref="57" data-group="Historical Science Cases"><a class="reference-number" href="#ref-57" data-ref-link="57">57</a><p>Mojica, F. J. M. et al.; Doudna, J. A., &amp; Charpentier, E. (2014). The new frontier of genome engineering with CRISPR-Cas9. <em>Science, 346</em>(6213), 1258096.</p></li>
+                    <li id="ref-58" class="reference-card" data-ref="58" data-group="Historical Science Cases"><a class="reference-number" href="#ref-58" data-ref-link="58">58</a><p>Fleming, A. (1929). <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2048009/" target="_blank" rel="noopener noreferrer">On the antibacterial action of cultures of a Penicillium, with special reference to their use in the isolation of B. influenzae.</a> <em>British Journal of Experimental Pathology, 10</em>(3), 226 to 236.</p></li>
+                    <li id="ref-59" class="reference-card" data-ref="59" data-group="Historical Science Cases"><a class="reference-number" href="#ref-59" data-ref-link="59">59</a><p>Chain, E. et al. (1940). <a href="https://www.sciencedirect.com/science/article/abs/pii/S0140673601087281" target="_blank" rel="noopener noreferrer">Penicillin as a chemotherapeutic agent.</a> <em>The Lancet, 236</em>(6104), 226 to 228.</p></li>
+                    <li id="ref-60" class="reference-card" data-ref="60" data-group="Historical Science Cases"><a class="reference-number" href="#ref-60" data-ref-link="60">60</a><p>Darwin, C., &amp; Wallace, A. R. (1858). On the tendency of species to form varieties; and on the perpetuation of varieties and species by natural means of selection. <em>Journal of the Proceedings of the Linnean Society: Zoology, 3</em>(9), 45 to 62; Wallace, A. R. (1869). <em>The Malay Archipelago.</em></p></li>
+                    <li id="ref-61" class="reference-card" data-ref="61" data-group="Historical Science Cases"><a class="reference-number" href="#ref-61" data-ref-link="61">61</a><p>Library of Congress. <a href="https://www.loc.gov/item/n79059674/martha-graham/" target="_blank" rel="noopener noreferrer">Martha Graham biography</a>; Library of Congress Information Bulletin. (1998). <a href="https://www.loc.gov/loc/lcib/9806/graham.html" target="_blank" rel="noopener noreferrer">What&#x27;s Old Is New</a>; Pina Bausch Foundation. <a href="https://www.pinabausch.org/person/pina_bausch" target="_blank" rel="noopener noreferrer">Pina Bausch biography.</a></p></li>
+                    <li id="ref-62" class="reference-card" data-ref="62" data-group="Historical Science Cases"><a class="reference-number" href="#ref-62" data-ref-link="62">62</a><p>Royal Institution. <a href="https://www.rigb.org/explore-science/explore/person/michael-faraday-1791-1867" target="_blank" rel="noopener noreferrer">Michael Faraday (1791 to 1867)</a>; Royal Institution. <a href="https://www.rigb.org/explore-science/explore/collection/michael-faradays-research-and-work" target="_blank" rel="noopener noreferrer">Michael Faraday&#x27;s research and work.</a></p></li>
+                    <li id="ref-63" class="reference-card" data-ref="63" data-group="Creativity And Expertise"><a class="reference-number" href="#ref-63" data-ref-link="63">63</a><p>Baer, J. (2015). <a href="https://doi.org/10.1080/02783193.2015.1047480" target="_blank" rel="noopener noreferrer">The importance of domain-specific expertise in creativity.</a> <em>Roeper Review, 37</em>(3), 165 to 178.</p></li>
+                    <li id="ref-64" class="reference-card" data-ref="64" data-group="Creativity And Expertise"><a class="reference-number" href="#ref-64" data-ref-link="64">64</a><p>Ward, T. B. (2008). The role of domain knowledge in creative generation. <em>Learning and Individual Differences, 18</em>(4), 363 to 366.</p></li>
+                    <li id="ref-65" class="reference-card" data-ref="65" data-group="Historical Science Cases"><a class="reference-number" href="#ref-65" data-ref-link="65">65</a><p>Hardy, G. H. (1940). <a href="https://bookstore.ams.org/chel-136" target="_blank" rel="noopener noreferrer">Ramanujan: Twelve Lectures on Subjects Suggested by His Life and Work.</a> Cambridge University Press; AMS Chelsea reprint.</p></li>
+                    <li id="ref-66" class="reference-card" data-ref="66" data-group="Creativity And Expertise"><a class="reference-number" href="#ref-66" data-ref-link="66">66</a><p>Wiley, J. (1998). <a href="https://doi.org/10.3758/BF03211392" target="_blank" rel="noopener noreferrer">Expertise as mental set: The effects of domain knowledge in creative problem solving.</a> <em>Memory &amp; Cognition, 26</em>(4), 716 to 730.</p></li>
+                    <li id="ref-67" class="reference-card" data-ref="67" data-group="Creativity And Expertise"><a class="reference-number" href="#ref-67" data-ref-link="67">67</a><p>Simonton, D. K. (1999). <a href="https://doi.org/10.1207/S15327965PLI1004_4" target="_blank" rel="noopener noreferrer">Creativity as blind variation and selective retention: Is the creative process Darwinian?</a> <em>Psychological Inquiry, 10</em>(4), 309 to 328.</p></li>
+                    <li id="ref-68" class="reference-card" data-ref="68" data-group="Creativity And Expertise"><a class="reference-number" href="#ref-68" data-ref-link="68">68</a><p>Stack Overflow. (2024). <a href="https://survey.stackoverflow.co/2024/developer-profile/" target="_blank" rel="noopener noreferrer">Developer Profile, 2024 Developer Survey.</a></p></li>
+                    <li id="ref-69" class="reference-card" data-ref="69" data-group="Creativity And Expertise"><a class="reference-number" href="#ref-69" data-ref-link="69">69</a><p>Bjurman, A., &amp; Stålnacke, O. (2026). <a href="https://doi.org/10.1016/j.econlet.2026.113035" target="_blank" rel="noopener noreferrer">Do entrepreneurs stay in their industry? Evidence from population-wide data.</a> <em>Economics Letters, 266</em>, 113035.</p></li>
+                </ol>
+            </div>
+        </aside>
+    </main>
+
+    <script src="../script.js"></script>
+</body>
+</html>
