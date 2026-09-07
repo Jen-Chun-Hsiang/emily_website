@@ -1,8 +1,8 @@
 # Emily Hsiang
-> Emily Hsiang, PhD is a neuroscience-trained founder and co-founder of Semiqlassical Inc., building Attryx, a human-inspectable computational workbench for frontier research, from protein dynamics to quantum circuit simulation. This site connects her current work in AI systems, scientific workflows, and founder writing with her academic archive under the name Jen-Chun Hsiang.
+> Emily Hsiang, PhD is a neuroscience-trained founder and co-founder of Semiqlassical Inc., building Toymodel, a human-inspectable computational workbench for frontier research, from protein dynamics to quantum circuit simulation. This site connects her current work in AI systems, scientific workflows, and founder writing with her academic archive under the name Jen-Chun Hsiang.
 
 ## Primary Pages
-- [Home](https://emilyhsiang.com/) - Current professional hub, biography, founder thesis, Attryx overview, academic archive bridge, and selected publications.
+- [Home](https://emilyhsiang.com/) - Current professional hub, biography, founder thesis, Toymodel overview, academic archive bridge, and selected publications.
 - [Blog](https://emilyhsiang.com/blog.html) - Essays from Emily Hsiang on AI systems, cognition, research workflows, modeling, and founder work.
 
 ## Articles
@@ -14,7 +14,7 @@
 
 ## Current Work
 - [Semiqlassical Inc.](https://semiqlassical.tech/) - Startup building computational and trust infrastructure for semiclassical physics.
-- [Attryx](https://attryx.ai/) - Product from Semiqlassical focused on human-inspectable workflows across frontier research domains, from protein dynamics to quantum circuit simulation.
+- [Toymodel](https://semiqlassical.tech/toymodel) - Product from Semiqlassical focused on human-inspectable workflows across frontier research domains, from protein dynamics to quantum circuit simulation.
 
 ## Research And Academic Identity
 - [Academic archive](https://jenchunhsiang.com/) - Research archive, publications, and earlier academic work under the name Jen-Chun Hsiang.
